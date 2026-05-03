@@ -1,0 +1,103 @@
+// calendar-shell/calendar-shell.component.scss
+:host {
+  display: block;
+  font-family: -apple-system, 'SF Pro Text', 'SF Pro Display', sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+.shell {
+  display: flex;
+  flex-direction: column;
+  background: #1c1c1e;
+  min-height: 100dvh;
+  padding-top: env(safe-area-inset-top, 0px);
+}
+
+// ── HEADER ──────────────────────────────────────────────────────────
+.shell__header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: rgba(28, 28, 30, 0.92);
+  backdrop-filter: blur(20px) saturate(1.4);
+  -webkit-backdrop-filter: blur(20px) saturate(1.4);
+  border-bottom: 1px solid #2c2c2e;
+  padding: 12px 16px 0;
+}
+
+.shell__title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.shell__month-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #f2f2f7;
+  letter-spacing: -0.4px;
+}
+
+.shell__today-btn {
+  font-size: 14px;
+  font-weight: 600;
+  color: #0a84ff;
+  background: rgba(10, 132, 255, 0.12);
+  border: none;
+  border-radius: 20px;
+  padding: 5px 14px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: opacity 140ms ease;
+  -webkit-tap-highlight-color: transparent;
+  min-height: 30px;
+
+  &:active { opacity: 0.6; }
+}
+
+// ── TABS ────────────────────────────────────────────────────────────
+.shell__tabs {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+}
+
+.shell__tab {
+  font-size: 13px;
+  font-weight: 500;
+  color: #636366;
+  background: transparent;
+  border: none;
+  padding: 10px 4px;
+  cursor: pointer;
+  font-family: inherit;
+  text-align: center;
+  transition: color 180ms ease;
+  -webkit-tap-highlight-color: transparent;
+  min-height: 44px;
+  position: relative;
+  z-index: 1;
+
+  &.active {
+    color: #0a84ff;
+    font-weight: 600;
+  }
+}
+
+.shell__tab-indicator {
+  position: absolute;
+  bottom: 0;
+  width: 25%;
+  height: 2px;
+  background: #0a84ff;
+  border-radius: 2px 2px 0 0;
+  transition: left 220ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+// ── BODY ────────────────────────────────────────────────────────────
+.shell__body {
+  flex: 1;
+  overflow: hidden;
+}

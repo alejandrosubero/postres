@@ -1,0 +1,27 @@
+ <h2 mat-dialog-title>🛒 Lista de compras</h2>
+    <mat-dialog-content>
+      <p class="subtitle">Productos que están por debajo del stock mínimo</p>
+      <div class="shopping-items">
+        @for (item of shoppingItems(); track item.id) {
+          <div class="item-row">
+            <div class="item-info">
+              <strong>{{ item.nombre }}</strong>
+              <span>Mín: {{ item.cantidadMinima }} {{ item.unidadBase }}</span>
+              <span>Actual: {{ item.cantidad }} {{ item.unidadBase }}</span>
+            </div>
+            <mat-form-field appearance="outline" class="qty-field">
+              <mat-label>Cantidad a pedir</mat-label>
+              <input matInput type="number" [(ngModel)]="item.orderQuantity" min="0">
+            </mat-form-field>
+          </div>
+        } @empty {
+          <div class="empty-message">🎉 No hay productos críticos. ¡Inventario saludable!</div>
+        }
+      </div>
+    </mat-dialog-content>
+    <mat-dialog-actions align="end">
+      <button mat-button mat-dialog-close>Cerrar</button>
+      <button mat-button color="primary" [disabled]="shoppingItems().length === 0" (click)="generatePDF()">
+        <mat-icon>picture_as_pdf</mat-icon> Generar PDF
+      </button>
+    </mat-dialog-actions>

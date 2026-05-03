@@ -1,0 +1,164 @@
+
+// Custom Theming for Angular Material
+// For more information: https://material.angular.io/guide/theming
+@use '@angular/material' as mat;
+// Plus imports for other components in your app.
+
+// Include the common styles for Angular Material. We include this here so that you only
+// have to load a single css file for Angular Material in your app.
+// Be sure that you only ever include this mixin once!
+@include mat.core();
+
+// Define the palettes for your theme using the Material Design palettes available in palette.scss
+// (imported above). For each palette, you can optionally specify a default, lighter, and darker
+// hue. Available color palettes: https://material.io/design/color/
+$postres-primary: mat.define-palette(mat.$indigo-palette);
+$postres-accent: mat.define-palette(mat.$pink-palette, A200, A100, A400);
+
+// The warn palette is optional (defaults to red).
+$postres-warn: mat.define-palette(mat.$red-palette);
+
+// Create the theme object. A theme consists of configurations for individual
+// theming systems such as "color" or "typography".
+$postres-theme: mat.define-light-theme((
+  color: (
+    primary: $postres-primary,
+    accent: $postres-accent,
+    warn: $postres-warn,
+  ),
+  typography: mat.define-typography-config(),
+  density: 0
+));
+
+// Include theme styles for core and each component used in your app.
+// Alternatively, you can import and @include the theme mixins for each component
+// that you are using.
+@include mat.all-component-themes($postres-theme);
+
+/* You can add global styles to this file, and also import other style files */
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", sans-serif;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+
+
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+
+/* Quita el fondo blanco por defecto del modal de material */
+.ios-dialog-panel .mat-mdc-dialog-container {
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+
+.mat-mdc-option {
+  color: white !important;
+  background-color:  #2c2c2e !important;
+  border-bottom: 0.5px solid #2c2c2e !important;
+}
+
+.mat-mdc-option .mdc-list-item__primary-text {
+  color: #f2f2f7 !important; /* Blanco iOS */
+  font-size: 15px !important;
+  font-weight: 400 !important;
+   background-color:  #2c2c2e !important;
+}
+
+
+.mat-mdc-autocomplete-panel.mat-mdc-autocomplete-panel {
+  background-color: #1c1c1e !important; 
+  border-radius: 16px !important;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.7) !important;
+  border: 1px solid #3a3a3c !important; /* Un gris un poco más claro para el borde */
+  margin-top: 8px;
+  overflow: hidden !important;
+}
+
+
+ .mat-mdc-select-panel {
+  background-color: #2c2c2e !important;
+}
+//////////////////////////////////////////////////////
+
+
+// /* --- Estilo Global para Autocompletados (iOS Dark Mode) --- */
+// /* 1. EL PANEL (FONDO Y BORDES) */
+// /* Usamos la clase doble para ganar prioridad de especificidad */
+// .mat-mdc-autocomplete-panel.mat-mdc-autocomplete-panel {
+//   background-color: #1c1c1e !important; 
+//   border-radius: 16px !important;
+//   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.7) !important;
+//   border: 1px solid #3a3a3c !important; /* Un gris un poco más claro para el borde */
+//   margin-top: 8px;
+//   overflow: hidden !important;
+// }
+
+// /* 2. TEXTO DE LAS OPCIONES (EL ESTADO NORMAL) */
+// /* Aquí está el truco: hay que atacar al SPAN interno directamente */
+// .mat-mdc-option .mdc-list-item__primary-text {
+//   color: #f2f2f7 !important; /* Blanco iOS */
+//   font-size: 15px !important;
+//   font-weight: 400 !important;
+// }
+
+// /* 3. ALTURA Y LÍNEAS DIVISORIAS */
+// .mat-mdc-option {
+//   min-height: 52px !important;
+//   border-bottom: 0.5px solid #2c2c2e !important;
+// }
+
+// .mat-mdc-option:last-child {
+//   border-bottom: none !important;
+// }
+
+// /* 4. EL COLOR AZUL (OPCIÓN SELECCIONADA) */
+// /* Este selector es el que Material no puede ignorar */
+// .mat-mdc-option.mdc-list-item--selected .mdc-list-item__primary-text {
+//   color: #0a84ff !important; /* Azul Apple */
+//   font-weight: 600 !important;
+// }
+
+// /* 5. EFECTO HOVER / FOCUS */
+// /* Cuando pasas el mouse o navegas con teclado */
+// .mat-mdc-option:hover:not(.mdc-list-item--disabled),
+// .mat-mdc-option.mdc-list-item--activated {
+//   background-color: #2c2c2e !important;
+// }
+
+// /* 6. QUITAR EL OVERLAY POR DEFECTO DE MATERIAL */
+// /* Material a veces pone una capa gris encima que opaca tus colores */
+// .mat-mdc-option .mat-mdc-focus-indicator,
+// .mat-mdc-option .mat-mdc-option-focus-indicator {
+//   display: none !important;
+// }
+
+///////////////////////////////////////
+
+.clickable-address {
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  padding: 4px 8px; /* Un poco de aire para el clic */
+  border-radius: 6px;
+  // display: flex;
+}
+
+.clickable-address:active {
+  background-color: #e5e5ea; /* Efecto de pulsación gris iOS */
+}
+
+/* En modo oscuro */
+@media (prefers-color-scheme: dark) {
+  .clickable-address:active {
+    background-color: #2c2c2e;
+  }
+}

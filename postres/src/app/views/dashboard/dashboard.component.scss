@@ -1,0 +1,188 @@
+
+
+.ios-square-btn {
+  aspect-ratio: 1 / 1; /* Botones perfectamente cuadrados */
+  background: #1c1c1e;
+  border: none;
+  border-radius: 24px;
+  color: white;
+  font-weight: 600;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  transition: transform 0.2s, background 0.2s;
+}
+
+.ios-square-btn:active {
+  transform: scale(0.95);
+  background: #2c2c2e;
+}
+
+
+/* src/app/views/dashboard/dashboard.component.css */
+.dashboard-wrapper {
+  background-color: #000000;
+  min-height: 100vh;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.ios-header {
+  padding: 40px 0 20px 0;
+  color: white;
+  text-align: center;
+}
+
+.ios-header h1 {
+  font-size: 34px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+}
+
+.grid-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* Dos columnas iguales */
+  gap: 16px;
+  max-width: 500px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.ios-card {
+  background: #1c1c1e; /* Color nativo Dark Mode iOS */
+  border-radius: 24px;
+  border: none;
+  padding: 20px;
+  aspect-ratio: 1 / 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  color: white;
+  transition: transform 0.2s cubic-bezier(0.2, 0, 0, 1);
+}
+
+.ios-card:active {
+  transform: scale(0.92); /* Feedback táctil estilo iOS */
+  background: #2c2c2e;
+}
+
+.icon {
+  font-size: 32px;
+}
+
+.label {
+  font-size: 14px;
+  font-weight: 500;
+  text-align: center;
+}
+
+
+.tab-icon {
+  margin-right: 8px;
+}
+
+/// custom-tabs ////
+
+/* Contenedor principal para no afectar a todos los tabs de la app */
+.custom-tabs {
+  
+  /* 1. Fondo del encabezado del tab (la barra donde están los botones) */
+  ::ng-deep .mat-mdc-tab-header {
+    background-color: #1c1c1e; /* El fondo oscuro de tu app[cite: 11] */
+  }
+
+  /* 2. Color del texto e icono (Estado Inactivo) */
+  ::ng-deep .mat-mdc-tab .mdc-tab__text-label {
+    color: #8e8e93 !important; /* Gris de iOS */
+    
+    .tab-icon {
+      color: #8e8e93; 
+    }
+  }
+
+  /* 3. Color del texto e icono (Estado Activo/Seleccionado) */
+  ::ng-deep .mat-mdc-tab.mdc-tab--active .mdc-tab__text-label {
+    color: #0a84ff !important; /* Azul destacado[cite: 2, 8] */
+    
+    .tab-icon {
+      color: #0a84ff;
+    }
+  }
+
+  /* 4. El fondo individual de cada pestaña (opcional) */
+  ::ng-deep .mdc-tab {
+    background: transparent;
+    border-radius: 12px 12px 0 0;
+  }
+
+  /* 5. La barrita indicadora inferior */
+  ::ng-deep .mat-mdc-tab-indicator .mdc-tab-indicator__content--underline {
+    border-color: #0a84ff !important;
+  }
+}
+
+
+.calendar-container {
+  /* Asegura que el calendario no tenga scrolls dobles innecesarios */
+  height: calc(100vh - 48px); /* 48px es la altura estándar del header de mat-tab */
+  overflow: hidden;
+  background: #1c1c1e; /* Color de fondo iOS Dark[cite: 14] */
+}
+
+/* Opcional: Si quieres que el shell del calendario no tenga su propio 
+   padding superior adicional al estar dentro de un tab */
+::ng-deep app-calendar-shell .shell {
+  padding-top: 0 !important;
+}
+
+
+// add pedido css
+
+
+.fab-container {
+  position: fixed;
+ bottom: 20px;
+// top: 24px;
+  right: 24px;
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: flex-end;
+  z-index: 100;
+
+  button {
+    margin-top: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    transition: transform 0.3s ease, opacity 0.3s ease;
+  }
+
+  .fab-action {
+    opacity: 1;
+    transform: translateY(0);
+    animation: slide-up 0.3s ease forwards;
+  }
+
+  @keyframes slide-up {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}
+
+.green-fab {
+  background-color: #217724 !important; // tono verde Material Design
+  color: white;
+
+  &:hover {
+    background-color: #43a047 !important; // tono más oscuro al hover
+  }
+}

@@ -1,0 +1,88 @@
+<div class="week-root"
+      (touchstart)="ts($event)" (touchend)="te($event)">
+ 
+      <!-- NAV -->
+      <div class="week-nav">
+        <button class="week-nav__btn" (click)="prev()">
+          <svg width="8" height="14" viewBox="0 0 8 14" fill="none">
+            <path d="M7 1L1 7l6 6" stroke="#0a84ff" stroke-width="1.8" stroke-linecap="round"/>
+          </svg>
+        </button>
+        <span class="week-nav__label">{{ weekLabel() }}</span>
+        <button class="week-nav__btn" (click)="next()">
+          <svg width="8" height="14" viewBox="0 0 8 14" fill="none">
+            <path d="M1 1l6 6-6 6" stroke="#0a84ff" stroke-width="1.8" stroke-linecap="round"/>
+          </svg>
+        </button>
+      </div>
+ 
+      <!-- 7-DAY STRIP -->
+      <div class="week-strip" [@wslide]="slideKey()">
+        <button
+          *ngFor="let wd of weekDays()"
+          class="wday"
+          [class.today]="wd.isToday"
+          [class.selected]="isSelected(wd.date)"
+          [class.has-pedidos]="wd.pedidos.length > 0"
+          (click)="onTap(wd)"
+        >
+          <span class="wday__label">{{ dayLetter(wd.date) }}</span>
+          <span class="wday__num">{{ wd.date.getDate() }}</span>
+ 
+          <!-- dot + count -->
+          <span class="wday__ind" *ngIf="wd.pedidos.length > 0"
+            [class.ind-p]="hasPriority(wd.pedidos)">
+            <span class="wday__dot"></span>
+            <span class="wday__cnt">{{ wd.pedidos.length > 9 ? '9+' : wd.pedidos.length }}</span>
+          </span>
+          <span class="wday__no-ind" *ngIf="wd.pedidos.length === 0"></span>
+        </button>
+      </div>
+ 
+      <!-- PEDIDOS DEL DÍA SELECCIONADO -->
+      <div class="week-list">
+        <ng-container *ngIf="selectedDayPedidos().length > 0; else empty">
+          <div class="week-list__header">
+            <span class="week-list__date-label">{{ selectedDateLabel() }}</span>
+            <span class="week-list__count-pill">{{ selectedDayPedidos().length }} pedido{{ selectedDayPedidos().length !== 1 ? 's' : '' }}</span>
+          </div>
+ 
+          <div class="week-list__cards">
+            <div
+              *ngFor="let p of selectedDayPedidos(); trackBy: trackById"
+              class="wcard"
+              [class.wcard--priority]="p.ispriority"
+              (click)="cardTap(p)"
+            >
+              <div class="wcard__accent"
+                [class.ac-p]="p.ispriority"
+                [class.ac-e]="p.enCurso && !p.ispriority"
+                [class.ac-d]="p.delivery && !p.ispriority && !p.enCurso"
+                [class.ac-n]="!p.ispriority && !p.enCurso && !p.delivery">
+              </div>
+              <div class="wcard__body">
+                <div class="wcard__top">
+                  <span class="wcard__name">{{ p.name }}</span>
+                  <div class="wcard__emojis">
+                    <span *ngIf="p.ispriority">🔴</span>
+                    <span *ngIf="p.enCurso">🟡</span>
+                    <span *ngIf="p.delivery">🚚</span>
+                  </div>
+                </div>
+                <span class="wcard__customer" *ngIf="p.customer?.name">{{ p.customer!.name }}</span>
+              </div>
+              <svg class="wcard__chevron" width="7" height="12" viewBox="0 0 7 12">
+                <path d="M1 1l5 5-5 5" stroke="#48484a" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+              </svg>
+            </div>
+          </div>
+        </ng-container>
+ 
+        <ng-template #empty>
+          <div class="week-empty">
+            <span class="week-empty__icon">📋</span>
+            <span class="week-empty__text">Sin pedidos este día</span>
+          </div>
+        </ng-template>
+      </div>
+    </div>

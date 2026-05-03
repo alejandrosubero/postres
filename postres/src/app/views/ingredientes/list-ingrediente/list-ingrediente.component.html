@@ -1,0 +1,33 @@
+<div class="list-container">
+  <header> 
+    <div class="search-bar">
+      <span class="icon">🔍</span>
+      <input 
+        type="text" 
+        placeholder="Buscar nombre o unidad..." 
+        [(ngModel)]="searchTerm">
+    </div>
+  </header>
+
+  <div class="list-scroll">
+    @for (item of filteredIngredientes(); track item.id) {
+      <div class="ios-card" (click)="seleccionarIngrediente(item)">
+        <div class="card-info">
+          <h3>{{ item.nombre }}</h3>
+          <p>{{ item.presentacion }} {{ item.unidadBase }}</p>
+        </div>
+        <div class="card-price">
+          <span>${{ item.precio }}</span>
+        </div>
+      </div>
+    }
+  </div>
+</div>
+
+
+<div class="fab-container">
+    <button mat-fab class="green-fab" (click)="add()">
+        <mat-icon>add</mat-icon>
+    </button>
+</div>
+

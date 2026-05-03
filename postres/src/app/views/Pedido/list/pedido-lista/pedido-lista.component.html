@@ -1,0 +1,85 @@
+
+<div class="list-container">
+  <header> 
+    <div class="search-bar-container">
+      <div class="search-bar">
+        <span class="icon">🔍</span>
+        <input type="text" 
+               placeholder="Buscar nombre..." 
+               [(ngModel)]="searchTerm"
+               (input)="searchTerm.set($any($event.target).value)">
+        
+        <!-- Botón de ayuda para filtros -->
+        <button mat-icon-button [matMenuTriggerFor]="filterHelp" class="help-btn">
+          <mat-icon>info_outline</mat-icon>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Menú de Ayuda de Filtrado (Estilo iOS) -->
+  <mat-menu #filterHelp="matMenu" xPosition="before" class="ios-menu">
+    <div class="menu-header">Comandos Especiales (& o *)</div>
+    <button mat-menu-item (click)="setSearch('&cancelado')"><span>&cancelado</span></button>
+    <button mat-menu-item (click)="setSearch('&completados')"><span>&completados</span></button>
+    <button mat-menu-item (click)="setSearch('&en curso')"><span>&en curso</span></button>
+    <button mat-menu-item (click)="setSearch('&gratis')"><span>&gratis</span></button>
+    
+    <div class="menu-divider"></div>
+    <div class="menu-header">Rangos de Fecha</div>
+    <div class="menu-hint">rango 11/25/2026 - 12/23/2027</div>
+    <div class="menu-hint">rango c (para creación)</div>
+  </mat-menu>
+
+  <div class="list-scroll">
+    @for (item of filteredRecetas(); track item.id) {
+      <div class="ios-card" (click)="seleccionarPedido(item)">
+        <div class="card-info">
+          <h3>{{ item.name }}</h3>
+          <p class="date">{{ item.dayDue | date: 'MM/dd/yyyy' }}</p>
+        </div>
+
+        <div class="total-row">
+            <span class="label">Costo: </span>
+            <strong class="value">${{item.cost_total | number:'1.3-3' }}</strong>
+        </div>
+      </div>
+    } @empty {
+      <div class="empty-state">No se encontraron pedidos</div>
+    }
+  </div>
+</div>
+
+
+<div class="fab-container">
+    <button mat-fab class="green-fab" (click)="add()">
+        <mat-icon>add</mat-icon>
+    </button>
+</div>
+
+<!-- <div class="list-container">
+  <header> 
+    <div class="search-bar">
+      <span class="icon">🔍</span>
+      <input type="text"  placeholder="Buscar nombre o unidad..." [(ngModel)]="searchTerm">
+    </div>
+  </header>
+
+  <div class="list-scroll">
+    @for (item of filteredRecetas(); track item.id) {
+      <div class="ios-card" (click)="seleccionarPedido(item)">
+        <div class="card-info">
+          <h3>{{ item.name }}</h3>
+          <p>{{ item.dayDue | date: 'MM/dd/yyyy' }}</p>
+        </div>
+
+           <div class="total-row">
+         
+                <span>Costo: </span>
+                <strong>${{item.cost_total | number:'1.3-3' }}</strong>
+            </div>
+      </div>
+    }
+  </div>
+</div> -->
+

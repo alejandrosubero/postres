@@ -1,0 +1,129 @@
+ <div class="shell">
+ 
+    
+      <div class="shell__header">
+        <div class="shell__title-row">
+          <span class="shell__title">{{ headerLabel() }}</span>
+          <button class="shell__today-btn" (click)="goToday()" *ngIf="!isToday()">
+            Hoy
+          </button>
+        </div>
+ 
+      
+        <div class="shell__tabs" role="tablist">
+          <button
+            *ngFor="let tab of tabs"
+            class="shell__tab"
+            [class.active]="activeView() === tab.id"
+            (click)="setView(tab.id)"
+            role="tab"
+            [attr.aria-selected]="activeView() === tab.id"
+          >
+            {{ tab.label }}
+          </button>
+          <div class="shell__indicator" [style.left.%]="indicatorLeft()"></div>
+        </div>
+      </div>
+ 
+     
+      <div class="shell__body" [@viewFade]="activeView()">
+ 
+      
+        <app-calendar-year
+          *ngIf="activeView() === 'year'"
+          [pedidos]="pedidos()"
+          [focusDate]="focusDate()"
+          (yearMonthSelected)="onYearMonthSelected($event)"
+        />
+ 
+      
+        <app-calendar-month
+          *ngIf="activeView() === 'month'"
+          [pedidos]="pedidos()"
+          [focusDate]="focusDate()"
+          (dateSelected)="onDateSelected($event)"
+        />
+ 
+      
+        <app-calendar-week
+          *ngIf="activeView() === 'week'"
+          [pedidos]="pedidos()"
+          [focusDate]="focusDate()"
+          (dateSelected)="onDateSelected($event)"
+        />
+ 
+  
+        <app-calendar-day-view
+          *ngIf="activeView() === 'day'"
+          [pedidos]="pedidosForDay()"
+          [date]="focusDate()"
+        />
+ 
+        <app-calendar-agenda
+          *ngIf="activeView() === 'agenda'"
+          [pedidos]="pedidos()"
+          [focusDate]="focusDate()"
+          (dateSelected)="onDateSelected($event)"
+        />
+ 
+      </div>
+    </div>
+ 
+ <!-- <div class="shell">
+ 
+      <div class="shell__header">
+        <div class="shell__title-row">
+          <span class="shell__month-title">{{ headerLabel() }}</span>
+          <button class="shell__today-btn" (click)="goToday()" *ngIf="!isToday()">
+            Hoy
+          </button>
+        </div>
+ 
+        <div class="shell__tabs" role="tablist">
+          <button
+            *ngFor="let tab of tabs"
+            class="shell__tab"
+            [class.active]="activeView() === tab.id"
+            (click)="setView(tab.id)"
+            role="tab"
+            [attr.aria-selected]="activeView() === tab.id"
+          >
+            {{ tab.label }}
+          </button>
+      
+          <div class="shell__tab-indicator" [style.left.%]="indicatorLeft()"></div>
+        </div>
+      </div>
+ 
+
+      <div class="shell__body" [@viewFade]="activeView()">
+ 
+        <app-calendar-month
+          *ngIf="activeView() === 'month'"
+          [pedidos]="pedidos()"
+          [focusDate]="focusDate()"
+          (dateSelected)="onDateSelected($event)"
+        />
+ 
+        <app-calendar-week
+          *ngIf="activeView() === 'week'"
+          [pedidos]="pedidos()"
+          [focusDate]="focusDate()"
+          (dateSelected)="onDateSelected($event)"
+        />
+ 
+        <app-calendar-day-view
+          *ngIf="activeView() === 'day'"
+          [pedidos]="pedidosForDay()"
+          [date]="focusDate()"
+        />
+ 
+        <app-calendar-agenda
+          *ngIf="activeView() === 'agenda'"
+          [pedidos]="pedidos()"
+          [focusDate]="focusDate()"
+          (dateSelected)="onDateSelected($event)"
+        />
+ 
+      </div>
+    </div>  -->

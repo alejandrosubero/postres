@@ -1,0 +1,56 @@
+<div class="detail-container">
+    <mat-card class="ios-card">
+        <h1>{{ receta.Name }}</h1>
+
+        <p>{{ receta.Date | date:'longDate' }}</p>
+    </mat-card>
+
+    <mat-card class="ios-card">
+        <h3>Ingredientes</h3>
+        <div class="ios-table">
+            @for (ing of receta.Lista_ingredientes; track $index) {
+            <div class="row">
+                <div class="col-name">{{ ing.Name }}</div>
+                <div class="col-cant">{{ ing.Cantidad }}</div>
+                <div class="col-cost">${{ ing.Cost | number:'1.3-3' }}</div>
+            </div>
+            }
+        </div>
+        <div class="total-row">
+            <span>Total</span>
+            <strong>{{ receta.CostoTotal | currency:'USD' }}</strong>
+        </div>
+    </mat-card>
+
+    <mat-card class="ios-card">
+        <h3>Instrucciones</h3>
+        <p class="content-text">{{ receta.instrucciones }}</p>
+    </mat-card>
+
+@if (receta.Notes && receta.Notes.length > 0) {
+    <mat-card class="ios-card">
+        <h3>Notas</h3>
+        <ul class="notes-list">
+            @for (note of receta.Notes; track $index) {
+                <li class="note-item">{{ note }}</li>
+            }
+        </ul>
+    </mat-card>
+}
+
+</div>
+
+
+<div class="fab-container">
+    <button mat-fab color="primary" (click)="toggleFab()" aria-label="Menu">
+        <mat-icon>{{ isFabOpen ? 'close' : 'menu' }}</mat-icon>
+    </button>
+    @if (isFabOpen) {
+    <button mat-fab class="green-fab" (click)="edit()">
+        <mat-icon>edit</mat-icon>
+    </button>
+    <button mat-fab color="warn" (click)="confirmDelete()">
+        <mat-icon>delete</mat-icon>
+    </button>
+    }
+</div>

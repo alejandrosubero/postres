@@ -1,0 +1,53 @@
+
+<div class="custom-tabs">
+  <mat-tab-group animationDuration="200ms">
+    
+    <!-- PESTAÑA CALENDARIO -->
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <mat-icon class="tab-icon">calendar_today</mat-icon>
+        <span class="tab-label">Calendario</span>
+      </ng-template>
+      
+    <div class="calendar-container">
+      <app-calendar-shell></app-calendar-shell>
+    </div>
+
+    </mat-tab>
+
+    <!-- PESTAÑA DASHBOARD -->
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <mat-icon class="tab-icon">dashboard</mat-icon>
+        <span class="tab-label">Dashboard</span>
+      </ng-template>
+
+      <div class="dashboard-wrapper">
+        <header class="ios-header">
+          <h1>Dashboard</h1>
+        </header>
+
+        <div class="grid-container">
+          @for (item of menuItems; track item.label) {
+            <button class="ios-card" (click)="navegar(item.path)">
+              <span class="icon">{{ item.icon }}</span>
+              <span class="label">{{ item.label }}</span>
+            </button>
+          }
+        </div>
+      </div>
+
+    </mat-tab>
+  </mat-tab-group>
+</div>
+
+<div class="fab-container">
+    <button mat-fab 
+            class="green-fab" 
+            (click)="add()"
+            matTooltip="Añadir nuevo pedido"
+            matTooltipPosition="left"
+            [matTooltipShowDelay]="500"> <!-- Opcional: retardo para evitar que salga muy rápido -->
+        <mat-icon>add</mat-icon>
+    </button>
+</div>

@@ -1,0 +1,51 @@
+
+<h2 mat-dialog-title>Agregar Cliente</h2>
+
+<form [formGroup]="form">
+
+
+<mat-form-field appearance="fill" class="full-width">
+  <mat-label>Nombre del Cliente</mat-label>
+  <input type="text"
+         matInput
+         formControlName="name"
+         [matAutocomplete]="auto">
+  
+  <mat-autocomplete #auto="matAutocomplete" 
+                    [displayWith]="displayFn" 
+                    (optionSelected)="onCustomerSelected($event)">
+    @for (customer of filteredCustomers | async; track customer.id) {
+      <mat-option [value]="customer">
+        {{customer.name}}
+      </mat-option>
+    }
+  </mat-autocomplete>
+</mat-form-field>
+
+
+  <mat-form-field appearance="fill">
+    <mat-label>Teléfono</mat-label>
+    <!-- <input matInput type="text" formControlName="phoneNumber" placeholder="Ej: 555-555-1234"> -->
+     <input matInput type="tel" formControlName="phoneNumber" mask="(000) 000-0000" placeholder="(555) 555-1234">
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>email</mat-label>
+    <input matInput type="email" formControlName="email" placeholder="">
+  </mat-form-field>
+
+
+  <mat-form-field appearance="fill">
+    <mat-label>Dirección</mat-label>
+    <input matInput type="text" formControlName="address" placeholder="">
+  </mat-form-field>
+
+  <mat-form-field appearance="fill" class="full-width">
+    <mat-label>Notas</mat-label>
+    <textarea matInput formControlName="notas" rows="3" placeholder="Ej: Great Value..."></textarea>
+  </mat-form-field>
+
+  <button type="button" class="btn-save-dialog" (click)="guardar()">
+    Guardar
+  </button>
+</form>

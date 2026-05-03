@@ -1,0 +1,84 @@
+ <div class="inventory-container">
+      <!-- Header iOS style -->
+      <div class="ios-header">
+        <h1>Inventario</h1>
+        <div class="header-actions">
+          <button mat-icon-button (click)="printRestockList()">
+            <mat-icon>print</mat-icon>
+          </button>
+          <button mat-icon-button (click)="openShoppingList()">
+            <mat-icon>shopping_cart</mat-icon>
+          </button>
+        </div>
+      </div>
+
+      <!-- Resumen rápido -->
+      <div class="summary-cards">
+        <mat-card>
+          <mat-card-content>
+            <div class="summary-item">
+              <span class="label">Total productos</span>
+              <span class="value">{{ totalProducts() }}</span>
+            </div>
+            <div class="summary-item">
+              <span class="label">⚠️ Por reabastecer</span>
+              <span class="value critical">{{ lowStockCount() }}</span>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <!-- Lista de ingredientes estilo iOS (cards) -->
+      <div class="ingredient-list">
+        @for (item of ingredientes(); track item.id) {
+          <mat-card class="ingredient-card" [class.critical]="isCritical(item)">
+            <mat-card-content>
+              <div class="card-header">
+                <div class="title-group">
+                  <h3>{{ item.nombre }}</h3>
+                  <mat-chip-set>
+                    <mat-chip>{{ item.categoria }}</mat-chip>
+                  </mat-chip-set>
+                </div>
+                <button mat-icon-button (click)="openAddStock(item)">
+                  <mat-icon>add_circle</mat-icon>
+                </button>
+              </div>
+
+              <div class="details">
+                <div class="detail-row">
+                  <span>Presentación: {{ item.presentacion }}</span>
+                  <span>Precio: {{ item.precio | currency }}</span>
+                </div>
+                <div class="detail-row">
+                  <span>Unidad base: {{ item.unidadBase }}</span>
+                  <span>Precio/ud: {{ item.precioPorUnidad | currency }}</span>
+                </div>
+              </div>
+
+              <div class="stock-info">
+                <div class="stock-quantity">
+                  <span class="label">Cantidad actual:</span>
+                  <span class="quantity">{{ item.cantidad }} {{ item.unidadBase }}</span>
+                </div>
+                @if (isCritical(item)) {
+                  <div class="alert-badge">
+                    <mat-icon>warning</mat-icon> ¡Reabastecer!
+                  </div>
+                }
+                <mat-progress-bar
+                  [value]="getStockPercentage(item)"
+                  [color]="isCritical(item) ? 'warn' : 'primary'">
+                </mat-progress-bar>
+                <div class="min-stock">Mínimo: {{ item.cantidadMinima }} {{ item.unidadBase }}</div>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        } @empty {
+          <div class="empty-state">
+            <mat-icon>inventory</mat-icon>
+            <p>No hay productos en el inventario</p>
+          </div>
+        }
+      </div>
+    </div>

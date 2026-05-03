@@ -1,0 +1,75 @@
+<div class="detail-container">
+
+  <div class="header-section">
+    <h1>{{ ingrediente.nombre }}</h1>
+    <p class="subtitle">{{ ingrediente.categoria }}</p>
+  </div>
+
+  <div class="notes-section">
+    <p>Ingresado: {{ ingrediente.fechaIngreso }}</p>
+  </div>
+
+  <div class="ios-card">
+    <div class="info-row">
+      <span>Presentación:</span>
+      <span class="value">{{ ingrediente.presentacion }} {{ ingrediente.unidadBase }}</span>
+    </div>
+    <div class="info-row">
+      <span>Precio Total:</span>
+      <span class="value">${{ ingrediente.precio }}</span>
+    </div>
+    <div class="info-row">
+      <span>Precio por Unidad:</span>
+      <span class="value highlight">${{ ingrediente.precioPorUnidad }}</span>
+    </div>
+
+
+    @if (ingrediente.cantidad != null && ingrediente.cantidad != undefined && ingrediente.cantidad){
+    <div class="info-row">
+      <span>Cantidad en Inventario:</span>
+      <span class="value">{{ingrediente.cantidad}}</span>
+    </div>
+    }
+    @if (ingrediente.cantidadMinima != null && ingrediente.cantidadMinima != undefined && ingrediente.cantidadMinima){
+    <div class="info-row">
+      <span>Cantidad minima en Inventario:</span>
+      <span class="value">{{ ingrediente.cantidadMinima }}</span>
+    </div>
+    }
+    <div class="info-row">
+      <span>Notificacion:</span>
+      @if (ingrediente.notificar != null && ingrediente.notificar != undefined && ingrediente.notificar) {
+      <span class="value">Activa</span>
+      }
+      @if (ingrediente.notificar != null && ingrediente.notificar != undefined && !ingrediente.notificar) {
+      <span class="value">No Activa</span>
+      }
+    </div>
+
+  </div>
+
+  <div class="notes-section">
+    <h3>Notas</h3>
+    <p>{{ ingrediente.notas || 'Sin notas adicionales.' }}</p>
+  </div>
+
+  <!-- <div class="footer-info">
+    <p>Ingresado el: {{ ingrediente.fechaIngreso }}</p>
+  </div> -->
+
+
+  <div class="fab-container">
+    <button mat-fab color="primary" (click)="toggleFab()" aria-label="Menu">
+      <mat-icon>{{ isFabOpen ? 'close' : 'menu' }}</mat-icon>
+    </button>
+    @if (isFabOpen) {
+    <button mat-fab class="green-fab" (click)="edit()">
+      <mat-icon>edit</mat-icon>
+    </button>
+    <button mat-fab color="warn" (click)="confirmDelete()">
+      <mat-icon>delete</mat-icon>
+    </button>
+    }
+  </div>
+
+</div>

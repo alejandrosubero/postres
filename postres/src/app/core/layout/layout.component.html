@@ -1,0 +1,140 @@
+<mat-sidenav-container class="sidenav-container" fullscreen>
+  <!-- Sidebar -->
+  <mat-sidenav #sidenav mode="over" [opened]="false" [fixedInViewport]="isHandset$ | async" fixedTopGap="56"
+    class="sidenav" role="navigation" aria-label="Menú principal">
+
+    <mat-nav-list>
+      <div>
+        <div class="buto" (click)="goHome(sidenav)">
+          <mat-icon aria-hidden="true">home</mat-icon>
+        </div>
+
+        <div class="buto" (click)="adIngredient(sidenav)">
+          <p>Add ingredient</p>
+        </div>
+
+        <div class="buto" (click)=" addRecipe(sidenav)">
+          <p> Add Receta</p>
+        </div>
+
+        <div class="buto" (click)="  magerInventario(sidenav)">
+          <p>Inventario</p>
+        </div>
+
+        @if( this.isAdmin){
+        <div class="buto" (click)=" magerUsusers(sidenav)">
+          <p> Usuarios </p>
+        </div>
+        }
+
+        <div class="buto" (click)="logout()">
+          <mat-icon>exit_to_app</mat-icon>
+          <p>logout</p>
+        </div>
+
+      </div>
+    </mat-nav-list>
+
+  </mat-sidenav>
+
+  <!-- Main Content -->
+  <mat-sidenav-content>
+    <!-- Header -->
+    <header>
+      <mat-toolbar color="primary" class="navbar fixed-top" role="banner">
+
+        @if (navConfig().ico.menu) {
+        <button mat-icon-button (click)="sidenav.toggle()" aria-label="Alternar menú" aria-controls="main-menu"
+          [attr.aria-expanded]="sidenav.opened">
+          <mat-icon aria-hidden="true">menu</mat-icon>
+        </button>
+        }
+
+        @if (navConfig().ico.back) {
+        <a mat-icon-button (click)="back()">
+          <mat-icon>arrow_back</mat-icon>
+        </a>
+        }
+
+        @if (navConfig().ico.home) {
+        <mat-icon aria-hidden="true" (click)="home()">home</mat-icon>
+        }
+
+        <a class="toolbar-title" routerLink="/app/dashboard" aria-label="Ir al inicio">
+          <h2>{{navConfig().title}}</h2>
+        </a>
+
+      
+       <span class="spacer"></span>
+
+        <nav aria-label="Navegación principal">
+
+            @if (navConfig().ico.cart) {
+               <mat-icon 
+                [matBadge]="this.lowStockCount" 
+                matBadgeColor="warn" 
+                matBadgeOverlap="false" 
+                aria-hidden="false" 
+                role="button" 
+                (click)="navigateToInventory()" 
+                style="cursor: pointer; margin-right: 20px;"
+              >shopping_cart</mat-icon>
+          }
+
+          @if (navConfig().ico.favorite) {
+            <mat-icon (click)="goFavorites()"> {{ navConfig().favorite.active ? 'star' : 'star_border'}}</mat-icon>
+          }
+          
+          @if (navConfig().ico.source) {
+            <a mat-icon-button (click)="goToSourceDetail()">
+              <mat-icon (click)="goToSourceDetail()">description</mat-icon>
+           </a>
+          }
+
+          @if (navConfig().ico.logut) {
+            <mat-icon (click)="logout()">exit_to_app</mat-icon>
+          }
+
+        </nav>
+
+      </mat-toolbar>
+    </header>
+
+    <!-- Main Content -->
+    <main class="contentMain" role="main">
+      <router-outlet></router-outlet>
+    </main>
+
+
+    <!-- Footer -->
+    <footer class="footer" role="contentinfo">
+
+      <div class="footer-content">
+        <!-- <div class="footer-section">
+                <h3>Mi App</h3>
+                <p>La mejor solución para tus necesidades</p>
+              </div> -->
+        <!-- <div class="footer-section">
+                <h4>Enlaces rápidos</h4>
+                <nav aria-label="Enlaces rápidos">
+                  <a routerLink="/home">Inicio</a>
+                  <a routerLink="/about">Acerca de</a>
+                  <a routerLink="/services">Servicios</a>
+                  <a routerLink="/contact">Contacto</a>
+                </nav>
+              </div> -->
+        <!-- <div class="footer-section">
+                <h4>Contacto</h4>
+                <address>
+                  <p>email&#64;ejemplo.com</p>
+                  <p>+1 (555) 123-4567</p>
+                </address>
+              </div> -->
+      </div>
+
+      <div class="footer-bottom">
+        <p>&copy; 2026. All rights reserved.</p>
+      </div>
+    </footer>
+  </mat-sidenav-content>
+</mat-sidenav-container>

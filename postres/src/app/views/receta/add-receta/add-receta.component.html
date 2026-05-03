@@ -1,0 +1,79 @@
+<div class="container">
+    <header class="header">
+    </header>
+
+    <form [formGroup]="recetaForm" (ngSubmit)="guardar()">
+
+        <section class="section-group">
+            <mat-form-field appearance="fill">
+                <mat-label>Nombre de la Receta</mat-label>
+                <input matInput formControlName="Name" placeholder="Ej: Pastel de Chocolate">
+            </mat-form-field>
+        </section>
+
+
+        <section class="section-group">
+
+            <div class="header-container">
+                <h3>Ingredientes:</h3>
+                <button type="button" class="btn-add-circle" (click)="agregarIngrediente()">+</button>
+            </div>
+
+            <div class="ios-table">
+                <div class="table-header">
+                    <div class="col-name">Nombre</div>
+                    <div class="col-cant">Cant.</div>
+                    <div class="col-cost">Costo</div>
+                </div>
+
+                @for (ing of recetaForm.value.Lista_ingredientes; track $index) {
+                <div class="row" (click)="borrarIngrediente($index)">
+                    <div class="col-name">{{ ing.Name }}</div>
+                    <div class="col-cant">{{ ing.Cantidad }}</div>
+                    <div class="col-cost">${{ ing.Cost | number:'1.2-2' }}</div>
+                </div>
+                } @empty {
+                <p class="empty-msg">No hay ingredientes agregados.</p>
+                }
+            </div>
+
+            <div class="total-row">
+                <span>Costo Total</span>
+                <strong>${{ recetaForm.get('CostoTotal')?.value | number:'1.2-2' }}</strong>
+            </div>
+        </section>
+
+        <section class="section-group">
+            <mat-form-field appearance="fill" class="full-width">
+                <mat-label>Instrucciones</mat-label>
+                <textarea matInput formControlName="instrucciones" rows="4"></textarea>
+            </mat-form-field>
+
+            <div class="header-container">
+                <h3>Agregar Nota:</h3>
+                <button type="button" class="btn-add-circle" (click)="agregarNota()">+</button>
+            </div>
+
+            <div formArrayName="Notes">
+                @for (nota of getNotesControls(); track $index) {
+                <div class="note-row">
+                    <mat-form-field appearance="fill" class="full-width">
+                        <mat-label>Nota {{ $index + 1 }}</mat-label>
+                        <textarea matInput [formControlName]="$index" rows="2"></textarea>
+                    </mat-form-field>
+
+                    <button type="button" class="btn-remove" (click)="quitarNota($index)">Eliminar</button>
+                </div>
+                }
+            </div>
+        </section>
+
+        <section class="section-group">
+            <div class="footer-action">
+                <button type="submit" class="btn-save-fixed" [disabled]="recetaForm.invalid">
+                    Guardar Receta
+                </button>
+            </div>
+        </section>
+    </form>
+</div>

@@ -1,0 +1,118 @@
+<div class="year-root">
+ 
+      <!-- ── YEAR NAV ── -->
+      <div class="year-nav">
+        <button class="year-nav__btn" (click)="prevYear()" [disabled]="!canGoPrev()">
+          <svg width="8" height="14" viewBox="0 0 8 14" fill="none">
+            <path d="M7 1L1 7l6 6" stroke="#0a84ff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+ 
+        <!-- YEAR LABEL + DROPDOWN TRIGGER -->
+        <div class="year-nav__center">
+          <button class="year-label-btn" (click)="toggleDropdown()">
+            <span class="year-label">{{ viewYear() }}</span>
+            <svg class="year-label__caret" width="10" height="6" viewBox="0 0 10 6" fill="none"
+              [style.transform]="dropdownOpen() ? 'rotate(180deg)' : 'rotate(0deg)'">
+              <path d="M1 1l4 4 4-4" stroke="#0a84ff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+ 
+          <!-- DROPDOWN -->
+          <div class="year-dropdown" *ngIf="dropdownOpen()" @dropdownFade>
+            <div class="yd-header">Ir a año</div>
+            <div class="yd-scroll">
+              <button
+                *ngFor="let y of availableYears()"
+                class="yd-item"
+                [class.yd-item--active]="y.year === viewYear()"
+                [class.yd-item--current]="y.isCurrentYear"
+                (click)="selectYear(y.year)"
+              >
+                <span class="yd-item__year">{{ y.year }}</span>
+                <span class="yd-item__count" *ngIf="y.totalPedidos > 0">
+                  {{ y.totalPedidos }} pedido{{ y.totalPedidos !== 1 ? 's' : '' }}
+                </span>
+                <span class="yd-item__empty" *ngIf="y.totalPedidos === 0">Sin pedidos</span>
+              </button>
+            </div>
+          </div>
+        </div>
+ 
+        <button class="year-nav__btn" (click)="nextYear()" [disabled]="!canGoNext()">
+          <svg width="8" height="14" viewBox="0 0 8 14" fill="none">
+            <path d="M1 1l6 6-6 6" stroke="#0a84ff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div>
+ 
+      <!-- PEDIDOS TOTAL DEL AÑO -->
+      <div class="year-summary" *ngIf="totalyear() > 0">
+        <span class="year-summary__num">{{ totalyear() }}</span>
+        <span class="year-summary__label">pedido{{ totalyear() !== 1 ? 's' : '' }} en {{ viewYear() }}</span>
+        <span class="year-summary__sep">·</span>
+        <span class="year-summary__meses">{{ mesesConPedidos() }} mes{{ mesesConPedidos() !== 1 ? 'es' : '' }} con actividad</span>
+      </div>
+      <div class="year-summary year-summary--empty" *ngIf="totalyear() === 0">
+        Sin pedidos en {{ viewYear() }}
+      </div>
+ 
+      <!-- BACKDROP para cerrar dropdown -->
+      <div class="yd-backdrop" *ngIf="dropdownOpen()" (click)="dropdownOpen.set(false)"></div>
+ 
+      <!-- ── GRID 4×3 ── -->
+      <div class="year-grid" [@yearSlide]="slideKey()">
+        <div
+          *ngFor="let m of months(); trackBy: trackByMonth"
+          class="mini-month"
+          [class.mm--active]="m.isCurrentMonth"
+          [class.mm--has-pedidos]="m.hasPedidos"
+          [class.mm--priority]="m.hasPriority"
+          (click)="onMonthTap(m)"
+          [attr.aria-label]="m.label + ', ' + m.totalPedidos + ' pedidos'"
+          role="button"
+          tabindex="0"
+          (keydown.enter)="onMonthTap(m)"
+        >
+          <!-- MONTH NAME -->
+          <span class="mm__label" [class.mm__label--active]="m.isCurrentMonth">
+            {{ m.label }}
+          </span>
+ 
+          <!-- INDICATOR AREA -->
+          <ng-container *ngIf="m.hasPedidos; else emptySlot">
+            <!-- COUNT BADGE -->
+            <span class="mm__badge"
+              [class.mm__badge--priority]="m.hasPriority"
+              [class.mm__badge--en-curso]="m.hasEnCurso && !m.hasPriority">
+              {{ m.totalPedidos > 99 ? '99+' : m.totalPedidos }}
+            </span>
+ 
+            <!-- MINI DOT ROW: hasta 5 pedidos mostrados como puntos -->
+            <div class="mm__dots">
+              <span
+                *ngFor="let d of dotsArray(m)"
+                class="mm__dot"
+                [class.mm__dot--priority]="d === 'priority'"
+                [class.mm__dot--en-curso]="d === 'enCurso'"
+                [class.mm__dot--normal]="d === 'normal'"
+              ></span>
+              <span class="mm__dots-more" *ngIf="m.totalPedidos > 5">+{{ m.totalPedidos - 5 }}</span>
+            </div>
+          </ng-container>
+ 
+          <ng-template #emptySlot>
+            <span class="mm__empty-dot"></span>
+          </ng-template>
+ 
+        </div>
+      </div>
+ 
+      <!-- LEYENDA -->
+      <div class="year-legend">
+        <span class="legend-item"><span class="legend-dot ld-p"></span>Urgente</span>
+        <span class="legend-item"><span class="legend-dot ld-e"></span>En curso</span>
+        <span class="legend-item"><span class="legend-dot ld-n"></span>Pendiente</span>
+      </div>
+ 
+    </div>

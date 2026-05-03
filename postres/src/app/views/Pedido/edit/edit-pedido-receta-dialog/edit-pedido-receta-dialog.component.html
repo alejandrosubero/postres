@@ -1,0 +1,35 @@
+<h2 mat-dialog-title>Agregar Receta</h2>
+
+<form [formGroup]="form">
+    <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Buscar Receta:</mat-label>
+        <input type="text"
+               placeholder="Escribe para buscar..."
+               matInput
+               formControlName="receta"
+               [matAutocomplete]="auto">
+        
+        <mat-autocomplete #auto="matAutocomplete" 
+                          [displayWith]="displayFn" 
+                          (optionSelected)="onSelected($event)">
+            @for(receta of filteredRecetas | async; track receta.id) {
+                <mat-option [value]="receta">
+                    {{receta.Name}}
+                </mat-option>
+            }
+        </mat-autocomplete>
+
+        @if (form.get('receta')?.hasError('invalidAutocompleteString')) {
+            <mat-error>Debes seleccionar una receta de la lista</mat-error>
+        }
+    </mat-form-field>
+
+    <div class="button-container">
+        <button mat-flat-button 
+                class="btn-save-dialog" 
+                [disabled]="form.invalid"
+                (click)="save()">
+            Seleccionar
+        </button>
+    </div>
+</form>

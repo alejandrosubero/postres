@@ -1,0 +1,31 @@
+
+  <h2 mat-dialog-title>Agregar Ingrediente</h2>
+
+<form [formGroup]="form">
+  <mat-form-field appearance="fill">
+    <mat-label>Ingrediente</mat-label>
+    <mat-select formControlName="nombre" (selectionChange)="onSelect($event.value)">
+      @for(i of ingredientes(); track i.id) { <mat-option [value]="i">{{i.nombre}}</mat-option> }
+    </mat-select>
+  </mat-form-field>
+  
+  <mat-form-field appearance="fill">
+    <mat-label>Cantidad</mat-label>
+    <input matInput type="number" formControlName="cantidad" placeholder="0.00">
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Unidad</mat-label>
+    <mat-select formControlName="unidadSeleccionada">
+      @for(u of unidades; track u) { <mat-option [value]="u">{{u}}</mat-option> }
+    </mat-select>
+  </mat-form-field>
+
+  <div class="costo-display">
+    Costo: {{costoCalculado() | currency:'USD'}}
+  </div>
+
+  <button type="button" class="btn-save-dialog" (click)="guardar()">
+    Guardar
+  </button>
+</form>

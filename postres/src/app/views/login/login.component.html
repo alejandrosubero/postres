@@ -1,0 +1,19 @@
+
+<div class="login-container">
+    
+<div class="login-card">
+    <div style="color: aliceblue; justify-content: center; align-content: center;">
+        <h1 >Bienvenido</h1>
+    </div>
+  
+  @if (errorMessage()) {
+    <p style="color: #ff3b30; font-size: 14px;">{{ errorMessage() }}</p>
+  }
+
+  <input [(ngModel)]="email" type="text" inputmode="email" autocapitalize="none" placeholder="Nombre" class="ios-input">
+  <input [(ngModel)]="password" type="password" placeholder="Contraseña" class="ios-input">
+  
+  <button class="btn-primary" (click)="onLogin()">Ingresar</button>
+</div>
+</div> 
+ 

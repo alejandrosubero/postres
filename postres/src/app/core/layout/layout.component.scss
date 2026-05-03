@@ -1,0 +1,351 @@
+/* Variables CSS para consistencia */
+:host {
+  --primary-color: #3f51b5;
+  --primary-light: #757de8;
+  --primary-dark: #002984;
+  --text-color: #333;
+  --text-light: #666;
+  --background-light: #f5f5f5;
+  --background-dark: #e0e0e0;
+  --shadow: 0 2px 4px rgba(0,0,0,0.1);
+  --border-radius: 4px;
+}
+
+.sidenav-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; // altura mínima total
+}
+
+mat-sidenav-content {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  background-color: var(--background-light);
+}
+
+/* Compatibilidad para navegadores antiguos */
+@supports not (height: 100dvh) {
+  mat-sidenav-container,
+  mat-sidenav-content {
+    height: 100vh;
+    min-height: 100vh;
+  }
+}
+
+
+header.navbar {
+  flex: 0 0 auto;
+}
+
+
+.sidenav {
+  width: 280px;
+  background: linear-gradient(135deg, var(--background-light) 0%, #ffffff 100%);
+  box-shadow: 2px 0 8px rgba(0,0,0,0.15);
+}
+
+.sidenav .mat-nav-list a {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px;
+  color: var(--text-color);
+  text-decoration: none;
+  transition: all 0.3s ease;
+  border-left: 4px solid transparent;
+}
+
+.sidenav .mat-nav-list a:hover {
+  background-color: var(--background-dark);
+  border-left-color: var(--primary-color);
+}
+
+.sidenav .mat-nav-list a mat-icon {
+  color: var(--primary-color);
+  transition: transform 0.3s ease;
+}
+
+.sidenav .mat-nav-list a:hover mat-icon {
+  transform: scale(1.1);
+}
+
+/* Toolbar Styles */
+.toolbar {
+  top: 0;
+  z-index: 1000;
+  box-shadow: var(--shadow);
+  // padding: 0 5px;
+}
+
+
+.toolbar-title {
+  margin-left: 10px;
+  cursor: pointer;
+  text-decoration: none;
+  color: white;
+}
+
+.toolbar-title h1 {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: white;
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+.spacer1 {
+  margin-left: 30px;
+}
+
+/* Desktop Navigation */
+.desktop-nav {
+  display: flex;
+  gap: 4px;
+}
+
+.desktop-nav a {
+  border-radius: var(--border-radius);
+  transition: background-color 0.3s ease;
+}
+
+.desktop-nav a.active {
+  background-color: rgba(255, 255, 255, 0.2);
+  font-weight: 500;
+}
+
+.desktop-nav a:hover:not(.active) {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+
+// Para las animaciones de ruta
+.route-animation {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+
+
+.footer {
+  flex-shrink: 0;
+  margin-top: auto;
+  background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-color) 100%);
+  color: white;
+  padding: 20px 0;
+  text-align: center;
+  width: 100%;
+  box-sizing: border-box;
+  position: relative; // no fixed
+}
+
+.footer-content {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 32px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.footer-section h3,
+.footer-section h4 {
+  margin: 0 0 16px 0;
+  color: #ffffff;
+}
+
+.footer-section p {
+  margin: 8px 0;
+  line-height: 1.5;
+}
+
+.footer-section a {
+  display: block;
+  color: rgba(255, 255, 255, 0.9);
+  text-decoration: none;
+  margin-bottom: 12px;
+  transition: color 0.3s ease;
+}
+
+.footer-section a:hover {
+  color: #ffffff;
+  text-decoration: underline;
+}
+
+.footer-section address {
+  font-style: normal;
+}
+
+.footer-bottom {
+  text-align: center;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.footer-bottom p {
+  margin: 0;
+  opacity: 0.8;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .sidenav {
+    width: 250px;
+  }
+  
+  .content {
+    padding: 20px 16px;
+    min-height: calc(100vh - 140px);
+  }
+  
+  .footer-content {
+    grid-template-columns: 1fr;
+    text-align: center;
+    gap: 24px;
+  }
+  
+  .toolbar {
+    padding: 0 12px;
+  }
+  
+  .toolbar-title h1 {
+    font-size: 1.2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .content {
+    padding: 16px 12px;
+  }
+  
+  .footer {
+    padding: 32px 0 16px;
+  }
+  
+  .footer-content {
+    padding: 0 16px;
+  }
+}
+
+/* iPhone 13 mini specific adjustments */
+@media (max-width: 375px) and (max-height: 812px) {
+  .content {
+    padding: 10px;
+  }
+  
+  .toolbar-title h1 {
+    font-size: 1.1rem;
+  }
+  
+  .footer-section {
+    text-align: center;
+  }
+}
+
+/* Safe area insets for modern devices */
+@supports(padding: max(0px)) {
+  .content {
+    padding-left: max(16px, env(safe-area-inset-left));
+    padding-right: max(16px, env(safe-area-inset-right));
+  }
+  
+  .footer {
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+  }
+}
+
+/* Ajuste para safe area (iPhones con notch) */
+@supports (padding: env(safe-area-inset-bottom)) {
+  .footer {
+    padding-bottom: calc(20px + env(safe-area-inset-bottom));
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .sidenav .mat-nav-list a {
+    border-left-width: 3px;
+  }
+  
+  .desktop-nav a.active {
+    outline: 2px solid white;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .sidenav .mat-nav-list a,
+  .sidenav .mat-nav-list a mat-icon,
+  .desktop-nav a {
+    transition: none;
+  }
+}
+
+
+
+/* --- Estilos base y visuales --- */
+.buto {
+  margin-top: 5px;
+  margin-left: 8px;
+  margin-right: 8px;
+  margin-bottom: 10px;
+  background-color: #3f51b5; /* Azul primario de Angular */
+  color: white;
+  padding: 0.8rem 1.2rem;
+  border: 1px solid #303f9f;
+  border-radius: 8px;
+  cursor: pointer;
+  
+  /* --- La Magia del 3D --- */
+  box-shadow: 0px 4px 0px 0px #303f9f; /* Sombra más oscura para el efecto 3D */
+  
+  /* --- Preparación para la animación --- */
+  transition: transform 0.07s ease-in-out, box-shadow 0.07s ease-in-out;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  user-select: none;
+}
+
+/* --- Estado Hover (cuando el mouse está encima) --- */
+.buto:hover {
+  background-color: #303f9f; /* Un azul ligeramente más oscuro */
+}
+
+/* --- Estado Active (MIENTRAS se hace clic) --- */
+.buto:active {
+  transform: translateY(4px);
+  box-shadow: 0px 0px 0px 0px #303f9f;
+  background-color: #303f9f;
+}
+
+/* No olvides quitar el margen por defecto del párrafo */
+.buto p {
+  margin: 0;
+  font-weight: bold;
+}
+
+.boxButton {
+  padding-top: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  padding-bottom: 10px;
+  border-radius: 0px;
+  background: linear-gradient(225deg, #42a5f5, #90caf9); /* Degradado azul de Angular */
+  box-shadow: -9px 9px 16px #303f9f, /* Sombra azul más oscura para el neomorfismo */
+              9px -9px 16px #6a82fb; /* Sombra azul más clara para el neomorfismo */
+}
+
+
+// Ajuste para el badge del carrito
+.mat-badge-content {
+  font-size: 10px;
+  font-weight: bold;
+  top: -4px !important;
+  right: -8px !important;
+}
+

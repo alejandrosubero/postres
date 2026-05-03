@@ -1,0 +1,55 @@
+/* src/app/views/login/login.component.css */
+.login-container {
+  background: #000;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto;
+}
+
+
+.login-card {
+  width: 90%;
+  max-width: 400px;
+  margin: 100px auto;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+
+  h1{
+    text-align: center;
+  }
+
+  .error {
+    color: red;
+    text-align: center;
+  }
+}
+
+
+.ios-input {
+  background: #1c1c1e; /* Gris oscuro iOS */
+  border: none;
+  padding: 15px;
+  border-radius: 12px;
+  color: white;
+}
+
+.btn-primary {
+  background: #007AFF; /* Azul iOS */
+  color: white;
+  padding: 15px;
+  border-radius: 12px;
+  border: none;
+  font-weight: 600;
+}
+
+.btn-danger {
+  background: #ff3b30; /* Rojo iOS */
+  color: white;
+  padding: 15px;
+  border-radius: 12px;
+  border: none;
+}

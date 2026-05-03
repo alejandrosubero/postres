@@ -1,0 +1,327 @@
+// calendar-year/calendar-year.component.scss
+:host {
+  display: block;
+  font-family: -apple-system, 'SF Pro Text', 'SF Pro Display', sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+.year-root {
+  background: #1c1c1e;
+  min-height: calc(100dvh - 112px);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+// ── YEAR NAV ─────────────────────────────────────────────────────────
+.year-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px 6px;
+  position: relative;
+  z-index: 20;
+}
+
+.year-nav__btn {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: #2c2c2e;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 110ms ease, background 110ms ease;
+  -webkit-tap-highlight-color: transparent;
+
+  &:active { transform: scale(0.88); background: #3a3a3c; }
+  &:disabled { opacity: 0.25; pointer-events: none; }
+}
+
+.year-nav__center {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.year-label-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  padding: 4px 10px;
+  border-radius: 20px;
+  transition: background 120ms;
+
+  &:active { background: rgba(255,255,255,0.06); }
+}
+
+.year-label {
+  font-size: 22px;
+  font-weight: 700;
+  color: #f2f2f7;
+  letter-spacing: -0.5px;
+}
+
+.year-label__caret {
+  flex-shrink: 0;
+  transition: transform 200ms ease;
+}
+
+// ── DROPDOWN ─────────────────────────────────────────────────────────
+.yd-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 18;
+}
+
+.year-dropdown {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: #2c2c2e;
+  border-radius: 16px;
+  border: 1px solid #3a3a3c;
+  width: 200px;
+  z-index: 19;
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5), 0 2px 8px rgba(0,0,0,0.3);
+  transform-origin: top center;
+}
+
+.yd-header {
+  font-size: 11px;
+  font-weight: 600;
+  color: #636366;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  padding: 10px 14px 6px;
+  border-bottom: 1px solid #3a3a3c;
+}
+
+.yd-scroll {
+  max-height: 220px;
+  overflow-y: auto;
+  scrollbar-width: none;
+  &::-webkit-scrollbar { display: none; }
+}
+
+.yd-item {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 11px 14px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 100ms;
+  -webkit-tap-highlight-color: transparent;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+
+  &:last-child { border-bottom: none; }
+  &:active { background: rgba(255,255,255,0.05); }
+}
+
+.yd-item--active {
+  background: rgba(10,132,255,0.12);
+  .yd-item__year { color: #0a84ff; font-weight: 700; }
+}
+
+.yd-item--current:not(.yd-item--active) {
+  .yd-item__year::after {
+    content: ' ·';
+    color: #0a84ff;
+  }
+}
+
+.yd-item__year {
+  font-size: 15px;
+  font-weight: 500;
+  color: #f2f2f7;
+}
+
+.yd-item__count {
+  font-size: 11px;
+  color: #0a84ff;
+  font-weight: 500;
+}
+
+.yd-item__empty {
+  font-size: 11px;
+  color: #48484a;
+}
+
+// ── YEAR SUMMARY ─────────────────────────────────────────────────────
+.year-summary {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 16px 10px;
+  flex-wrap: wrap;
+}
+
+.year-summary__num {
+  font-size: 14px;
+  font-weight: 700;
+  color: #0a84ff;
+}
+
+.year-summary__label,
+.year-summary__meses {
+  font-size: 12px;
+  color: #636366;
+  font-weight: 400;
+}
+
+.year-summary__sep {
+  font-size: 12px;
+  color: #3a3a3c;
+}
+
+.year-summary--empty {
+  font-size: 12px;
+  color: #48484a;
+}
+
+// ── GRID 4×3 ─────────────────────────────────────────────────────────
+.year-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);  // 3 columnas en móvil
+  gap: 8px;
+  padding: 0 12px 12px;
+  flex: 1;
+
+  @media (min-width: 600px) {
+    grid-template-columns: repeat(4, 1fr); // 4 columnas en tablet
+  }
+}
+
+// ── MINI MONTH CARD ───────────────────────────────────────────────────
+.mini-month {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 12px 6px;
+  border-radius: 16px;
+  background: #2c2c2e;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: transform 130ms ease, background 130ms ease, border-color 130ms ease;
+  -webkit-tap-highlight-color: transparent;
+  min-height: 80px;
+  position: relative;
+  overflow: hidden;
+
+  &:active {
+    transform: scale(0.93);
+    background: #3a3a3c;
+  }
+}
+
+.mm--active {
+  background: rgba(10,132,255,0.1);
+  border-color: rgba(10,132,255,0.3);
+}
+
+.mm--priority:not(.mm--active) {
+  border-color: rgba(255,59,48,0.2);
+}
+
+.mm__label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #8e8e93;
+  letter-spacing: 0.2px;
+  text-transform: uppercase;
+}
+
+.mm__label--active {
+  color: #0a84ff;
+}
+
+// BADGE
+.mm__badge {
+  font-size: 18px;
+  font-weight: 700;
+  color: #f2f2f7;
+  line-height: 1;
+  letter-spacing: -0.5px;
+}
+
+.mm__badge--priority { color: #ff3b30; }
+.mm__badge--en-curso { color: #ffd60a; }
+
+// DOTS ROW
+.mm__dots {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.mm__dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  flex-shrink: 0;
+
+  &--priority { background: #ff3b30; }
+  &--en-curso  { background: #ffd60a; }
+  &--normal    { background: #0a84ff; }
+}
+
+.mm__dots-more {
+  font-size: 9px;
+  font-weight: 700;
+  color: #636366;
+}
+
+// EMPTY DOT (mes sin pedidos)
+.mm__empty-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #3a3a3c;
+}
+
+// ── LEYENDA ──────────────────────────────────────────────────────────
+.year-legend {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 8px 16px 16px;
+  border-top: 1px solid #2c2c2e;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  color: #636366;
+  font-weight: 400;
+}
+
+.legend-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.ld-p { background: #ff3b30; }
+.ld-e { background: #ffd60a; }
+.ld-n { background: #0a84ff; }

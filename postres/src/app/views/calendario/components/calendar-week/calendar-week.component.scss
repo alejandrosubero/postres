@@ -1,0 +1,93 @@
+:host { display: block; font-family: -apple-system, 'SF Pro Text', sans-serif; }
+ 
+    .week-root { background: #1c1c1e; min-height: calc(100dvh - 112px); }
+ 
+    // NAV
+    .week-nav {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 8px 16px 4px;
+    }
+    .week-nav__label { font-size: 13px; font-weight: 500; color: #8e8e93; }
+    .week-nav__btn {
+      width: 36px; height: 36px; border-radius: 50%; background: #2c2c2e;
+      border: none; cursor: pointer; display: flex; align-items: center; justify-content: center;
+      transition: transform 100ms; -webkit-tap-highlight-color: transparent;
+      &:active { transform: scale(0.88); }
+    }
+ 
+    // STRIP
+    .week-strip {
+      display: grid; grid-template-columns: repeat(7, 1fr);
+      padding: 4px 6px; gap: 3px; border-bottom: 1px solid #2c2c2e;
+    }
+    .wday {
+      display: flex; flex-direction: column; align-items: center;
+      gap: 3px; padding: 8px 2px; border-radius: 12px;
+      background: transparent; border: none; cursor: pointer;
+      transition: background 120ms, transform 100ms;
+      -webkit-tap-highlight-color: transparent; min-height: 70px;
+      justify-content: center;
+      &:active { transform: scale(0.88); }
+    }
+    .wday__label { font-size: 10px; font-weight: 500; color: #48484a; text-transform: uppercase; letter-spacing: 0.4px; }
+    .wday__num { font-size: 17px; font-weight: 400; color: #f2f2f7; line-height: 1; }
+    .wday__ind { display: flex; align-items: center; gap: 2px; }
+    .wday__dot { width: 5px; height: 5px; border-radius: 50%; background: #0a84ff; }
+    .wday__cnt { font-size: 9px; font-weight: 700; color: #0a84ff; }
+    .ind-p { .wday__dot { background: #ff3b30; } .wday__cnt { color: #ff3b30; } }
+    .wday__no-ind { height: 10px; }
+ 
+    .today {
+      background: rgba(10,132,255,0.1);
+      .wday__num { color: #0a84ff; font-weight: 700; }
+      .wday__label { color: #0a84ff; }
+    }
+    .selected {
+      background: #0a84ff !important;
+      .wday__num { color: #fff; font-weight: 700; }
+      .wday__label { color: rgba(255,255,255,0.7); }
+      .wday__dot { background: rgba(255,255,255,0.85) !important; }
+      .wday__cnt { color: rgba(255,255,255,0.85) !important; }
+    }
+ 
+    // LIST
+    .week-list { padding: 16px 14px; overflow-y: auto; max-height: calc(100dvh - 230px); scrollbar-width: none; &::-webkit-scrollbar { display: none; } }
+ 
+    .week-list__header {
+      display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;
+    }
+    .week-list__date-label { font-size: 15px; font-weight: 600; color: #f2f2f7; }
+    .week-list__count-pill {
+      font-size: 11px; font-weight: 600; color: #0a84ff;
+      background: rgba(10,132,255,0.14); border-radius: 20px; padding: 3px 10px;
+    }
+ 
+    .week-list__cards { display: flex; flex-direction: column; gap: 10px; }
+ 
+    // CARDS
+    .wcard {
+      display: flex; align-items: center; background: #2c2c2e;
+      border-radius: 14px; overflow: hidden; padding: 12px 12px 12px 0;
+      cursor: pointer; gap: 12px;
+      box-shadow: 0 1px 5px rgba(0,0,0,0.3);
+      transition: transform 130ms, box-shadow 130ms;
+      -webkit-tap-highlight-color: transparent;
+      &:active { transform: scale(0.97); box-shadow: 0 1px 2px rgba(0,0,0,0.2); }
+    }
+    .wcard--priority { box-shadow: 0 1px 8px rgba(255,59,48,0.15); }
+    .wcard__accent { width: 4px; align-self: stretch; border-radius: 0 2px 2px 0; flex-shrink: 0; }
+    .ac-p { background: #ff3b30; }
+    .ac-e { background: #ffd60a; }
+    .ac-d { background: #30d158; }
+    .ac-n { background: #0a84ff; }
+    .wcard__body { flex: 1; display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+    .wcard__top { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+    .wcard__name { font-size: 14px; font-weight: 600; color: #f2f2f7; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .wcard__emojis { display: flex; gap: 2px; font-size: 13px; flex-shrink: 0; }
+    .wcard__customer { font-size: 12px; color: #8e8e93; }
+    .wcard__chevron { flex-shrink: 0; opacity: 0.4; padding-right: 2px; }
+ 
+    // EMPTY
+    .week-empty { display: flex; flex-direction: column; align-items: center; padding: 48px 20px; gap: 8px; }
+    .week-empty__icon { font-size: 36px; }
+    .week-empty__text { font-size: 14px; color: #48484a; }

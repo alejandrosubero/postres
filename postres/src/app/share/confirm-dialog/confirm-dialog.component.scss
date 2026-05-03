@@ -1,0 +1,5 @@
+/* Esto asegura que el botón "Sí" resalte como acción destructiva */
+.mat-mdc-button.mat-warn {
+  color: #FF3B30 !important; /* Rojo iOS */
+  font-weight: 600;
+}

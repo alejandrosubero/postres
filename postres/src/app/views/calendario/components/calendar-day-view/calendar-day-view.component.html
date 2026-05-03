@@ -1,0 +1,99 @@
+<div class="day-root">
+ 
+      <!-- STATS STRIP -->
+      <div class="day-stats" @fadeIn>
+        <div class="stat-pill" [class.active]="pedidos().length > 0">
+          <span class="stat-pill__num">{{ pedidos().length }}</span>
+          <span class="stat-pill__label">total</span>
+        </div>
+        <div class="stat-pill stat-pill--p" *ngIf="countPriority() > 0">
+          <span class="stat-pill__num">{{ countPriority() }}</span>
+          <span class="stat-pill__label">urgente{{ countPriority() !== 1 ? 's' : '' }}</span>
+        </div>
+        <div class="stat-pill stat-pill--e" *ngIf="countEnCurso() > 0">
+          <span class="stat-pill__num">{{ countEnCurso() }}</span>
+          <span class="stat-pill__label">en curso</span>
+        </div>
+        <div class="stat-pill stat-pill--d" *ngIf="countDelivery() > 0">
+          <span class="stat-pill__num">{{ countDelivery() }}</span>
+          <span class="stat-pill__label">entrega{{ countDelivery() !== 1 ? 's' : '' }}</span>
+        </div>
+      </div>
+ 
+      <!-- DIVIDER -->
+      <div class="day-divider"></div>
+ 
+      <!-- LIST -->
+      <div class="day-list" [@listIn]="pedidos().length">
+ 
+        <!-- EMPTY -->
+        <div class="day-empty" *ngIf="pedidos().length === 0" @fadeIn>
+          <span class="day-empty__icon">🗓</span>
+          <span class="day-empty__title">Día libre</span>
+          <span class="day-empty__sub">No hay pedidos programados</span>
+        </div>
+ 
+        <!-- SECTION: PRIORITY -->
+        <ng-container *ngIf="priorityPedidos().length > 0">
+          <div class="day-section-label">
+            <span class="dsec dsec--p">🔴 Urgentes</span>
+          </div>
+          <div class="day-card"
+            *ngFor="let p of priorityPedidos(); trackBy: trackById"
+            (click)="navigate(p)">
+            <ng-container *ngTemplateOutlet="cardTpl; context: { p: p }"></ng-container>
+          </div>
+        </ng-container>
+ 
+        <!-- SECTION: EN CURSO -->
+        <ng-container *ngIf="enCursoPedidos().length > 0">
+          <div class="day-section-label">
+            <span class="dsec dsec--e">🟡 En curso</span>
+          </div>
+          <div class="day-card"
+            *ngFor="let p of enCursoPedidos(); trackBy: trackById"
+            (click)="navigate(p)">
+            <ng-container *ngTemplateOutlet="cardTpl; context: { p: p }"></ng-container>
+          </div>
+        </ng-container>
+ 
+        <!-- SECTION: RESTO -->
+        <ng-container *ngIf="restoPedidos().length > 0">
+          <div class="day-section-label" *ngIf="priorityPedidos().length > 0 || enCursoPedidos().length > 0">
+            <span class="dsec dsec--n">📦 Pendientes</span>
+          </div>
+          <div class="day-card"
+            *ngFor="let p of restoPedidos(); trackBy: trackById"
+            (click)="navigate(p)">
+            <ng-container *ngTemplateOutlet="cardTpl; context: { p: p }"></ng-container>
+          </div>
+        </ng-container>
+ 
+      </div>
+ 
+      <!-- CARD TEMPLATE -->
+      <ng-template #cardTpl let-p="p">
+        <div class="dc__accent"
+          [class.ac-p]="p.ispriority"
+          [class.ac-e]="p.enCurso && !p.ispriority"
+          [class.ac-d]="p.delivery && !p.ispriority && !p.enCurso"
+          [class.ac-n]="!p.ispriority && !p.enCurso && !p.delivery">
+        </div>
+        <div class="dc__body">
+          <div class="dc__top">
+            <span class="dc__name">{{ p.name }}</span>
+            <div class="dc__badges">
+              <span *ngIf="p.ispriority">🔴</span>
+              <span *ngIf="p.enCurso">🟡</span>
+              <span *ngIf="p.delivery">🚚</span>
+            </div>
+          </div>
+          <span class="dc__customer" *ngIf="p.customer?.name">{{ p.customer!.name }}</span>
+          <span class="dc__notes" *ngIf="p.notes">{{ p.notes }}</span>
+        </div>
+        <svg class="dc__chevron" width="7" height="12" viewBox="0 0 7 12">
+          <path d="M1 1l5 5-5 5" stroke="#48484a" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+        </svg>
+      </ng-template>
+ 
+    </div>

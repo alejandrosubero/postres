@@ -1,0 +1,242 @@
+<div class="ios-detail-container">
+  <!-- Header con nombre del pedido y estado -->
+  <div class="ios-header">
+    <div class="lineBottom">
+      <h1 class="pedido-name">{{ pedido.name }}</h1>
+    </div>
+
+    <div class="buletInfo">
+      <div class="status-badge" [class.en-curso]="pedido.enCurso">
+        {{ this.status() }}
+      </div>
+
+      @if(!pedido.cancel){
+      <div class="status-badge" [class.en-curso]="pedido.charges">
+        {{ pedido.cancel? 'Cancelado' : (pedido.charges && pedido.charges? 'Donar':'Normal') }}
+      </div>
+      }
+    </div>
+
+  </div>
+
+  <!-- Sección de estados interactivos (botones y toggles) -->
+  <div class="ios-section">
+    <div class="section-title lineBottom ">Estados</div>
+    
+    <div class="status-grid">
+
+      <!-- Prioridad: botón mini-fab -->
+      <div class="status-item">
+        <div class="status-label">Prioritario</div>
+        <button mat-mini-fab (click)="togglePriority()" [class.btn-active]="pedido.ispriority"
+          [class.btn-inactive]="!pedido.ispriority">
+          <mat-icon>{{ pedido.ispriority ? 'check' : 'add' }}</mat-icon>
+        </button>
+      </div>
+
+      <!-- En curso: botón mini-fab -->
+      <div class="status-item">
+        <div class="status-label">En Curso</div>
+        <button mat-mini-fab (click)="toggleEsCurso()" [class.btn-active]="pedido.enCurso"
+          [class.btn-inactive]="!pedido.enCurso">
+          <mat-icon>{{ pedido.enCurso ? 'check' : 'add' }}</mat-icon>
+        </button>
+      </div>
+
+      <!-- En pausa: botón mini-fab -->
+      <div class="status-item">
+        <div class="status-label">En pausa</div>
+        <button mat-mini-fab (click)="toggleOnPausa()" [class.btn-active]="pedido.onPausa"
+          [class.btn-inactive]="!pedido.onPausa">
+          <mat-icon>{{ pedido.onPausa ? 'pause' : 'play_arrow' }}</mat-icon>
+        </button>
+      </div>
+
+      <!-- Delivery: slide-toggle -->
+      <div class="status-item">
+        <div class="status-label">En Entregra:</div>
+        <button mat-mini-fab (click)="toggleOnDelivery()" [class.btn-active]="pedido.on_delivery"
+          [class.btn-inactive]="!pedido.on_delivery">
+          <mat-icon>{{ pedido.on_delivery ? 'check' : 'add' }}</mat-icon>
+        </button>
+      </div>
+
+      <div class="status-item">
+        <div class="status-label">Entregado:</div>
+        <button mat-mini-fab (click)="toggleDelivery()" [class.btn-active]="pedido.delivery"
+          [class.btn-inactive]="!pedido.delivery">
+          <mat-icon>{{ pedido.delivery ? 'check' : 'add' }}</mat-icon>
+        </button>
+      </div>
+
+      <!-- Cancelado -->
+      <div class="status-item">
+        <div class="status-label">Cancelar</div>
+        <button mat-mini-fab (click)="toggleCancel()" [class.btn-active]="pedido.cancel"
+          [class.btn-inactive]="!pedido.cancel">
+          <mat-icon>{{ pedido.cancel ? 'check' : 'add' }}</mat-icon>
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Sección de cliente -->
+  <div class="ios-section">
+    <div class="section-title lineBottom">Cliente</div>
+    <div class="info-row">
+      <span class="info-label">Nombre:</span>
+      <span class="info-value">{{ pedido.customer.name }}</span>
+    </div>
+    <div class="info-row">
+      <span class="info-label">Teléfono:</span>
+      <span class="info-value clickable-address" [cdkCopyToClipboard]="this.pedido.customer.phoneNumber + ''"
+        (click)="notificarCopiado()">{{ pedido.customer.phoneNumber }}</span>
+    </div>
+    <div class="info-row" *ngIf="pedido.customer.email">
+      <span class="info-label">Email:</span>
+      <span class="info-value clickable-address" [cdkCopyToClipboard]="pedido.customer.email"
+        (click)="notificarCopiado()">{{ pedido.customer.email }}</span>
+    </div>
+    <div class="info-row">
+      <span class="info-label">Dirección:</span>
+      <span class="info-value clickable-address" [cdkCopyToClipboard]="this.pedido.customer.address "
+        (click)="notificarCopiado()">{{ pedido.customer.address }}</span>
+    </div>
+    <div class="info-row" *ngIf="pedido.customer.notas">
+      <span class="info-label">Notas del cliente:</span>
+      <span class="info-value">{{ pedido.customer.notas }}</span>
+    </div>
+  </div>
+
+  <!-- Sección de dirección de entrega -->
+  <div class="ios-section" *ngIf="pedido.address_Of_delivery">
+    <div class="section-title lineBottom">Dirección de entrega</div>
+    <div class="info-row">
+      <span class="info-label">Dirección:</span>
+      <span class="info-value  clickable-address" [cdkCopyToClipboard]="pedido.address_Of_delivery"
+        (click)="notificarCopiado()">{{ pedido.address_Of_delivery }}</span>
+    </div>
+    <div class="info-row" *ngIf="pedido.address_Of_delivery_note">
+      <span class="info-label">Nota de entrega:</span>
+      <span class="info-value">{{ pedido.address_Of_delivery_note }}</span>
+    </div>
+  </div>
+
+  <!-- Sección de fechas -->
+  <div class="ios-section">
+    <div class="section-title lineBottom">Fechas</div>
+    <div class="info-row">
+      <span class="info-label">Fecha creación:</span>
+      <span class="info-value">{{ pedido.createDay | date:'dd/MM/yyyy hh:mm a' }}</span>
+    </div>
+    <div class="info-row">
+      <span class="info-label">Fecha entrega:</span>
+      <span class="info-value">{{ pedido.dayDue | date:'dd/MM/yyyy' }}</span>
+    </div>
+  </div>
+
+  <!-- Sección de costos -->
+  <div class="ios-section">
+    <div class="section-title lineBottom">Costos</div>
+    <div class="cost-grid">
+      <div class="cost-item">
+        <span class="cost-label">Costo base:</span>
+        <span class="cost-value">{{ formatCurrency(pedido.cost_base) }}</span>
+      </div>
+      <div class="cost-item">
+        <span class="cost-label">Costo total:</span>
+        <span class="cost-value">{{ formatCurrency(pedido.cost_total) }}</span>
+      </div>
+      <div class="cost-item">
+        <span class="cost-label">Ganancia:</span>
+        <span class="cost-value">{{ formatCurrency(pedido.profit) }}</span>
+      </div>
+      <div class="cost-item">
+        <span class="cost-label">% Ganancia:</span>
+        <span class="cost-value">{{ pedido.profit_Percentage }}%</span>
+      </div>
+      <div class="cost-item" *ngIf="pedido.delivery_cost">
+        <span class="cost-label">Costo delivery:</span>
+        <span class="cost-value">{{ formatCurrency(pedido.delivery_cost) }}</span>
+      </div>
+      <div class="cost-item " *ngIf="pedido.miscellaneous_cost">
+        <span class="cost-label">Costos varios:</span>
+        <span class="cost-value">{{ formatCurrency(pedido.miscellaneous_cost) }}</span>
+      </div>
+    </div>
+    <div class="lineBottom"></div>
+    <div class="info-row" *ngIf="pedido.note_of_miscellaneous_Cost">
+      <span class="info-label">Nota de costos varios:</span>
+      <span class="info-value">{{ pedido.note_of_miscellaneous_Cost }}</span>
+    </div>
+  </div>
+
+  <!-- Sección de recetas (expansión) -->
+  <div class="ios-section">
+    <div class="section-title lineBottom">Recetas</div>
+    <mat-accordion>
+      <mat-expansion-panel *ngFor="let receta of pedido.recetas; let i = index" class="receta-panel">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            {{ receta.Name }}
+          </mat-panel-title>
+          <mat-panel-description>
+            {{ formatCurrency(receta.CostoTotal) }}
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+
+        <!-- Ingredientes -->
+        <div class="sub-section-title">Ingredientes</div>
+        <div class="ingredients-list">
+          <div *ngFor="let ing of receta.Lista_ingredientes" class="ingredient-item">
+            <span class="ingredient-name">{{ ing.Name }}</span>
+            <span class="ingredient-quantity">{{ ing.Cantidad }} und.</span>
+            <span class="ingredient-cost">{{ formatCurrency(ing.Cost) }}</span>
+          </div>
+        </div>
+
+        <!-- Instrucciones -->
+        <div *ngIf="receta.instrucciones" class="instrucciones">
+          <div class="sub-section-title lineBottom">Instrucciones</div>
+          <p>{{ receta.instrucciones }}</p>
+        </div>
+
+        <!-- Notas -->
+        <div *ngIf="receta.Notes && receta.Notes.length">
+          <div class="sub-section-title">Notas</div>
+          <ul class="notes-list">
+            <li *ngFor="let note of receta.Notes">{{ note }}</li>
+          </ul>
+        </div>
+      </mat-expansion-panel>
+    </mat-accordion>
+  </div>
+
+  <!-- Notas generales del pedido -->
+  <div class="ios-section" *ngIf="pedido.notas">
+    <div class="section-title lineBottom">Notas del pedido</div>
+    <p class="pedido-notas">{{ pedido.notas }}</p>
+  </div>
+
+  <!-- Campo adicional pedido (texto libre) -->
+  <div class="ios-section" *ngIf="pedido.pedido">
+    <div class="section-title lineBottom ">Detalle pedido</div>
+    <p class="pedido-texto">{{ pedido.pedido }}</p>
+  </div>
+</div>
+
+
+<div class="fab-container">
+  <button mat-fab color="primary" (click)="toggleFab()" aria-label="Menu">
+    <mat-icon>{{ isFabOpen ? 'close' : 'menu' }}</mat-icon>
+  </button>
+  @if (isFabOpen) {
+  <button mat-fab class="green-fab" (click)="edit()">
+    <mat-icon>edit</mat-icon>
+  </button>
+  <button mat-fab color="warn" (click)="confirmDelete()">
+    <mat-icon>delete</mat-icon>
+  </button>
+  }
+</div>

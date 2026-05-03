@@ -1,0 +1,98 @@
+<div class="admin-container">
+  <header class="ios-header">
+    <h1>Usuarios</h1>
+    <button class="add-btn" (click)="prepararNuevo()">
+      <mat-icon>add</mat-icon>
+    </button>
+  </header>
+
+  <div class="main-content">
+    <!-- LISTA DE USUARIOS -->
+    <section class="user-list-section">
+      @for (u of usuarios; track u.id) {
+        <div class="user-card" (click)="seleccionarUsuario(u)">
+          <div class="user-info">
+            <span class="u-name">{{ u.nombre }}</span>
+            <span class="u-rol" [class.rol-admin]="u.rol === 'admin'">({{ u.rol }})</span>
+          </div>
+          <mat-icon class="chevron">chevron_right</mat-icon>
+        </div>
+      } @empty {
+        <p>No hay usuarios registrados.</p>
+      }
+    </section>
+
+    <!-- FORMULARIO (Mismo para Editar/Nuevo) -->
+    @if (editando()) {
+      <section class="form-section">
+        <div class="form-card">
+          <h2>{{ usuarioActual().id ? 'Editar' : 'Nuevo' }} Usuario</h2>
+          
+          <input type="text" [(ngModel)]="usuarioActual().nombre" placeholder="Nombre completo">
+          <input type="email" [(ngModel)]="usuarioActual().email" placeholder="Email">
+          <input type="password" [(ngModel)]="usuarioActual().pass" placeholder="Contraseña">
+          
+          <select [(ngModel)]="usuarioActual().rol">
+            <option value="cliente">Cliente</option>
+            <option value="admin">Administrador</option>
+          </select>
+
+          <div class="actions">
+            <button class="btn-save" (click)="save()">Guardar</button>
+            
+            @if (usuarioActual().id) {
+              <button class="btn-delete" (click)="delete()">Eliminar</button>
+            }
+            
+            <button class="btn-cancel" (click)="editando.set(false)">Cancelar</button>
+          </div>
+        </div>
+      </section>
+    }
+  </div>
+</div>
+
+
+<!-- <div class="admin-container">
+  <header class="ios-header">
+    <h1>Usuarios</h1>
+    <button class="add-btn" (click)="prepararNuevo()">
+      <mat-icon>add</mat-icon>
+    </button>
+  </header>
+
+  <div class="main-content">
+  
+    <section class="user-list-section">
+      <div class="user-card" *ngFor="let u of usuarios" (click)="seleccionarUsuario(u)">
+        <div class="user-info">
+          <span class="u-name">{{ u.nombre }}</span>
+          <span class="u-rol" [class.rol-admin]="u.rol === 'admin'">{{ u.rol }}</span>
+        </div>
+        <mat-icon class="chevron">chevron_right</mat-icon>
+      </div>
+    </section>
+
+
+    <section class="form-section" *ngIf="editando()">
+      <div class="form-card">
+        <h2>{{ usuarioActual().id ? 'Editar' : 'Nuevo' }} Usuario</h2>
+        
+        <input type="text" [(ngModel)]="usuarioActual().nombre" placeholder="Nombre completo">
+        <input type="email" [(ngModel)]="usuarioActual().email" placeholder="Email">
+        <input type="password" [(ngModel)]="usuarioActual().pass" placeholder="Contraseña">
+        
+        <select [(ngModel)]="usuarioActual().rol">
+          <option value="cliente">Cliente</option>
+          <option value="admin">Administrador</option>
+        </select>
+
+        <div class="actions">
+          <button class="btn-save" (click)="save()">Guardar</button>
+          <button class="btn-delete" *ngIf="usuarioActual().id" (click)="delete()">Eliminar</button>
+          <button class="btn-cancel" (click)="editando.set(false)">Cancelar</button>
+        </div>
+      </div>
+    </section>
+  </div>
+</div> -->

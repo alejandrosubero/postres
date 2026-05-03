@@ -1,0 +1,36 @@
+ <div class="month-root"
+      (touchstart)="ts($event)" (touchend)="te($event)">
+ 
+      <!-- WEEKDAY HEADERS -->
+      <div class="month-wdays">
+        <span *ngFor="let w of wdays">{{ w }}</span>
+      </div>
+ 
+      <!-- GRID -->
+      <div class="month-grid" [@slide]="slideKey()">
+        <button
+          *ngFor="let day of days(); trackBy: trackBy"
+          class="mday"
+          [class.today]="day.isToday"
+          [class.selected]="isSelected(day.date)"
+          [class.other]="!day.isCurrentMonth"
+          [class.has-priority]="hasPriority(day.pedidos)"
+          [disabled]="!day.isCurrentMonth"
+          (click)="onTap(day)"
+          [attr.aria-label]="a11y(day)"
+        >
+          <!-- NUMBER + INDICATOR ROW -->
+          <div class="mday__row">
+            <span class="mday__num">{{ day.date.getDate() }}</span>
+ 
+            <!-- DOT + COUNT (tu indicador pedido) -->
+            <span class="mday__indicator" *ngIf="day.isCurrentMonth && day.pedidos.length > 0"
+              [class.ind--priority]="hasPriority(day.pedidos)"
+              [class.ind--en-curso]="hasEnCurso(day.pedidos)">
+              <span class="mday__dot"></span>
+              <span class="mday__count">{{ day.pedidos.length > 9 ? '9+' : day.pedidos.length }}</span>
+            </span>
+          </div>
+        </button>
+      </div>
+    </div>

@@ -1,0 +1,124 @@
+ :host { display: block; }
+ 
+    .month-root {
+      padding: 0 4px;
+      background: #1c1c1e;
+    }
+ 
+    // WEEKDAYS
+    .month-wdays {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      padding: 8px 0 4px;
+      border-bottom: 1px solid #2c2c2e;
+      margin: 0 2px;
+ 
+      span {
+        text-align: center;
+        font-size: 11px;
+        font-weight: 600;
+        color: #48484a;
+        letter-spacing: 0.6px;
+        text-transform: uppercase;
+        padding: 4px 0;
+      }
+    }
+ 
+    // GRID
+    .month-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 1px;
+      padding: 4px 0;
+    }
+ 
+    // DAY CELL
+    .mday {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 52px;
+      background: transparent;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      padding: 4px 2px;
+      transition: background 120ms ease, transform 100ms ease;
+      -webkit-tap-highlight-color: transparent;
+      outline: none;
+      font-family: -apple-system, 'SF Pro Text', sans-serif;
+ 
+      &:active:not(:disabled) {
+        transform: scale(0.84);
+        background: rgba(255,255,255,0.05);
+      }
+      &:disabled { cursor: default; pointer-events: none; }
+    }
+ 
+    .mday__row {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+ 
+    .mday__num {
+      font-size: 16px;
+      font-weight: 400;
+      color: #f2f2f7;
+      line-height: 1;
+      min-width: 20px;
+      text-align: center;
+    }
+ 
+    // INDICATOR: punto + número
+    .mday__indicator {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+    }
+ 
+    .mday__dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: #0a84ff;
+      flex-shrink: 0;
+    }
+ 
+    .mday__count {
+      font-size: 10px;
+      font-weight: 700;
+      color: #0a84ff;
+      line-height: 1;
+    }
+ 
+    // Priority overrides dot+count color
+    .ind--priority {
+      .mday__dot  { background: #ff3b30; }
+      .mday__count { color: #ff3b30; }
+    }
+ 
+    .ind--en-curso {
+      .mday__dot  { background: #ffd60a; }
+      .mday__count { color: #ffd60a; }
+    }
+ 
+    // STATES
+    .other .mday__num { color: #3a3a3c; }
+ 
+    .today {
+      background: rgba(10, 132, 255, 0.1);
+      .mday__num { color: #0a84ff; font-weight: 700; }
+    }
+ 
+    .selected {
+      background: #0a84ff !important;
+      .mday__num { color: #fff; font-weight: 700; }
+      .mday__dot { background: rgba(255,255,255,0.85) !important; }
+      .mday__count { color: rgba(255,255,255,0.85) !important; }
+    }
+ 
+    .has-priority:not(.selected):not(.today) {
+      background: rgba(255,59,48,0.06);
+    }

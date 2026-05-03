@@ -1,0 +1,71 @@
+<div class="agenda-root">
+ 
+      <!-- FILTER ROW -->
+      <div class="agenda-filters">
+        <button class="af-pill" [class.active]="filter() === 'all'"      (click)="filter.set('all')">Todos</button>
+        <button class="af-pill" [class.active]="filter() === 'priority'" (click)="filter.set('priority')">🔴 Urgentes</button>
+        <button class="af-pill" [class.active]="filter() === 'enCurso'"  (click)="filter.set('enCurso')">🟡 En curso</button>
+        <button class="af-pill" [class.active]="filter() === 'delivery'" (click)="filter.set('delivery')">🚚 Entrega</button>
+      </div>
+ 
+      <!-- EMPTY -->
+      <div class="agenda-empty" *ngIf="groups().length === 0" @fadeIn>
+        <span class="ae__icon">🎉</span>
+        <span class="ae__title">Todo al día</span>
+        <span class="ae__sub">No hay pedidos próximos con este filtro</span>
+      </div>
+ 
+      <!-- GROUPS -->
+      <div class="agenda-scroll" @listStagger *ngIf="groups().length > 0">
+        <div class="agenda-group" *ngFor="let g of groups(); trackBy: trackByDate">
+ 
+          <!-- DATE HEADER -->
+          <div class="ag-header" [class.ag-header--today]="g.isToday">
+            <div class="ag-header__left">
+              <span class="ag-header__weekday">{{ g.isToday ? 'Hoy' : g.isTomorrow ? 'Mañana' : weekday(g.date) }}</span>
+              <span class="ag-header__date">{{ g.date.getDate() }} {{ monthShort(g.date) }}</span>
+            </div>
+            <span class="ag-header__count">{{ g.pedidos.length }}</span>
+          </div>
+ 
+          <!-- CARDS -->
+          <div class="ag-cards">
+            <div
+              class="ag-card"
+              *ngFor="let p of g.pedidos; trackBy: trackById"
+              [class.ag-card--priority]="p.ispriority"
+              (click)="navigate(p)"
+            >
+              <div class="ag-card__accent"
+                [class.ac-p]="p.ispriority"
+                [class.ac-e]="p.enCurso && !p.ispriority"
+                [class.ac-d]="p.delivery && !p.ispriority && !p.enCurso"
+                [class.ac-n]="!p.ispriority && !p.enCurso && !p.delivery">
+              </div>
+ 
+              <div class="ag-card__body">
+                <div class="ag-card__top">
+                  <span class="ag-card__name">{{ p.name }}</span>
+                  <div class="ag-card__emojis">
+                    <span *ngIf="p.ispriority">🔴</span>
+                    <span *ngIf="p.enCurso">🟡</span>
+                    <span *ngIf="p.delivery">🚚</span>
+                  </div>
+                </div>
+                <span class="ag-card__customer" *ngIf="p.customer?.name">{{ p.customer!.name }}</span>
+              </div>
+ 
+              <svg class="ag-card__chevron" width="7" height="12" viewBox="0 0 7 12">
+                <path d="M1 1l5 5-5 5" stroke="#48484a" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+ 
+        <!-- SHOW MORE -->
+        <button class="agenda-more" *ngIf="canShowMore()" (click)="loadMore()">
+          Cargar más pedidos
+        </button>
+
+      </div>
+    </div>

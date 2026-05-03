@@ -1,0 +1,104 @@
+.list-container {
+  background: #000;
+  min-height: 100vh;
+  padding: 20px;
+}
+
+header { padding: 40px 0 20px 0; color: white; }
+
+.ios-card {
+  background: #f8f8f7; 
+    // background: #f5f5dc; /* Blanco Hueso */
+  color: #000;
+  padding: 16px 20px;
+  border-radius: 16px;
+  margin-bottom: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 8px rgba(255,255,255,0.05);
+  transition: transform 0.2s;
+  cursor: pointer;
+}
+
+.ios-card:active { transform: scale(0.98); }
+
+.card-info h3 { margin: 0; font-size: 18px; font-weight: 600; }
+.card-info p { margin: 4px 0 0 0; color: #555; font-size: 14px; }
+
+.card-price span {
+  font-weight: 700;
+  font-size: 16px;
+}
+
+.search-bar {
+  background: #1c1c1e;
+  padding: 10px 15px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.search-bar input {
+  background: transparent;
+  border: none;
+  color: white;
+  width: 100%;
+  font-size: 16px;
+  outline: none;
+}
+
+.search-bar input::placeholder {
+  color: #8e8e93;
+}
+
+.icon {
+  font-size: 18px;
+}
+
+
+
+.fab-container {
+  position: fixed;
+ bottom: 20px;
+// top: 24px;
+  right: 24px;
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: flex-end;
+  z-index: 100;
+
+  button {
+    margin-top: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    transition: transform 0.3s ease, opacity 0.3s ease;
+  }
+
+  .fab-action {
+    opacity: 1;
+    transform: translateY(0);
+    animation: slide-up 0.3s ease forwards;
+  }
+
+  @keyframes slide-up {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}
+
+.green-fab {
+  background-color: #217724 !important; // tono verde Material Design
+  color: white;
+
+  &:hover {
+    background-color: #43a047 !important; // tono más oscuro al hover
+  }
+}

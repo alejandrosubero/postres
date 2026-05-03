@@ -1,0 +1,128 @@
+.inventory-container {
+      padding: 16px;
+      background-color: #f2f2f6; /* iOS light gray */
+      min-height: 100vh;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    .ios-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 20px;
+      padding: 8px 0;
+    }
+    .ios-header h1 {
+      font-size: 34px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      background: linear-gradient(135deg, #1c1c1e, #3a3a3c);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      margin: 0;
+    }
+    .header-actions button {
+      margin-left: 8px;
+    }
+
+    .summary-cards {
+      margin-bottom: 20px;
+    }
+    .summary-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 16px;
+      padding: 4px 0;
+    }
+    .summary-item .label {
+      color: #6c6c70;
+    }
+    .summary-item .value {
+      font-weight: 600;
+    }
+    .summary-item .critical {
+      color: #ff3b30;
+    }
+
+    .ingredient-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .ingredient-card {
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      transition: all 0.2s ease;
+      border: 1px solid rgba(224, 224, 230, 0.6);
+    }
+    .ingredient-card.critical {
+      border-left: 6px solid #ff3b30;
+      background: rgba(255, 59, 48, 0.05);
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+    .title-group h3 {
+      margin: 0 0 4px 0;
+      font-size: 20px;
+      font-weight: 600;
+    }
+
+    .details {
+      margin-bottom: 12px;
+      font-size: 14px;
+      color: #3a3a3c;
+    }
+    .detail-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 4px;
+    }
+
+    .stock-info {
+      margin-top: 8px;
+    }
+    .stock-quantity {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 6px;
+      font-weight: 500;
+    }
+    .alert-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: #ff3b30;
+      color: white;
+      padding: 4px 12px;
+      border-radius: 30px;
+      font-size: 12px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    .min-stock {
+      font-size: 12px;
+      color: #8e8e93;
+      margin-top: 6px;
+      text-align: right;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 48px;
+      color: #8e8e93;
+    }
+    .empty-state mat-icon {
+      font-size: 64px;
+      width: 64px;
+      height: 64px;
+    }
