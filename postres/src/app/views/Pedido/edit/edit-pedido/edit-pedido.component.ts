@@ -328,7 +328,7 @@ export class EditPedidoComponent implements OnInit {
     navConfig.ico.logut = false;
     navConfig.ico.back = true;
     navConfig.goto = "/app/pedido/list";
-    navConfig.ico.cart =false;
+    navConfig.ico.cart = false;
     if (this.isFavoriteView) {
       navConfig.favorite.active = this.isFavoriteView;
     }

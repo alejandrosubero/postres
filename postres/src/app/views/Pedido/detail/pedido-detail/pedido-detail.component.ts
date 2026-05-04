@@ -16,6 +16,7 @@ import { Pedido } from '../../../../models/pedido.model';
 import { NavConfig } from '../../../../models/navegation/navElemet.model';
 import { ClipboardModule } from '@angular/cdk/clipboard';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { InventoryService } from '../../../../services/inventories/inventory.service';
 
 @Component({
   selector: 'app-pedido-detail',
@@ -39,6 +40,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 })
 export class PedidoDetailComponent {
 
+  
+  private inventoryService = inject(InventoryService);
   private snackBar = inject(MatSnackBar);
   private navService = inject(NavService);
   private router = inject(Router);
@@ -81,7 +84,36 @@ export class PedidoDetailComponent {
   toggleEsCurso(): void {
     this.pedido.enCurso = !this.pedido.enCurso;
     this.guardar();
+
+    // if(this.pedido.enCurso){
+    //   this. confirmarPedido(this.pedido);
+    // }
+    
   }
+
+  confirmarPedido(pedido: Pedido) {
+  this.inventoryService.procesarDescuentoStock(pedido)
+    .then(() => {
+      // Notificación de éxito
+      this.snackBar.open('Inventario actualizado con éxito', 'Cerrar', {
+        duration: 3000,
+        horizontalPosition: 'center',
+        verticalPosition: 'bottom',
+        panelClass: ['success-snackbar']
+      });
+      // Aquí podrías navegar a otra pantalla si quieres
+      // this.router.navigate(['/pedidos']); 
+    })
+    .catch((error) => {
+      // Notificación de error
+      this.snackBar.open('Error al actualizar inventario', 'Reintentar', {
+        duration: 5000,
+        panelClass: ['error-snackbar']
+      });
+    });
+}
+
+
 
 
   togglePriority(): void {

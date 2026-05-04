@@ -81,10 +81,7 @@ export class LayoutComponent  implements OnInit {
     shareReplay()
   );
 
-  
- 
-  
-  
+
   // ======= navegate =============== //
   navigateToInventory(): void {
     this.router.navigate(['/app/mager/inventario']);
@@ -116,7 +113,6 @@ logout(): void {
     sidenav.toggle();
     this.navigate(routeBase);
   }
-
 
     
 
@@ -150,6 +146,15 @@ logout(): void {
 
     addRecipe(sidenav: any): void {
     const routeBase = '/app/receta/add';
+    sidenav.toggle();
+    this.navigate(routeBase);
+  }
+
+
+
+
+ magerStadistic(sidenav: any): void {
+    const routeBase = '/app/mager/estadisticas';
     sidenav.toggle();
     this.navigate(routeBase);
   }

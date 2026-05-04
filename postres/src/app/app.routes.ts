@@ -51,6 +51,7 @@ export const routes: Routes = [
           { path: 'calendar', loadComponent: () => import('./views/calendario/components/calendar-shell/calendar-shell.component').then(m => m.CalendarShellComponent), data: { animation: 'calendar' }, canActivate: [authGuard] },
           { path: 'usuarios', loadComponent: () => import('./views/user/admin-usuarios/admin-usuarios.component').then(m => m.AdminUsuariosComponent), data: { animation: 'calendar' }, canActivate: [adminGuard] },
           { path: 'inventario', loadComponent: () => import('./views/inventario/inventory/inventory.component').then(m => m.InventoryComponent), data: { animation: 'calendar' }, canActivate: [authGuard] },
+          { path: 'estadisticas', loadComponent: () => import('./views/ShellDashboard/dashboard-shell/dashboard-shell.component').then(m => m.DashboardShellComponent), data: { animation: 'calendar' }, canActivate: [adminGuard] },
         ]
       },
 

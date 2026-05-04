@@ -3,7 +3,7 @@
       <p><strong>{{ data.nombre }}</strong> - Cantidad actual: {{ data.cantidad }} {{ data.unidadBase }}</p>
       <mat-form-field appearance="outline" style="width: 100%">
         <mat-label>Cantidad a añadir</mat-label>
-        <input matInput type="number" [(ngModel)]="quantityToAdd" min="1">
+        <input matInput type="number" [(ngModel)]="quantityToAdd" min="1" cdkFocusInitial>
       </mat-form-field>
     </mat-dialog-content>
     <mat-dialog-actions align="end">

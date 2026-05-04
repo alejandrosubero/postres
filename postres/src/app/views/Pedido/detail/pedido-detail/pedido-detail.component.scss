@@ -377,3 +377,18 @@
   }
 }
 
+
+
+::ng-deep .success-snackbar {
+  --mdc-snackbar-container-color: #2c2c2e; // Tu color de tarjeta iOS
+  --mdc-snackbar-supporting-text-color: #f2f2f7;
+  border-radius: 14px !important;
+  margin-bottom: 20px !important;
+  backdrop-filter: blur(10px);
+  border: 0.5px solid #3a3a3c;
+  
+  .mdc-button__label {
+    color: #0a84ff; // Azul iOS para el botón de cerrar
+    font-weight: 600;
+  }
+}

@@ -55,16 +55,27 @@ export class InventoryComponent {
     return Math.min(100, Math.max(0, percent));
   }
 
+
+
   openAddStock(ingrediente: Ingrediente): void {
+    // 1. Forzamos a quitar el foco del elemento activo (el botón)
+    if (document.activeElement instanceof HTMLElement) {
+      document.activeElement.blur();
+    }
+
     this.dialog.open(AddStockDialogComponent, {
       data: ingrediente,
       width: '90%',
       maxWidth: '400px',
-      panelClass: 'ios-dialog'
+      panelClass: 'ios-dialog',
+      autoFocus: 'first-tabbable',
+      restoreFocus: false
     }).afterClosed().subscribe(result => {
       if (result) this.snackBar.open('Stock actualizado', 'Cerrar', { duration: 2000 });
     });
   }
+
+
 
   printRestockList(): void {
 

@@ -1,0 +1,107 @@
+:host {
+  display: block;
+}
+
+.fin-root {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.fin-tabs {
+  display: flex;
+  gap: 0;
+  padding: 0 16px;
+  background: #2c2c2e;
+  border-radius: 12px;
+  margin: 0 16px;
+  overflow: hidden;
+}
+
+.fin-tab {
+  flex: 1;
+  font-size: 12px;
+  font-weight: 600;
+  color: #636366;
+  background: transparent;
+  border: none;
+  padding: 10px 8px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 160ms;
+  -webkit-tap-highlight-color: transparent;
+
+  &.active {
+    color: #0a84ff;
+    background: rgba(10, 132, 255, 0.1);
+    border-radius: 10px;
+  }
+}
+
+.fin-chart-wrap {
+  padding: 0 4px;
+}
+
+.fin-chart {
+  min-height: 240px;
+}
+
+.fin-summary {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  padding: 0 16px;
+}
+
+.fin-sum-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #2c2c2e;
+  border-radius: 12px;
+  padding: 12px;
+}
+
+.fin-sum-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.fin-sum-body {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.fin-sum-label {
+  font-size: 11px;
+  // color: #636366;
+  color: #f2f2f7;
+  font-weight: 400;
+}
+
+.fin-sum-val {
+  font-size: 15px;
+  font-weight: 700;
+  font-family: -apple-system, 'SF Pro Display', sans-serif;
+  letter-spacing: -0.3px;
+}
+
+.green {
+  color: #30d158;
+}
+
+.blue {
+  color: #0a84ff;
+}
+
+.yellow {
+  color: #ffd60a;
+}
+
+.red {
+  color: #ff3b30;
+}

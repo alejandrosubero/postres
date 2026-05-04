@@ -1,0 +1,21 @@
+<div class="kpis-scroll" @cardsIn>
+      <div class="kpis-grid">
+        <div
+          *ngFor="let k of kpis()"
+          class="kpi-card kpi-card--{{ k.accent }}"
+        >
+          <div class="kpi-card__top">
+            <span class="kpi-card__icon">{{ k.icon }}</span>
+            <span class="kpi-card__delta"
+              *ngIf="k.delta"
+              [class.positive]="k.deltaPositive"
+              [class.negative]="!k.deltaPositive">
+              {{ k.delta }}
+            </span>
+          </div>
+          <span class="kpi-card__value">{{ k.value }}</span>
+          <span class="kpi-card__label">{{ k.label }}</span>
+          <span class="kpi-card__sub">{{ k.sub }}</span>
+        </div>
+      </div>
+    </div>

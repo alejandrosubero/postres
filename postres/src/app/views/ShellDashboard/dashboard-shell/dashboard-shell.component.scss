@@ -1,0 +1,131 @@
+
+// dashboard-shell.component.scss
+:host {
+  display: block;
+  font-family: -apple-system, 'SF Pro Text', 'SF Pro Display', sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+.dash-root {
+  background: #1c1c1e;
+  min-height: 100dvh;
+  padding-top: env(safe-area-inset-top, 0px);
+  overflow-x: hidden;
+}
+
+// ── HEADER ────────────────────────────────────────────────────────
+.dash-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  padding: 20px 20px 12px;
+}
+
+.dash-header__left {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.dash-header__greeting {
+  font-size: 13px;
+  font-weight: 400;
+//   color: #636366;
+color: #f2f2f7;
+}
+
+.dash-header__title {
+  font-size: 28px;
+  font-weight: 800;
+  color: #f2f2f7;
+  letter-spacing: -0.8px;
+  line-height: 1;
+}
+
+.dash-header__total-badge {
+  font-size: 12px;
+  font-weight: 600;
+  color: #0a84ff;
+  background: rgba(10, 132, 255, 0.14);
+  border-radius: 20px;
+  padding: 5px 12px;
+  align-self: flex-end;
+}
+
+// ── PERIOD PILLS ──────────────────────────────────────────────────
+.dash-period {
+  display: flex;
+  gap: 8px;
+  padding: 0 16px 16px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  &::-webkit-scrollbar { display: none; }
+}
+
+.period-pill {
+  flex-shrink: 0;
+  font-size: 13px;
+  font-weight: 600;
+//   color: #636366;
+  color: #f2f2f7;
+  background: #2c2c2e;
+  border: 1px solid #3a3a3c;
+  border-radius: 20px;
+  padding: 7px 16px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 160ms ease;
+  -webkit-tap-highlight-color: transparent;
+  min-height: 34px;
+
+  &:active { transform: scale(0.93); }
+
+  &.active {
+    background: #0a84ff;
+    border-color: #0a84ff;
+    color: #fff;
+  }
+}
+
+// ── SECTIONS ──────────────────────────────────────────────────────
+.dash-sections {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  padding: 0 0 8px;
+}
+
+.dash-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.dash-section__header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 20px;
+}
+
+.dash-section__icon { font-size: 18px; flex-shrink: 0; }
+
+.dash-section__title {
+  font-size: 17px;
+  font-weight: 700;
+  color: #f2f2f7;
+  letter-spacing: -0.3px;
+  flex: 1;
+}
+
+.dash-section__sub {
+  font-size: 11px;
+//   color: #636366;
+  color: #f2f2f7;
+  font-weight: 400;
+}
+
+// ── SAFE AREA ─────────────────────────────────────────────────────
+.dash-bottom-safe {
+  height: calc(env(safe-area-inset-bottom, 0px) + 24px);
+}

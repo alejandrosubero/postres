@@ -1,6 +1,7 @@
 .inventory-container {
       padding: 16px;
-      background-color: #f2f2f6; /* iOS light gray */
+      // background-color: #f2f2f6; /* iOS light gray */
+      background-color:rgb(32, 31, 31);
       min-height: 100vh;
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
     }
@@ -19,11 +20,13 @@
       background: linear-gradient(135deg, #1c1c1e, #3a3a3c);
       -webkit-background-clip: text;
       background-clip: text;
-      color: transparent;
+      // color: transparent;
+      color: aliceblue;
       margin: 0;
     }
     .header-actions button {
       margin-left: 8px;
+      color: aliceblue;
     }
 
     .summary-cards {
@@ -54,15 +57,18 @@
 
     .ingredient-card {
       border-radius: 20px;
-      background: rgba(255, 255, 255, 0.85);
+      background: white;
+      background-color: white;
       backdrop-filter: blur(10px);
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
       transition: all 0.2s ease;
       border: 1px solid rgba(224, 224, 230, 0.6);
     }
+
     .ingredient-card.critical {
       border-left: 6px solid #ff3b30;
-      background: rgba(255, 59, 48, 0.05);
+       background: yellow;
+       color:#1c1c1e;
     }
 
     .card-header {

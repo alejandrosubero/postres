@@ -88,59 +88,6 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
  .mat-mdc-select-panel {
   background-color: #2c2c2e !important;
 }
-//////////////////////////////////////////////////////
-
-
-// /* --- Estilo Global para Autocompletados (iOS Dark Mode) --- */
-// /* 1. EL PANEL (FONDO Y BORDES) */
-// /* Usamos la clase doble para ganar prioridad de especificidad */
-// .mat-mdc-autocomplete-panel.mat-mdc-autocomplete-panel {
-//   background-color: #1c1c1e !important; 
-//   border-radius: 16px !important;
-//   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.7) !important;
-//   border: 1px solid #3a3a3c !important; /* Un gris un poco más claro para el borde */
-//   margin-top: 8px;
-//   overflow: hidden !important;
-// }
-
-// /* 2. TEXTO DE LAS OPCIONES (EL ESTADO NORMAL) */
-// /* Aquí está el truco: hay que atacar al SPAN interno directamente */
-// .mat-mdc-option .mdc-list-item__primary-text {
-//   color: #f2f2f7 !important; /* Blanco iOS */
-//   font-size: 15px !important;
-//   font-weight: 400 !important;
-// }
-
-// /* 3. ALTURA Y LÍNEAS DIVISORIAS */
-// .mat-mdc-option {
-//   min-height: 52px !important;
-//   border-bottom: 0.5px solid #2c2c2e !important;
-// }
-
-// .mat-mdc-option:last-child {
-//   border-bottom: none !important;
-// }
-
-// /* 4. EL COLOR AZUL (OPCIÓN SELECCIONADA) */
-// /* Este selector es el que Material no puede ignorar */
-// .mat-mdc-option.mdc-list-item--selected .mdc-list-item__primary-text {
-//   color: #0a84ff !important; /* Azul Apple */
-//   font-weight: 600 !important;
-// }
-
-// /* 5. EFECTO HOVER / FOCUS */
-// /* Cuando pasas el mouse o navegas con teclado */
-// .mat-mdc-option:hover:not(.mdc-list-item--disabled),
-// .mat-mdc-option.mdc-list-item--activated {
-//   background-color: #2c2c2e !important;
-// }
-
-// /* 6. QUITAR EL OVERLAY POR DEFECTO DE MATERIAL */
-// /* Material a veces pone una capa gris encima que opaca tus colores */
-// .mat-mdc-option .mat-mdc-focus-indicator,
-// .mat-mdc-option .mat-mdc-option-focus-indicator {
-//   display: none !important;
-// }
 
 ///////////////////////////////////////
 

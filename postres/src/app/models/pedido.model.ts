@@ -4,13 +4,12 @@ import { Receta } from "./receta.model";
 export interface Pedido{
     
     id?:string;
-    name:string;
-    
+    name:string;    
     dayDue:Date;
     createDay:Date;
     editDay:Date;
     deliveryDay:Date;
-
+    
     enCurso:boolean;
     pendy:boolean; 
     ispriority:boolean;

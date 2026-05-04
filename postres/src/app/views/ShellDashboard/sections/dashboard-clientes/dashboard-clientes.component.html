@@ -1,0 +1,57 @@
+ <div class="cli-root">
+ 
+      <!-- PARETO BADGE -->
+      <div class="cli-pareto-banner" *ngIf="paretoCount() > 0">
+        <span class="cli-pareto-banner__icon">🎯</span>
+        <div class="cli-pareto-banner__text">
+          <span class="cli-pareto-banner__title">
+            {{ paretoCount() }} cliente{{ paretoCount() !== 1 ? 's' : '' }} generan el 80% de tus ingresos
+          </span>
+          <span class="cli-pareto-banner__sub">Ley de Pareto — enfoca tu energía aquí</span>
+        </div>
+      </div>
+ 
+      <!-- CHART -->
+      <div #cliChart class="cli-chart"></div>
+ 
+      <!-- RANKING LIST -->
+      <div class="cli-list">
+        <div
+          *ngFor="let c of clientes(); let i = index"
+          class="cli-item"
+          [class.cli-item--pareto]="c.esPareto"
+        >
+          <div class="cli-item__avatar">
+            {{ inicial(c.nombre) }}
+          </div>
+          <div class="cli-item__body">
+            <div class="cli-item__top">
+              <span class="cli-item__name">{{ c.nombre }}</span>
+              <span class="cli-item__pareto-badge" *ngIf="c.esPareto">TOP</span>
+            </div>
+            <div class="cli-item__meta">
+              <span>{{ c.totalPedidos }} pedido{{ c.totalPedidos !== 1 ? 's' : '' }}</span>
+              <span class="cli-item__sep">·</span>
+              <span>{{ fmt(c.totalProfit) }} ganancia</span>
+            </div>
+            <!-- PROGRESS BAR -->
+            <div class="cli-item__progress">
+              <div class="cli-item__progress-fill"
+                [style.width.%]="c.pctIngresos"
+                [class.fill-pareto]="c.esPareto">
+              </div>
+            </div>
+          </div>
+          <div class="cli-item__right">
+            <span class="cli-item__ingreso">{{ fmt(c.totalIngresos) }}</span>
+            <span class="cli-item__pct">{{ c.pctIngresos.toFixed(1) }}%</span>
+          </div>
+        </div>
+ 
+        <div class="cli-empty" *ngIf="clientes().length === 0">
+          <span>👥</span>
+          <span>Sin clientes en este período</span>
+        </div>
+      </div>
+ 
+    </div>

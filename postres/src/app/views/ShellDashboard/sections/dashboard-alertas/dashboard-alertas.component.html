@@ -1,0 +1,17 @@
+ <div class="alertas-root">
+      <div class="alertas-header">
+        <span class="alertas-title">⚡ Alertas del sistema</span>
+        <button class="alertas-clear" (click)="clearAll()">Limpiar</button>
+      </div>
+      <div class="alertas-list">
+        <div
+          *ngFor="let a of visibles(); trackBy: trackBy"
+          class="alerta alerta--{{ a.nivel }}"
+          @alertDismiss
+        >
+          <span class="alerta__icon">{{ icon(a.nivel) }}</span>
+          <span class="alerta__msg">{{ a.msg }}</span>
+          <button class="alerta__dismiss" (click)="dismiss(a.tipo)">✕</button>
+        </div>
+      </div>
+    </div>

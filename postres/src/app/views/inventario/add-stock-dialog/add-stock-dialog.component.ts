@@ -6,11 +6,12 @@ import { MatInputModule } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
 import { FirebaseService } from '../../../services/data/firebase.service';
 import { Ingrediente } from '../../../models/ingrediente.model';
+import { A11yModule } from '@angular/cdk/a11y'; 
 
 @Component({
   selector: 'app-add-stock',
   standalone: true,
-  imports: [CommonModule, MatDialogModule, MatButtonModule, MatInputModule, FormsModule],
+  imports: [CommonModule, MatDialogModule, MatButtonModule, MatInputModule, FormsModule, A11yModule],
   templateUrl: './add-stock-dialog.component.html',
   styleUrl: './add-stock-dialog.component.scss'
 })

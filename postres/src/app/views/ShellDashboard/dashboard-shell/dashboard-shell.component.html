@@ -1,0 +1,79 @@
+<div class="dash-root">
+ 
+      <!-- ── HEADER ── -->
+      <div class="dash-header" @fadeIn>
+        <div class="dash-header__left">
+          <span class="dash-header__greeting">{{ greeting() }}</span>
+          <h1 class="dash-header__title">Dashboard</h1>
+        </div>
+        <div class="dash-header__right">
+          <span class="dash-header__total-badge">
+            {{ pedidosFiltrados().length }} pedidos
+          </span>
+        </div>
+      </div>
+ 
+      <!-- ── PERIOD FILTER ── -->
+      <div class="dash-period" @fadeIn>
+        <button
+          *ngFor="let p of periods"
+          class="period-pill"
+          [class.active]="period() === p.id"
+          (click)="period.set(p.id)"
+        >{{ p.label }}</button>
+      </div>
+ 
+      <!-- ── ALERTAS (si las hay, aparecen primero) ── -->
+      <app-dashboard-alertas
+        *ngIf="alertas().length > 0"
+        [alertas]="alertas()"
+        @fadeIn
+      />
+ 
+      <!-- ── SECCIONES ── -->
+      <div class="dash-sections" [@sectionsIn]="period()">
+ 
+        <!-- 1. KPIs -->
+        <section class="dash-section">
+          <div class="dash-section__header">
+            <span class="dash-section__icon">📊</span>
+            <h2 class="dash-section__title">Indicadores clave</h2>
+            <span class="dash-section__sub">KPIs del período</span>
+          </div>
+          <app-dashboard-kpis [pedidos]="pedidosFiltrados()" />
+        </section>
+ 
+        <!-- 2. FINANCIERO -->
+        <section class="dash-section">
+          <div class="dash-section__header">
+            <span class="dash-section__icon">💰</span>
+            <h2 class="dash-section__title">Análisis financiero</h2>
+            <span class="dash-section__sub">Ingresos, costos y margen</span>
+          </div>
+          <app-dashboard-financiero [pedidos]="pedidosFiltrados()" [period]="period()" />
+        </section>
+ 
+        <!-- 3. RECETAS -->
+        <section class="dash-section">
+          <div class="dash-section__header">
+            <span class="dash-section__icon">🍰</span>
+            <h2 class="dash-section__title">Top recetas</h2>
+            <span class="dash-section__sub">Rentabilidad por receta</span>
+          </div>
+          <app-dashboard-recetas [pedidos]="pedidosFiltrados()" />
+        </section>
+ 
+        <!-- 4. CLIENTES -->
+        <section class="dash-section">
+          <div class="dash-section__header">
+            <span class="dash-section__icon">👥</span>
+            <h2 class="dash-section__title">Clientes top</h2>
+            <span class="dash-section__sub">Ley de Pareto 80/20</span>
+          </div>
+          <app-dashboard-clientes [pedidos]="pedidosFiltrados()" />
+        </section>
+ 
+      </div>
+ 
+      <div class="dash-bottom-safe"></div>
+    </div>

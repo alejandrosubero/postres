@@ -1,0 +1,37 @@
+<div class="rec-root">
+ 
+      <!-- CHART HORIZONTAL BAR -->
+      <div #recChart class="rec-chart"></div>
+ 
+      <!-- RANKING LIST -->
+      <div class="rec-list">
+        <div
+          *ngFor="let r of topRecetas()"
+          class="rec-item"
+        >
+          <div class="rec-item__rank" [class.gold]="r.rank === 1" [class.silver]="r.rank === 2" [class.bronze]="r.rank === 3">
+            {{ r.rank }}
+          </div>
+          <div class="rec-item__body">
+            <span class="rec-item__name">{{ r.nombre }}</span>
+            <div class="rec-item__meta">
+              <span class="rec-item__veces">× {{ r.veces }}</span>
+              <span class="rec-item__sep">·</span>
+              <span class="rec-item__prom">{{ fmt(r.profitPromedio) }} prom.</span>
+            </div>
+          </div>
+          <div class="rec-item__right">
+            <span class="rec-item__total">{{ fmt(r.profitTotal) }}</span>
+            <span class="rec-item__bar-wrap">
+              <span class="rec-item__bar" [style.width.%]="barPct(r.profitTotal)"></span>
+            </span>
+          </div>
+        </div>
+ 
+        <div class="rec-empty" *ngIf="topRecetas().length === 0">
+          <span>🍰</span>
+          <span>Sin recetas en este período</span>
+        </div>
+      </div>
+ 
+    </div>
