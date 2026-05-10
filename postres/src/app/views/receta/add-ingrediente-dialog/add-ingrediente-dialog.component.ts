@@ -40,7 +40,9 @@ export class AddIngredienteDialogComponent {
     this.form.valueChanges.subscribe(() => this.calcular());
   }
 
-  onSelect(ing: Ingrediente) { this.selectedIngrediente = ing; this.calcular(); }
+  onSelect(ing: Ingrediente) { 
+    this.selectedIngrediente = ing; this.calcular(); 
+  }
 
   calcular() {
     if (!this.selectedIngrediente) return;
@@ -56,6 +58,7 @@ export class AddIngredienteDialogComponent {
       idIngrediente: this.selectedIngrediente?.id,
       Name: this.selectedIngrediente?.nombre,
       Cantidad: this.form.value.cantidad,
+      presentacion: this.form.value.unidadSeleccionada,
       Cost: this.costoCalculado()
     });
   }

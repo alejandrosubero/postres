@@ -54,6 +54,16 @@ export const routes: Routes = [
           { path: 'estadisticas', loadComponent: () => import('./views/ShellDashboard/dashboard-shell/dashboard-shell.component').then(m => m.DashboardShellComponent), data: { animation: 'calendar' }, canActivate: [adminGuard] },
         ]
       },
+           {
+        path: 'inventory',
+        canActivate: [authGuard],
+        children: [
+          { path: 'management', loadComponent: () => import('./views/inventario/inventory/inventory.component').then(m => m.InventoryComponent), data: { animation: 'calendar' }, canActivate: [authGuard] },
+          { path: 'checker', loadComponent: () => import('./views/inventario/verificador-recetas/verificador-recetas.component').then(m => m.VerificadorRecetasComponent), data: { animation: 'calendar' }, canActivate: [authGuard] },
+    
+
+        ]
+      },
 
     ]
   },

@@ -35,7 +35,7 @@ export class AddRecetaComponent {
   isFavoriteView: boolean = false;
   // private dialogRef = inject(MatDialogRef);
   private navService = inject(NavService);
- 
+
 
   recetaForm: FormGroup = this.fb.group({
     Name: ['', Validators.required],
@@ -46,7 +46,7 @@ export class AddRecetaComponent {
   });
 
 
-  constructor(){
+  constructor() {
     this.setNav();
   }
 
@@ -72,20 +72,20 @@ export class AddRecetaComponent {
 
 
   borrarIngrediente(index: number) {
-  const dialogRef = this.dialog.open(ConfirmDialogComponent);
-  dialogRef.afterClosed().subscribe(res => {
-    if (res) {
-      // 1. Obtenemos la lista actual
-      const lista = [...this.recetaForm.value.Lista_ingredientes!];
-      // 2. Eliminamos el ingrediente
-      lista.splice(index, 1);
-      // 3. Calculamos el nuevo total ANTES de pasarlo al formulario
-      const nuevoTotal = lista.reduce((acc, curr) => acc + (curr.Cost || 0), 0);
-      // 4. Actualizamos el formulario con los valores calculados
-      this.recetaForm.patchValue({  Lista_ingredientes: lista,  CostoTotal: nuevoTotal });
-    }
-  });
-}
+    const dialogRef = this.dialog.open(ConfirmDialogComponent);
+    dialogRef.afterClosed().subscribe(res => {
+      if (res) {
+        // 1. Obtenemos la lista actual
+        const lista = [...this.recetaForm.value.Lista_ingredientes!];
+        // 2. Eliminamos el ingrediente
+        lista.splice(index, 1);
+        // 3. Calculamos el nuevo total ANTES de pasarlo al formulario
+        const nuevoTotal = lista.reduce((acc, curr) => acc + (curr.Cost || 0), 0);
+        // 4. Actualizamos el formulario con los valores calculados
+        this.recetaForm.patchValue({ Lista_ingredientes: lista, CostoTotal: nuevoTotal });
+      }
+    });
+  }
 
 
   async guardar() {
@@ -119,7 +119,7 @@ export class AddRecetaComponent {
 
 
 
-setNav() {
+  setNav() {
     // this.checkFavorites();
     let navConfig: NavConfig = new NavConfig();
     navConfig.title = 'Nueva Receta';
@@ -128,7 +128,7 @@ setNav() {
     navConfig.ico.logut = false;
     navConfig.ico.back = true;
     navConfig.ico.cart = false;
-     navConfig.goto = '/app/receta/list';
+    navConfig.goto = '/app/receta/list';
     if (this.isFavoriteView) {
       navConfig.favorite.active = this.isFavoriteView;
     }

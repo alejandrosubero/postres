@@ -1,134 +1,350 @@
 .inventory-container {
-      padding: 16px;
-      // background-color: #f2f2f6; /* iOS light gray */
-      background-color:rgb(32, 31, 31);
-      min-height: 100vh;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  padding: 16px;
+  // background-color: #f2f2f6; /* iOS light gray */
+  background-color: rgb(32, 31, 31);
+  min-height: 100vh;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
+
+.ios-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 20px;
+  padding: 8px 0;
+}
+
+.ios-header h1 {
+  font-size: 34px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  background: linear-gradient(135deg, #1c1c1e, #3a3a3c);
+  -webkit-background-clip: text;
+  background-clip: text;
+  // color: transparent;
+  color: aliceblue;
+  margin: 0;
+}
+
+.header-actions button {
+  margin-left: 8px;
+  color: aliceblue;
+}
+
+.summary-cards {
+  margin-bottom: 20px;
+}
+
+.summary-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 16px;
+  padding: 4px 0;
+}
+
+.summary-item .label {
+  color: #6c6c70;
+}
+
+.summary-item .value {
+  font-weight: 600;
+}
+
+.summary-item .critical {
+  color: #ff3b30;
+}
+
+.ingredient-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.ingredient-card {
+  border-radius: 20px;
+  background: white;
+  background-color: white;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  transition: all 0.2s ease;
+  border: 1px solid rgba(224, 224, 230, 0.6);
+}
+
+.ingredient-card.critical {
+  border-left: 6px solid #ff3b30;
+  background: yellow;
+  color: #1c1c1e;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.title-group h3 {
+  margin: 0 0 4px 0;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.details {
+  margin-bottom: 12px;
+  font-size: 14px;
+  color: #3a3a3c;
+}
+
+.detail-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.stock-info {
+  margin-top: 8px;
+}
+
+.stock-quantity {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 6px;
+  font-weight: 500;
+}
+
+.alert-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: #ff3b30;
+  color: white;
+  padding: 4px 12px;
+  border-radius: 30px;
+  font-size: 12px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.min-stock {
+  font-size: 12px;
+  color: #8e8e93;
+  margin-top: 6px;
+  text-align: right;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 48px;
+  color: #8e8e93;
+}
+
+// .empty-state mat-icon {
+//   font-size: 64px;
+//   width: 64px;
+//   height: 64px;
+// }
+
+
+
+// .search-bar input {
+//   background: transparent;
+//   border: none;
+//   color: white;
+//   width: 100%;
+//   font-size: 16px;
+//   outline: none;
+// }
+
+// .search-bar input::placeholder {
+//   color: #8e8e93;
+// }
+
+
+// .search-section {
+//   padding: 8px 0;
+//   margin-bottom: 16px;
+//   // border-radius: 15px;
+// }
+
+// .ios-search-field {
+//   width: 100%;
+//   color: white;
+//   border: 1px solid rgb(101, 99, 99);
+//   border-radius: 15px;
+//   box-shadow: 0 4px 14px 0 black,
+//     0 2px 4px 0 black !important;
+
+//   transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease !important;
+
+//   // 1. Contenedor principal estilo "Pill" de iOS
+//   ::ng-deep {
+//     .mat-mdc-text-field-wrapper {
+//       background-color: rgba(118, 118, 128, 0.24) !important; // Color estándar iOS Search
+//       border-radius: 12px !important;
+//       padding-top: 0 !important;
+//       padding-bottom: 0 !important;
+//       min-height: 40px !important;
+//       transition: background-color 0.2s ease;
+//     }
+
+
+//     // Eliminamos elementos que ensucian
+//     .mat-mdc-form-field-focus-indicator,
+//     .mdc-line-ripple {
+//       display: none !important;
+//     }
+
+
+//     &.mat-focused .mat-mdc-text-field-wrapper {
+//       background-color: rgba(28, 28, 77, 0.35) !important;
+//       box-shadow: 0 8px 20px 0 rgba(26, 26, 26, 0.6) !important;
+//       transform: translateY(-2px);
+//     }
+
+//        // Cuando el padre tiene foco, el placeholder desaparece por completo
+//     &.mat-focused input.mat-mdc-input-element::placeholder {
+//       opacity: 0 !important;
+//       color: #3a3a3c !important;
+//     }
+
+//     // Eliminamos la línea inferior de Material
+//     .mat-mdc-form-field-flex {
+//       padding: 0 12px !important;
+//       align-items: center !important;
+//     }
+
+//     .mdc-line-ripple {
+//       display: none !important;
+//     }
+
+//     // Ajuste de iconos y placeholder
+//     .mat-mdc-form-field-prefix,
+//     .mat-mdc-form-field-suffix {
+//       display: flex;
+//       align-items: center;
+//       color: #8e8e93 !important; // Gray iOS
+//     }
+
+//     .mat-mdc-form-field-subscript-wrapper {
+//       display: none; // Ahorro de espacio crítico en mobile
+//     }
+//   }
+
+//   // 2. Estilo del Input puro
+//   input.mat-mdc-input-element {
+//     color: #f2f2f7 !important;
+//     font-size: 17px !important; // Tamaño estándar iOS
+//     font-weight: 400;
+//     margin-top: 1px !important;
+
+//     &::placeholder {
+//       // color: #8e8e93 !important;
+//       color: white !important;
+//       opacity: 1;
+//     }
+//   }
+
+//   // Icono de búsqueda
+//   mat-icon {
+//     font-size: 20px;
+//     width: 20px;
+//     height: 20px;
+//     margin-right: 8px;
+//   }
+
+//   // Botón de borrar (el círculo con X)
+//   .clear-button {
+
+//     mat-icon {
+//       font-size: 18px;
+//       color: white
+//     }
+//   }
+// }
+
+// // Estilo para el icono del estado vacío cuando no hay resultados
+// .empty-state mat-icon {
+//   font-size: 64px;
+//   width: 64px;
+//   height: 64px;
+//   color: #48484a;
+// }
+
+.search-section {
+  padding: 8px 0;
+  margin-bottom: 16px;
+  display: block;
+}
+
+// Usamos ::ng-deep para entrar en el Shadow DOM de Angular Material
+::ng-deep .ios-search-field {
+  width: 100%;
+
+  // 1. EL CONTENEDOR (Estado Reposo)
+  .mat-mdc-text-field-wrapper.mdc-text-field--filled {
+    background-color: rgba(60, 60, 65, 0.4) !important; // Fondo gris sutil
+    border-radius: 12px !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important; // Sombra sutil
+    transition: all 0.25s ease-in-out !important;
+    
+    // Quitamos la línea inferior de Material
+    .mdc-line-ripple {
+      display: none !important;
     }
 
-    .ios-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: baseline;
-      margin-bottom: 20px;
-      padding: 8px 0;
-    }
-    .ios-header h1 {
-      font-size: 34px;
-      font-weight: 700;
-      letter-spacing: -0.5px;
-      background: linear-gradient(135deg, #1c1c1e, #3a3a3c);
-      -webkit-background-clip: text;
-      background-clip: text;
-      // color: transparent;
-      color: aliceblue;
-      margin: 0;
-    }
-    .header-actions button {
-      margin-left: 8px;
-      color: aliceblue;
-    }
+  }
 
-    .summary-cards {
-      margin-bottom: 20px;
+  // 2. EL CONTENEDOR (Estado FOCO / CLICK)
+  // Este selector es el más fuerte para detectar el foco
+  &.mat-form-field-should-float, &.mat-focused {
+    .mat-mdc-text-field-wrapper.mdc-text-field--filled {
+      background-color: rgba(80, 80, 100, 0.95) !important; // CAMBIO VISIBLE: Más claro y sólido
+      border: 1px solid #0a84ff !important; // Borde azul iOS
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6) !important; // Sombra profunda
+      transform: translateY(-2px); // Se eleva ligeramente
     }
-    .summary-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 16px;
-      padding: 4px 0;
+    
+    // Cambiamos el color de la lupa al hacer foco
+    .mat-mdc-form-field-prefix mat-icon {
+      color: #0a84ff !important;
     }
-    .summary-item .label {
-      color: #6c6c70;
-    }
-    .summary-item .value {
-      font-weight: 600;
-    }
-    .summary-item .critical {
-      color: #ff3b30;
-    }
+  }
 
-    .ingredient-list {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-    }
+  // 3. EL INPUT Y PLACEHOLDER
+  input.mat-mdc-input-element {
+    color: white !important;
+    caret-color: #0a84ff !important; // El cursor de escritura será azul
 
-    .ingredient-card {
-      border-radius: 20px;
-      background: white;
-      background-color: white;
-      backdrop-filter: blur(10px);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-      transition: all 0.2s ease;
-      border: 1px solid rgba(224, 224, 230, 0.6);
+    &::placeholder {
+      color: rgba(255, 255, 255, 0.7) !important;
+      transition: all 0.2s ease !important;
+      opacity: 1 !important;
     }
+  }
 
-    .ingredient-card.critical {
-      border-left: 6px solid #ff3b30;
-       background: yellow;
-       color:#1c1c1e;
-    }
+  // Desaparecer el placeholder cuando el usuario hace clic (Foco)
+  &.mat-focused input.mat-mdc-input-element::placeholder {
+    opacity: 0 !important;
+    transform: translateX(10px); // Se desliza hacia la derecha mientras desaparece
+  }
 
-    .card-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 12px;
-    }
-    .title-group h3 {
-      margin: 0 0 4px 0;
-      font-size: 20px;
-      font-weight: 600;
-    }
+  // Limpieza de espacios extra
+  .mat-mdc-form-field-subscript-wrapper {
+    display: none !important;
+  }
+  
+  .mat-mdc-form-field-flex {
+    padding: 0 16px !important;
+    align-items: center !important;
+  }
+}
 
-    .details {
-      margin-bottom: 12px;
-      font-size: 14px;
-      color: #3a3a3c;
-    }
-    .detail-row {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 4px;
-    }
-
-    .stock-info {
-      margin-top: 8px;
-    }
-    .stock-quantity {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 6px;
-      font-weight: 500;
-    }
-    .alert-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      background: #ff3b30;
-      color: white;
-      padding: 4px 12px;
-      border-radius: 30px;
-      font-size: 12px;
-      font-weight: 600;
-      margin-bottom: 8px;
-    }
-    .min-stock {
-      font-size: 12px;
-      color: #8e8e93;
-      margin-top: 6px;
-      text-align: right;
-    }
-
-    .empty-state {
-      text-align: center;
-      padding: 48px;
-      color: #8e8e93;
-    }
-    .empty-state mat-icon {
-      font-size: 64px;
-      width: 64px;
-      height: 64px;
-    }
+// Botón de cancelar (X)
+.clear-button {
+  mat-icon {
+    color: rgba(255, 255, 255, 0.5);
+    &:hover { color: white; }
+  }
+}

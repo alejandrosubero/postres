@@ -10,6 +10,9 @@ export class UnitsService {
 
   convertUnits(cantidad: number, unidadOrigen: string, unidadDestino: string, presentacion: string): number {
 
+      console.log('convertUnits recibe: ',`cantidad: ${cantidad}, unidadOrigen:  ${unidadOrigen}, unidadDestino:  ${unidadDestino}, presentacion: ${presentacion};` )
+    
+
     let factorH: number = 1;
     // 1. Manejo de "unit" (Lógica C2 y G2 de tu Excel)
     if (unidadOrigen === "unit" && unidadDestino !== "unit") {

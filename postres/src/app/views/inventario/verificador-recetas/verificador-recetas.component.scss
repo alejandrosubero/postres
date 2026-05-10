@@ -1,0 +1,483 @@
+// verificador-recetas/verificador-recetas.component.scss
+:host {
+  display: block;
+  font-family: -apple-system, 'SF Pro Text', 'SF Pro Display', sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+.vr-root {
+  background: #1c1c1e;
+  min-height: 100%;
+  padding: 0 0 40px;
+  color: #f2f2f7;
+}
+
+// ── HEADER ────────────────────────────────────────────────────────────────────
+.vr-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 20px 12px;
+  gap: 12px;
+}
+
+.vr-header__left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.vr-header__icon { font-size: 28px; }
+
+.vr-header__title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #f2f2f7;
+  letter-spacing: -0.4px;
+  margin: 0;
+}
+
+.vr-header__sub {
+  font-size: 12px;
+  color: #636366;
+  margin: 2px 0 0;
+}
+
+.vr-add-btn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(10,132,255,0.14);
+  color: #0a84ff;
+  border: none;
+  border-radius: 20px;
+  padding: 8px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: opacity 140ms;
+  flex-shrink: 0;
+
+  mat-icon { font-size: 16px; width: 16px; height: 16px; }
+  &:active { opacity: 0.7; }
+}
+
+// ── ENTRADAS ──────────────────────────────────────────────────────────────────
+.vr-entradas {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 0 16px;
+}
+
+.vr-entrada {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #2c2c2e;
+  border-radius: 16px;
+  padding: 12px 14px;
+  flex-wrap: wrap;
+}
+
+// MAT-SELECT override (iOS dark)
+.vr-select {
+  flex: 1;
+  min-width: 160px;
+  font-family: inherit;
+  font-size: 14px;
+  color: #f2f2f7;
+
+  ::ng-deep .mat-mdc-select-value { color: #f2f2f7; }
+  ::ng-deep .mat-mdc-select-arrow { color: #636366; }
+  ::ng-deep .mdc-line-ripple { display: none; }
+  ::ng-deep .mat-mdc-form-field-flex { background: transparent; }
+  ::ng-deep .mat-mdc-select-placeholder {color: white;}
+}
+
+// STEPPER
+.vr-stepper {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: #1c1c1e;
+  border-radius: 12px;
+  padding: 4px 6px;
+  flex-shrink: 0;
+}
+
+.vr-step-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
+  background: #3a3a3c;
+  color: #f2f2f7;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 120ms;
+
+  mat-icon { font-size: 16px; width: 16px; height: 16px; }
+  &:disabled { opacity: 0.3; cursor: default; }
+  &:active:not(:disabled) { background: #48484a; }
+}
+
+.vr-step-val {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 36px;
+}
+
+.vr-step-num {
+  font-size: 18px;
+  font-weight: 700;
+  color: #f2f2f7;
+  line-height: 1;
+}
+
+.vr-step-lbl {
+  font-size: 9px;
+  color: #636366;
+}
+
+// MAX CHIP
+.vr-max-chip {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  border-radius: 20px;
+  padding: 4px 10px;
+  flex-shrink: 0;
+
+  mat-icon { font-size: 14px; width: 14px; height: 14px; }
+
+  &--ok   { background: rgba(48,209,88,0.14); color: #30d158; }
+  &--warn { background: rgba(255,214,10,0.14); color: #ffd60a; }
+  &--err  { background: rgba(255,59,48,0.14);  color: #ff3b30; }
+}
+
+.vr-remove-btn {
+  width: 28px; height: 28px;
+  border-radius: 50%; border: none;
+  background: rgba(255,59,48,0.12); color: #ff3b30;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; transition: background 120ms;
+  mat-icon { font-size: 14px; width: 14px; height: 14px; }
+  &:active { background: rgba(255,59,48,0.25); }
+}
+
+// ── ACTIONS ───────────────────────────────────────────────────────────────────
+.vr-actions {
+  padding: 16px 16px 0;
+}
+
+.vr-analyze-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: #0a84ff;
+  color: #fff;
+  border: none;
+  border-radius: 14px;
+  padding: 14px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+  transition: opacity 140ms, transform 120ms;
+
+  mat-icon { font-size: 20px; }
+  &:disabled { opacity: 0.35; cursor: default; }
+  &:active:not(:disabled) { transform: scale(0.98); opacity: 0.85; }
+}
+
+// ── STATUS GLOBAL ─────────────────────────────────────────────────────────────
+.vr-status {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 16px 16px 0;
+  padding: 12px 14px;
+  border-radius: 14px;
+  font-size: 13px;
+  font-weight: 600;
+  border: 1px solid transparent;
+
+  mat-icon { font-size: 20px; flex-shrink: 0; }
+
+  &--ok  { background: rgba(48,209,88,0.1); border-color: rgba(48,209,88,0.25); color: #30d158; }
+  &--err { background: rgba(255,59,48,0.1); border-color: rgba(255,59,48,0.25); color: #ff3b30; }
+}
+
+// ── SECTION TITLES ────────────────────────────────────────────────────────────
+.vr-section-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #636366;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  padding: 20px 20px 8px;
+
+  mat-icon { font-size: 16px; color: #0a84ff; }
+
+  &--compra { color: #f2f2f7; font-size: 15px; text-transform: none; letter-spacing: 0; }
+}
+
+.vr-compra-total {
+  margin-left: auto;
+  font-size: 14px;
+  font-weight: 700;
+  color: #30d158;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+// ── RESULTADOS ────────────────────────────────────────────────────────────────
+.vr-resultados {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 0 16px;
+}
+
+.vr-resultado {
+  background: #2c2c2e;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid transparent;
+
+  &--ok  { border-color: rgba(48,209,88,0.2); }
+  &--err { border-color: rgba(255,59,48,0.2); }
+}
+
+.vr-res__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 14px 14px 16px;
+  gap: 10px;
+}
+
+.vr-res__name-block {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+  min-width: 0;
+}
+
+.vr-res__icon {
+  font-size: 20px;
+  flex-shrink: 0;
+
+  .vr-resultado--ok & { color: #30d158; }
+  .vr-resultado--err & { color: #ff3b30; }
+}
+
+.vr-res__name {
+  display: block;
+  font-size: 15px;
+  font-weight: 600;
+  color: #f2f2f7;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.vr-res__meta {
+  display: block;
+  font-size: 11px;
+  color: #636366;
+  margin-top: 2px;
+}
+
+.text-ok { color: #30d158; }
+.text-err { color: #ff3b30; }
+
+.vr-toggle-btn {
+  width: 32px; height: 32px;
+  border-radius: 50%; border: none;
+  background: #3a3a3c; color: #8e8e93;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; transition: background 120ms;
+  &:active { background: #48484a; }
+}
+
+// TABLA INGREDIENTES
+.vr-res__body {
+  padding: 0 14px 14px;
+  border-top: 1px solid #3a3a3c;
+}
+
+.vr-ing-table {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin-top: 10px;
+}
+
+.vr-ing-row {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1.5fr;
+  gap: 8px;
+  padding: 8px 6px;
+  font-size: 12px;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  align-items: center;
+
+  &:last-child { border-bottom: none; }
+
+  &--header {
+    color: #efeff2;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    text-transform: uppercase;
+    padding-bottom: 4px;
+  }
+
+  &--ok { color: #f2f2f7; }
+  &--err { background: rgba(255,59,48,0.06); border-radius: 8px; }
+}
+
+.vr-ing-nombre { font-weight: 500; color: #f2f2f7; }
+
+.vr-ing-estado {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.ic-ok { color: #30d158; font-size: 16px; }
+.ic-err {
+  display: flex; align-items: center; gap: 3px;
+  color: #ff3b30; font-size: 11px; font-weight: 600;
+  mat-icon { font-size: 14px; width: 14px; height: 14px; }
+}
+
+// ── LISTA DE COMPRA ───────────────────────────────────────────────────────────
+.vr-lista-compra {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 0 16px;
+}
+
+.vr-compra-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #2c2c2e;
+  border-radius: 14px;
+  padding: 12px 14px;
+  border-left: 3px solid #ffd60a;
+  gap: 12px;
+}
+
+.vr-compra-item__left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+  min-width: 0;
+}
+
+.vr-compra-item__icon {
+  color: #ffd60a;
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.vr-compra-item__info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.vr-compra-item__nombre {
+  font-size: 14px;
+  font-weight: 600;
+  color: #f2f2f7;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.vr-compra-item__detalle {
+  font-size: 11px;
+  color: #636366;
+}
+
+.vr-compra-item__right { flex-shrink: 0; }
+
+.vr-compra-item__costo {
+  font-size: 15px;
+  font-weight: 700;
+  color: #30d158;
+  font-family: -apple-system, 'SF Pro Display', sans-serif;
+}
+
+// ── PRINT BUTTON ──────────────────────────────────────────────────────────────
+.vr-print-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: calc(100% - 32px);
+  margin: 16px 16px 0;
+  background: #2c2c2e;
+  color: #0a84ff;
+  border: 1px solid rgba(10,132,255,0.3);
+  border-radius: 14px;
+  padding: 13px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 140ms;
+
+  mat-icon { font-size: 18px; }
+  &:active { background: #3a3a3c; }
+}
+
+// ── PRINT MEDIA ───────────────────────────────────────────────────────────────
+@media print {
+  .vr-print-area { display: block !important; }
+  .vr-root { display: none; }
+}
+
+// xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+/* Estilos para la pantalla normal */
+#vr-print-area {
+  display: none; // Oculto mientras navegas
+}
+
+/* Estilos exclusivos para la impresora */
+@media print {
+  .container {
+    display: none !important; // Oculta toda tu app
+  }
+
+  #vr-print-area {
+    display: block !important; // Muestra solo la lista
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    color: black;
+    background: white;
+  }
+}

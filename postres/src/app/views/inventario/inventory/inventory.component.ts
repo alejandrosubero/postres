@@ -13,6 +13,9 @@ import { AddStockDialogComponent } from '../add-stock-dialog/add-stock-dialog.co
 import { ShoppingListDialogComponent } from '../shopping-list-dialog/shopping-list-dialog.component';
 import { NavConfig } from '../../../models/navegation/navElemet.model';
 import { NavService } from '../../../services/navegate/nav.service';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-inventory',
@@ -23,7 +26,10 @@ import { NavService } from '../../../services/navegate/nav.service';
     MatButtonModule,
     MatIconModule,
     MatProgressBarModule,
-    MatChipsModule
+    MatChipsModule,
+    MatInputModule,
+    MatFormFieldModule,
+    FormsModule
   ],
   templateUrl: './inventory.component.html',
   styleUrl: './inventory.component.scss'
@@ -37,8 +43,36 @@ export class InventoryComponent {
 
   ingredientes = this.fbService.ingredientesSignal;
 
+  // 1. Signal para el texto de búsqueda
+  searchTerm = signal<string>('');
+
+  // 2. Signal computada que filtra la lista original
+  filteredIngredientes = computed(() => {
+    const term = this.searchTerm().toLowerCase().trim();
+    const lista = this.ingredientes();
+
+    // Filtra solo si hay 2 o más caracteres, si no, devuelve la lista completa
+    if (term.length < 2) return lista;
+
+
+    if (term.startsWith('&r')) {
+      return lista.filter(i => i.cantidad <= i.cantidadMinima);
+    } else {
+      return lista.filter(ing =>
+        ing.nombre.toLowerCase().includes(term)
+      );
+    }
+  });
+
+  // 3. Actualizamos los contadores para que usen la lista completa (opcional, 
+  // o puedes usar la filtrada si prefieres que el resumen cambie al buscar)
   totalProducts = computed(() => this.ingredientes().length);
   lowStockCount = computed(() => this.ingredientes().filter(i => i.cantidad <= i.cantidadMinima).length);
+
+
+
+  // totalProducts = computed(() => this.ingredientes().length);
+  // lowStockCount = computed(() => this.ingredientes().filter(i => i.cantidad <= i.cantidadMinima).length);
 
 
   constructor() {

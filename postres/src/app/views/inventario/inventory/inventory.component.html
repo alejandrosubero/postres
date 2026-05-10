@@ -1,84 +1,127 @@
- <div class="inventory-container">
-      <!-- Header iOS style -->
-      <div class="ios-header">
-        <h1>Inventario</h1>
-        <div class="header-actions">
-          <button mat-icon-button (click)="printRestockList()">
-            <mat-icon>print</mat-icon>
-          </button>
-          <button mat-icon-button (click)="openShoppingList()">
-            <mat-icon>shopping_cart</mat-icon>
+<div class="inventory-container">
+  <!-- Header iOS style -->
+  <div class="ios-header">
+    <h1>Inventario</h1>
+    <div class="header-actions">
+      <button mat-icon-button (click)="printRestockList()">
+        <mat-icon>print</mat-icon>
+      </button>
+      <button mat-icon-button (click)="openShoppingList()">
+        <mat-icon>shopping_cart</mat-icon>
+      </button>
+    </div>
+  </div>
+
+  <!-- Resumen rápido -->
+  <div class="summary-cards">
+    <mat-card>
+      <mat-card-content>
+        <div class="summary-item">
+          <span class="label">Total productos</span>
+          <span class="value">{{ totalProducts() }}</span>
+        </div>
+        <div class="summary-item">
+          <span class="label">⚠️ Por reabastecer</span>
+          <span class="value critical">{{ lowStockCount() }}</span>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <!-- search -->
+
+  <div class="search-section">
+  <mat-form-field appearance="fill" class="ios-search-field">
+    <mat-icon matPrefix style="color: white;">search</mat-icon>
+    <input matInput 
+           type="text" 
+           [ngModel]="searchTerm()" 
+           (ngModelChange)="searchTerm.set($event)"
+           placeholder="Buscar ingrediente">
+    @if (searchTerm()) {
+      <button matSuffix mat-icon-button (click)="searchTerm.set('')" class="clear-button">
+        <mat-icon>cancel</mat-icon>
+      </button>
+    }
+  </mat-form-field>
+</div>
+  <!-- <div>
+    <mat-card class="summary-cards-search">
+      <mat-card-content>
+        <div class="search-container">
+          <mat-form-field appearance="outline" class="ios-search-field">
+            <mat-icon matPrefix>search</mat-icon>
+            <mat-label style="color: white;">Buscar ingrediente...</mat-label>
+            <input matInput type="text" [ngModel]="searchTerm()" (ngModelChange)="searchTerm.set($event)"
+              placeholder="Ej: Harina">
+            @if (searchTerm()) {
+            <button matSuffix mat-icon-button (click)="searchTerm.set('')">
+              <mat-icon style="color: white;">close</mat-icon>
+            </button>
+            }
+          </mat-form-field>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div> -->
+
+
+
+  <!-- Lista de ingredientes estilo iOS (cards) -->
+  <div class="ingredient-list">
+    @for (item of filteredIngredientes(); track item.id) {
+    <mat-card class="ingredient-card" [class.critical]="isCritical(item)">
+      <mat-card-content>
+        <div class="card-header">
+          <div class="title-group">
+            <h3>{{ item.nombre }}</h3>
+            <mat-chip-set>
+              <mat-chip>{{ item.categoria }}</mat-chip>
+            </mat-chip-set>
+          </div>
+          <button mat-icon-button (click)="openAddStock(item)">
+            <mat-icon>add_circle</mat-icon>
           </button>
         </div>
-      </div>
 
-      <!-- Resumen rápido -->
-      <div class="summary-cards">
-        <mat-card>
-          <mat-card-content>
-            <div class="summary-item">
-              <span class="label">Total productos</span>
-              <span class="value">{{ totalProducts() }}</span>
-            </div>
-            <div class="summary-item">
-              <span class="label">⚠️ Por reabastecer</span>
-              <span class="value critical">{{ lowStockCount() }}</span>
-            </div>
-          </mat-card-content>
-        </mat-card>
-      </div>
+        <div class="details">
+          <div class="detail-row">
+            <span>Presentación: {{ item.presentacion }}</span>
+            <span>Precio: {{ item.precio | currency }}</span>
+          </div>
+          <div class="detail-row">
+            <span>Unidad base: {{ item.unidadBase }}</span>
+            <span>Precio/ud: {{ item.precioPorUnidad | currency }}</span>
+          </div>
+        </div>
 
-      <!-- Lista de ingredientes estilo iOS (cards) -->
-      <div class="ingredient-list">
-        @for (item of ingredientes(); track item.id) {
-          <mat-card class="ingredient-card" [class.critical]="isCritical(item)">
-            <mat-card-content>
-              <div class="card-header">
-                <div class="title-group">
-                  <h3>{{ item.nombre }}</h3>
-                  <mat-chip-set>
-                    <mat-chip>{{ item.categoria }}</mat-chip>
-                  </mat-chip-set>
-                </div>
-                <button mat-icon-button (click)="openAddStock(item)">
-                  <mat-icon>add_circle</mat-icon>
-                </button>
-              </div>
-
-              <div class="details">
-                <div class="detail-row">
-                  <span>Presentación: {{ item.presentacion }}</span>
-                  <span>Precio: {{ item.precio | currency }}</span>
-                </div>
-                <div class="detail-row">
-                  <span>Unidad base: {{ item.unidadBase }}</span>
-                  <span>Precio/ud: {{ item.precioPorUnidad | currency }}</span>
-                </div>
-              </div>
-
-              <div class="stock-info">
-                <div class="stock-quantity">
-                  <span class="label">Cantidad actual:</span>
-                  <span class="quantity">{{ item.cantidad }} {{ item.unidadBase }}</span>
-                </div>
-                @if (isCritical(item)) {
-                  <div class="alert-badge">
-                    <mat-icon>warning</mat-icon> ¡Reabastecer!
-                  </div>
-                }
-                <mat-progress-bar
-                  [value]="getStockPercentage(item)"
-                  [color]="isCritical(item) ? 'warn' : 'primary'">
-                </mat-progress-bar>
-                <div class="min-stock">Mínimo: {{ item.cantidadMinima }} {{ item.unidadBase }}</div>
-              </div>
-            </mat-card-content>
-          </mat-card>
-        } @empty {
+        <div class="stock-info">
+          <div class="stock-quantity">
+            <span class="label">Cantidad actual:</span>
+            <span class="quantity">{{ item.cantidad }} {{ item.unidadBase }}</span>
+          </div>
+          @if (isCritical(item)) {
+          <div class="alert-badge">
+            <mat-icon>warning</mat-icon> ¡Reabastecer!
+          </div>
+          }
+          <mat-progress-bar [value]="getStockPercentage(item)" [color]="isCritical(item) ? 'warn' : 'primary'">
+          </mat-progress-bar>
+          <div class="min-stock">Mínimo: {{ item.cantidadMinima }} {{ item.unidadBase }}</div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+    } @empty {
+    <div class="empty-state">
+      <mat-icon>search_off</mat-icon>
+      <p>{{ searchTerm().length < 2 ? 'No hay productos en el inventario' : 'No se encontraron resultados' }}</p>
+    </div>
+    }
+    <!-- } @empty {
           <div class="empty-state">
             <mat-icon>inventory</mat-icon>
             <p>No hay productos en el inventario</p>
           </div>
-        }
-      </div>
-    </div>
+        } -->
+  </div>
+</div>

@@ -7,6 +7,7 @@ import { Pedido } from '../../models/pedido.model';
 export class PedidoFilterService {
 
   filter(pedidos: Pedido[], term: string): Pedido[] {
+    
     if (!term || term.length < 2) return pedidos;
 
     const lowerTerm = term.toLowerCase().trim();

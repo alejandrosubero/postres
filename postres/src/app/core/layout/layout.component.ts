@@ -84,7 +84,7 @@ export class LayoutComponent  implements OnInit {
 
   // ======= navegate =============== //
   navigateToInventory(): void {
-    this.router.navigate(['/app/mager/inventario']);
+    this.router.navigate(['/app/inventory/management']);
   }
 
   navigate(routeBase: string) {
@@ -150,6 +150,12 @@ logout(): void {
     this.navigate(routeBase);
   }
 
+    addPedido(sidenav: any): void {
+    const routeBase = '/app/pedido/add' ;
+    sidenav.toggle();
+    this.navigate(routeBase);
+  }
+
 
 
 
@@ -166,16 +172,22 @@ logout(): void {
   }
 
    magerInventario(sidenav: any): void {
-    const routeBase = '/app/mager/inventario';
+    const routeBase = '/app/inventory/management';
     sidenav.toggle();
     this.navigate(routeBase);
   }
 
    navegateInventario(): void {
-    const routeBase = '/app/mager/inventario';
+    const routeBase = '/app/inventory/management';
     this.navigate(routeBase);
   }
   
+   checkeInventario(sidenav: any): void {
+     const routeBase = '/app/inventory/checker';
+     sidenav.toggle();
+     this.navigate(routeBase);
+  }
+   
 
   goCompareTecnnical(sidenav: any): void {
     // const routeBase = "app/technical/notes/compare";

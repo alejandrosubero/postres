@@ -1,0 +1,236 @@
+<div class="vr-root">
+ 
+      <!-- ── HEADER ── -->
+      <div class="vr-header" @fadeSlide>
+        <div class="vr-header__left">
+          <span class="vr-header__icon">🧪</span>
+          <div>
+            <h2 class="vr-header__title">Verificador de recetas</h2>
+            <p class="vr-header__sub">Comprueba qué puedes preparar con tu inventario actual</p>
+          </div>
+        </div>
+        <button class="vr-add-btn" (click)="agregarEntrada()" matRipple>
+          <mat-icon>add</mat-icon>
+          <span>Receta</span>
+        </button>
+      </div>
+ 
+      <!-- ── ENTRADAS (selector de recetas) ── -->
+      <div class="vr-entradas" [@listIn]="entradas().length">
+        <div
+          *ngFor="let e of entradas(); trackBy: trackByUid; let i = index"
+          class="vr-entrada"
+          @fadeSlide
+        >
+          <!-- SELECTOR RECETA -->
+          <mat-select
+            class="vr-select"
+            [(ngModel)]="e.receta"
+            (ngModelChange)="onRecetaChange(e)"
+            placeholder="Selecciona una receta"
+          >
+            <mat-option *ngFor="let r of recetas()" [value]="r">
+              {{ r.Name }}
+            </mat-option>
+          </mat-select>
+ 
+          <!-- STEPPER CANTIDAD -->
+          <div class="vr-stepper">
+            <button class="vr-step-btn" (click)="decrementar(e)" [disabled]="e.cantidad <= 1">
+              <mat-icon>remove</mat-icon>
+            </button>
+            <div class="vr-step-val">
+              <span class="vr-step-num">{{ e.cantidad }}</span>
+              <span class="vr-step-lbl">unid.</span>
+            </div>
+            <button class="vr-step-btn" (click)="incrementar(e)">
+              <mat-icon>add</mat-icon>
+            </button>
+          </div>
+ 
+          <!-- MAX POSIBLE -->
+          <div class="vr-max-chip" *ngIf="e.receta"
+            [class.vr-max-chip--ok]="e.maximoPosible >= e.cantidad"
+            [class.vr-max-chip--warn]="e.maximoPosible > 0 && e.maximoPosible < e.cantidad"
+            [class.vr-max-chip--err]="e.maximoPosible === 0">
+            <mat-icon class="vr-max-chip__icon">
+              {{ e.maximoPosible >= e.cantidad ? 'check_circle' : e.maximoPosible > 0 ? 'warning' : 'cancel' }}
+            </mat-icon>
+            <span>máx. {{ e.maximoPosible }}</span>
+          </div>
+ 
+          <!-- QUITAR FILA -->
+          <button class="vr-remove-btn" (click)="quitarEntrada(i)"
+            *ngIf="entradas().length > 1"
+            matTooltip="Quitar esta receta">
+            <mat-icon>close</mat-icon>
+          </button>
+        </div>
+      </div>
+ 
+      <!-- ── BOTÓN ANALIZAR ── -->
+      <div class="vr-actions">
+        <button
+          class="vr-analyze-btn"
+          [disabled]="!puedeAnalizar()"
+          (click)="analizar()"
+          matRipple
+        >
+          <mat-icon>biotech</mat-icon>
+          Verificar inventario
+        </button>
+      </div>
+ 
+      <!-- ── RESULTADOS ── -->
+      <ng-container *ngIf="resultado()">
+ 
+        <!-- STATUS GLOBAL -->
+        <div class="vr-status" @fadeSlide
+          [class.vr-status--ok]="resultado()!.todoAlcanza"
+          [class.vr-status--err]="!resultado()!.todoAlcanza">
+          <mat-icon>{{ resultado()!.todoAlcanza ? 'check_circle' : 'error' }}</mat-icon>
+          <span>
+            {{ resultado()!.todoAlcanza
+              ? '✅ Tienes todo en inventario para preparar lo solicitado'
+              : '⚠️ Faltan ingredientes — revisa la lista de compra abajo' }}
+          </span>
+        </div>
+ 
+        <!-- DETALLE POR RECETA -->
+        <div class="vr-section-title">Detalle por receta</div>
+ 
+        <div class="vr-resultados" [@listIn]="resultado()!.resultados.length">
+          <div
+            *ngFor="let resultado of resultado()!.resultados"
+            class="vr-resultado"
+            [class.vr-resultado--ok]="resultado.puedeCompletarse"
+            [class.vr-resultado--err]="!resultado.puedeCompletarse"
+          >
+            <!-- CABECERA RESULTADO -->
+            <div class="vr-res__header">
+              <div class="vr-res__name-block">
+                <mat-icon class="vr-res__icon">
+                  {{ resultado.puedeCompletarse ? 'check_circle' : 'cancel' }}
+                </mat-icon>
+                <div>
+                  <span class="vr-res__name">{{ resultado.receta.Name }}</span>
+                  <span class="vr-res__meta">
+                    Solicitadas: {{ resultado.cantidadSolicitada }} ·
+                    <strong [class.text-ok]="resultado.puedeCompletarse" [class.text-err]="!resultado.puedeCompletarse">
+                      Posibles: {{ resultado.cantidadPosible }}
+                    </strong>
+                  </span>
+                </div>
+              </div>
+              <button class="vr-toggle-btn" (click)="toggleDetalle(resultado.receta.id!)">
+                <mat-icon>{{ detalleAbierto(resultado.receta.id!) ? 'expand_less' : 'expand_more' }}</mat-icon>
+              </button>
+            </div>
+ 
+            <!-- TABLA DE INGREDIENTES (colapsable) -->
+            <div class="vr-res__body" *ngIf="detalleAbierto(resultado.receta.id!)">
+              <div class="vr-ing-table">
+                <div class="vr-ing-row vr-ing-row--header">
+                  <span>Ingrediente</span>
+                  <span>Requerido</span>
+                  <span>Disponible</span>
+                  <span>Estado</span>
+                </div>
+                <div
+                  *ngFor="let ingrediente of resultado.ingredientes"
+                  class="vr-ing-row"
+                  [class.vr-ing-row--ok]="ingrediente.alcanza"
+                  [class.vr-ing-row--err]="!ingrediente.alcanza"
+                >
+                  <span class="vr-ing-nombre">{{ ingrediente.nombre }}</span>
+                  <span>{{ ingrediente.requerido  | number:'1.2-2'}} ({{ingrediente.unidadOfPresentacion }})</span>
+                  <span>{{ ingrediente.disponible | number:'1.2-2'}} ({{ ingrediente.presentacion }})</span>
+                  <span class="vr-ing-estado">
+                    <mat-icon *ngIf="ingrediente.alcanza" class="ic-ok">check</mat-icon>
+                    <span *ngIf="!ingrediente.alcanza" class="ic-err">
+                      <mat-icon>close</mat-icon>
+                      falta {{ ingrediente.faltante | number:'1.2-2'}} ({{ ingrediente.unidadOfPresentacion }})
+                    </span>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+ 
+        <!-- ── LISTA DE COMPRA ── -->
+        <ng-container *ngIf="resultado()!.listaCompra.length > 0">
+          <div class="vr-section-title vr-section-title--compra">
+            <mat-icon>shopping_cart</mat-icon>
+            Lista de compra
+            <span class="vr-compra-total">Total estimado: {{ fmt(resultado()!.costoTotalCompra) }}</span>
+          </div>
+ 
+          <div class="vr-lista-compra" [@listIn]="resultado()!.listaCompra.length">
+            <div
+              *ngFor="let item of resultado()!.listaCompra"
+              class="vr-compra-item"
+            >
+              <div class="vr-compra-item__left">
+                <mat-icon class="vr-compra-item__icon">shopping_bag</mat-icon>
+                <div class="vr-compra-item__info">
+                  <span class="vr-compra-item__nombre">{{ item.nombre }}</span>
+                  <span class="vr-compra-item__detalle">
+                    {{ item.cantidadFaltante | number:'1.0-2' }} {{ item.presentacion }}
+                    · {{ fmt(item.precioPorUnidad) }} / unid.
+                  </span>
+                </div>
+              </div>
+              <div class="vr-compra-item__right">
+                <span class="vr-compra-item__costo">{{ fmt(item.costoEstimado) }}</span>
+              </div>
+            </div>
+          </div>
+ 
+          <!-- BOTÓN IMPRIMIR -->
+          <button class="vr-print-btn" (click)="imprimir()" matRipple>
+            <mat-icon>print</mat-icon>
+            Imprimir lista de compra
+          </button>
+        </ng-container>
+ 
+      </ng-container>
+ 
+    </div>
+ 
+    <!-- PRINT TEMPLATE (invisible, solo para impresión) -->
+    <div class="vr-print-area" id="vr-print-area" style="display:none">
+      <ng-container *ngIf="resultado()">
+        <h2>Lista de compra</h2>
+        <p>Generada: {{ now() }}</p>
+        <hr/>
+        <div *ngFor="let r of resultado()!.resultados" style="margin-bottom:8px">
+          <strong>{{ r.receta.Name }}</strong> — solicitadas: {{ r.cantidadSolicitada }}, posibles: {{ r.cantidadPosible }}
+        </div>
+        <hr/>
+        <table style="width:100%;border-collapse:collapse">
+          <thead>
+            <tr>
+              <th style="text-align:left;padding:4px;border-bottom:1px solid #ccc">Ingrediente</th>
+              <th style="text-align:left;padding:4px;border-bottom:1px solid #ccc">Cantidad</th>
+              <th style="text-align:left;padding:4px;border-bottom:1px solid #ccc">Presentación</th>
+              <th style="text-align:right;padding:4px;border-bottom:1px solid #ccc">Costo est.</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of resultado()!.listaCompra">
+              <td style="padding:4px;border-bottom:1px solid #eee">{{ item.nombre }}</td>
+              <td style="padding:4px;border-bottom:1px solid #eee">{{ item.cantidadFaltante | number:'1.0-2' }}</td>
+              <td style="padding:4px;border-bottom:1px solid #eee">{{ item.presentacion }}</td>
+              <td style="padding:4px;border-bottom:1px solid #eee;text-align:right">{{ fmt(item.costoEstimado) }}</td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr>
+              <td colspan="3" style="padding:6px;font-weight:bold">Total estimado</td>
+              <td style="padding:6px;font-weight:bold;text-align:right">{{ fmt(resultado()!.costoTotalCompra) }}</td>
+            </tr>
+          </tfoot>
+        </table>
+      </ng-container>
+    </div>

@@ -107,10 +107,11 @@
                     </div>
                     }
 
-                  
+
 
                     @if (this.customer.address != '') {
-                    <div class="input-row clickable-address" [cdkCopyToClipboard]="this.customer.address" (click)="notificarCopiado()">
+                    <div class="input-row clickable-address" [cdkCopyToClipboard]="this.customer.address"
+                        (click)="notificarCopiado()">
                         <span>Direccion: </span>
                         <strong>{{ this.customer.address }}</strong>
                         <!-- Opcional: un icono pequeño de copiar -->
@@ -147,7 +148,6 @@
                 </mat-expansion-panel-header>
 
                 <section class="section-group">
-
                     <div class="header-container">
                         <h3>Articulo:</h3>
                         <button type="button" class="btn-add-circle" (click)="addReceta()">+</button>
@@ -171,8 +171,152 @@
                         }
                     </div>
                 </section>
+
+                <section class="section-group">
+                    <div class="header-status-box">
+                        <div class="status-label">Chequar existencia de inventario:</div>
+                        <button mat-mini-fab type="button" (click)="toggleCheckInventory()"
+                            [class.btn-active]="checkInventory" [class.btn-inactive]="!checkInventory"
+                            aria-label="Toggle costo">
+                            <mat-icon>{{ checkInventory ? 'check' : 'add' }}</mat-icon>
+                        </button>
+                    </div>
+                </section>
+
+         @if(checkInventory){
+                <mat-accordion>
+                    <mat-expansion-panel hideToggle>
+                        <mat-expansion-panel-header>
+                            <mat-panel-title>
+                                Inventario disponibilidad
+                            </mat-panel-title>
+                            <mat-panel-description>
+                                {{this.customerExist ? 'check' : 'Disponibilidad'}}
+                            </mat-panel-description>
+                        </mat-expansion-panel-header>
+
+                        <section class="section-group">
+                            <ng-container *ngIf="resultado()">
+
+                                <!-- STATUS GLOBAL -->
+                                <div class="vr-status" @fadeSlide [class.vr-status--ok]="resultado()!.todoAlcanza"
+                                    [class.vr-status--err]="!resultado()!.todoAlcanza">
+                                    <mat-icon>{{ resultado()!.todoAlcanza ? 'check_circle' : 'error' }}</mat-icon>
+                                    <span>
+                                        {{ resultado()!.todoAlcanza
+                                        ? '✅ Tienes todo en inventario para preparar lo solicitado'
+                                        : '⚠️ Faltan ingredientes — revisa la lista de compra abajo' }}
+                                    </span>
+                                </div>
+
+                                <!-- DETALLE POR RECETA -->
+                                <div class="vr-section-title">Detalle por receta</div>
+
+                                <div class="vr-resultados" [@listIn]="resultado()!.resultados.length">
+                                    <div *ngFor="let resultado of resultado()!.resultados" class="vr-resultado"
+                                        [class.vr-resultado--ok]="resultado.puedeCompletarse"
+                                        [class.vr-resultado--err]="!resultado.puedeCompletarse">
+                                        <!-- CABECERA RESULTADO -->
+                                        <div class="vr-res__header">
+                                            <div class="vr-res__name-block">
+                                                <mat-icon class="vr-res__icon">
+                                                    {{ resultado.puedeCompletarse ? 'check_circle' : 'cancel' }}
+                                                </mat-icon>
+                                                <div>
+                                                    <span class="vr-res__name">{{ resultado.receta.Name }}</span>
+                                                    <span class="vr-res__meta">
+                                                        Solicitadas: {{ resultado.cantidadSolicitada }} ·
+                                                        <strong [class.text-ok]="resultado.puedeCompletarse"
+                                                            [class.text-err]="!resultado.puedeCompletarse">
+                                                            Posibles: {{ resultado.cantidadPosible }}
+                                                        </strong>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <button type="button" class="vr-toggle-btn" (click)="toggleDetalle(resultado.receta.id!)">
+                                                <mat-icon>{{ detalleAbierto(resultado.receta.id!) ? 'expand_less' :
+                                                    'expand_more' }}</mat-icon>
+                                            </button>
+                                        </div>
+
+                                        <!-- TABLA DE INGREDIENTES (colapsable) -->
+                                        <div class="vr-res__body" *ngIf="detalleAbierto(resultado.receta.id!)">
+                                            <div class="vr-ing-table">
+                                                <div class="vr-ing-row vr-ing-row--header">
+                                                    <span>Ingrediente</span>
+                                                    <span>Requerido</span>
+                                                    <span>Disponible</span>
+                                                    <span>Estado</span>
+                                                </div>
+                                                <div *ngFor="let ingrediente of resultado.ingredientes"
+                                                    class="vr-ing-row" [class.vr-ing-row--ok]="ingrediente.alcanza"
+                                                    [class.vr-ing-row--err]="!ingrediente.alcanza">
+                                                    <span class="vr-ing-nombre">{{ ingrediente.nombre }}</span>
+                                                    <span>{{ ingrediente.requerido | number:'1.2-2'}}
+                                                        ({{ingrediente.unidadOfPresentacion }})</span>
+                                                    <span>{{ ingrediente.disponible | number:'1.2-2'}} ({{
+                                                        ingrediente.presentacion }})</span>
+                                                    <span class="vr-ing-estado">
+                                                        <mat-icon *ngIf="ingrediente.alcanza"
+                                                            class="ic-ok">check</mat-icon>
+                                                        <span *ngIf="!ingrediente.alcanza" class="ic-err">
+                                                            <mat-icon>close</mat-icon>
+                                                            falta {{ ingrediente.faltante | number:'1.2-2'}} ({{
+                                                            ingrediente.unidadOfPresentacion }})
+                                                        </span>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- ── LISTA DE COMPRA ── -->
+                                <ng-container *ngIf="resultado()!.listaCompra.length > 0">
+                                    <div class="vr-section-title vr-section-title--compra">
+                                        <mat-icon>shopping_cart</mat-icon>
+                                        Lista de compra
+                                        <span class="vr-compra-total">Total estimado: {{
+                                            fmt(resultado()!.costoTotalCompra) }}</span>
+                                    </div>
+
+                                    <div class="vr-lista-compra" [@listIn]="resultado()!.listaCompra.length">
+                                        <div *ngFor="let item of resultado()!.listaCompra" class="vr-compra-item">
+                                            <div class="vr-compra-item__left">
+                                                <mat-icon class="vr-compra-item__icon">shopping_bag</mat-icon>
+                                                <div class="vr-compra-item__info">
+                                                    <span class="vr-compra-item__nombre">{{ item.nombre }}</span>
+                                                    <span class="vr-compra-item__detalle">
+                                                        {{ item.cantidadFaltante | number:'1.0-2' }} {{
+                                                        item.presentacion }}
+                                                        · {{ fmt(item.precioPorUnidad) }} / unid.
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div class="vr-compra-item__right">
+                                                <span class="vr-compra-item__costo">{{ fmt(item.costoEstimado) }}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- BOTÓN IMPRIMIR -->
+                                    <button type="button" class="vr-print-btn" (click)="imprimir()" matRipple>
+                                        <mat-icon>print</mat-icon>
+                                        Imprimir lista de compra
+                                    </button>
+                                </ng-container>
+
+                            </ng-container>
+                        </section>
+
+                    </mat-expansion-panel>
+                </mat-accordion>
+         }
+
+
             </mat-expansion-panel>
         </mat-accordion>
+
 
         <!-- Costos -->
         <mat-accordion>
@@ -192,7 +336,7 @@
                         <strong>${{pedidoForm.get('cost_base')?.value | number:'1.2-2' }}</strong>
                     </div>
 
-                    @if( this.esSinCargos){
+                    @if(!this.esSinCargos){
                     <mat-form-field appearance="fill">
                         <mat-label>Ganancia Porcentaje:</mat-label>
                         <input matInput type="number" formControlName="profit_Percentage" placeholder="">
@@ -210,7 +354,7 @@
                         <input matInput type="number" formControlName="delivery_cost" placeholder="">
                     </mat-form-field>
 
-                    @if( this.esSinCargos){
+                    @if(!this.esSinCargos){
                     <div class="total-row">
                         <span>Ganancia: </span>
                         <strong>${{ pedidoForm.get('profit')?.value | number:'1.2-2' }}</strong>
@@ -278,4 +422,46 @@
         </section>
 
     </form>
+</div>
+
+
+<!-- PRINT TEMPLATE (invisible, solo para impresión) -->
+<div class="vr-print-area" id="vr-print-area" style="display:none">
+    <ng-container *ngIf="resultado()">
+        <h2>Lista de compra</h2>
+        <p>Generada: {{ now() }}</p>
+        <hr />
+        <div *ngFor="let r of resultado()!.resultados" style="margin-bottom:8px">
+            <strong>{{ r.receta.Name }}</strong> — solicitadas: {{ r.cantidadSolicitada }}, posibles: {{
+            r.cantidadPosible }}
+        </div>
+        <hr />
+        <table style="width:100%;border-collapse:collapse">
+            <thead>
+                <tr>
+                    <th style="text-align:left;padding:4px;border-bottom:1px solid #ccc">Ingrediente</th>
+                    <th style="text-align:left;padding:4px;border-bottom:1px solid #ccc">Cantidad</th>
+                    <th style="text-align:left;padding:4px;border-bottom:1px solid #ccc">Presentación</th>
+                    <th style="text-align:right;padding:4px;border-bottom:1px solid #ccc">Costo est.</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let item of resultado()!.listaCompra">
+                    <td style="padding:4px;border-bottom:1px solid #eee">{{ item.nombre }}</td>
+                    <td style="padding:4px;border-bottom:1px solid #eee">{{ item.cantidadFaltante | number:'1.0-2' }}
+                    </td>
+                    <td style="padding:4px;border-bottom:1px solid #eee">{{ item.presentacion }}</td>
+                    <td style="padding:4px;border-bottom:1px solid #eee;text-align:right">{{ fmt(item.costoEstimado) }}
+                    </td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="3" style="padding:6px;font-weight:bold">Total estimado</td>
+                    <td style="padding:6px;font-weight:bold;text-align:right">{{ fmt(resultado()!.costoTotalCompra) }}
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    </ng-container>
 </div>

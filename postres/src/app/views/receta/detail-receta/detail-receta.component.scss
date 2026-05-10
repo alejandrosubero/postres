@@ -19,15 +19,36 @@ h3 {
     color: #f5f5f9; 
 }
 
-.row {
+
+
+.table-header {
   display: flex;
-  padding: 12px 0;
-  border-bottom: 1px solid #333;
+  padding: 12px 15px;
+  background: #2c2c2e; /* Un tono un poco más claro que la tabla */
+  color: #8e8e93;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
 }
 
+/* Filas */
+.row {
+  display: flex;
+  padding: 15px;
+  border-bottom: 1px solid #333;
+  color: #fff;
+  cursor: pointer;
+}
+
+/* Alineación de columnas: Repite estos anchos en header y row */
 .col-name { flex: 2; }
 .col-cant { flex: 1; text-align: center; }
 .col-cost { flex: 1; text-align: right; }
+
+.row:last-child { border-bottom: none; }
+.row:active { background: #2c2c2e; } 
+
+
 
 .total-row {
   display: flex;
