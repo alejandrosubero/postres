@@ -145,7 +145,7 @@ private checkerService = inject(InventarioCheckerService);
 
     this.pedidoForm.get('dayDue')?.valueChanges.subscribe(nuevaFecha => {
       this.newDate = nuevaFecha;
-      console.log('La nueva fecha seleccionada es:', nuevaFecha);
+      // console.log('La nueva fecha seleccionada es:', nuevaFecha);
       this.verificarFecha(nuevaFecha);
     });
   }
@@ -177,7 +177,7 @@ private checkerService = inject(InventarioCheckerService);
         this.customer = res;
         if (this.customer.name !== '') {
           this.customerExist = true;
-          console.log('El Customer:', this.customer);
+          // console.log('El Customer:', this.customer);
         }
         this.pedidoForm.patchValue({
           customer: this.customer,
@@ -312,6 +312,7 @@ private checkerService = inject(InventarioCheckerService);
     newPedido.wasPriority = newPedido.ispriority 
     newPedido.editDay = new Date();
     newPedido.deliveryDay = newPedido.dayDue;
+    newPedido.confirInventory = this.resultado()!.todoAlcanza;
 
     if(newPedido.ispriority){
       newPedido.enCurso = true;
@@ -356,7 +357,7 @@ analizar() {
 
     const res = this.checkerService.analizar(solicitudes);
     this.resultado.set(res);
-    console.log('this.resultado',this.resultado());
+    // console.log('this.resultado',this.resultado());
     const conFaltantes = new Set(
       res.resultados.filter(r => !r.puedeCompletarse).map(r => r.receta.id!)
     );

@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, OnInit, inject } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
@@ -17,6 +17,10 @@ import { NavConfig } from '../../../../models/navegation/navElemet.model';
 import { ClipboardModule } from '@angular/cdk/clipboard';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { InventoryService } from '../../../../services/inventories/inventory.service';
+import { InventarioCheckerService, RecetaConCantidad, ResultadoAnalisis, ResultadoReceta, EntradaReceta } from '../../../../services/inventories/inventario-checker.service';
+import { Receta } from '../../../../models/receta.model';
+import { provideNativeDateAdapter } from '@angular/material/core';
+import { trigger, transition, style, animate, query, stagger } from '@angular/animations';
 
 @Component({
   selector: 'app-pedido-detail',
@@ -33,14 +37,30 @@ import { InventoryService } from '../../../../services/inventories/inventory.ser
     MatListModule,
     MatCardModule,
     ClipboardModule
-
+  ],
+  providers: [provideNativeDateAdapter()],
+  animations: [
+    trigger('fadeSlide', [
+      transition(':enter', [
+        style({ opacity: 0, transform: 'translateY(10px)' }),
+        animate('220ms ease-out', style({ opacity: 1, transform: 'none' })),
+      ]),
+    ]),
+    trigger('listIn', [
+      transition('* => *', [
+        query(':enter', [
+          style({ opacity: 0, transform: 'translateY(8px)' }),
+          stagger(40, animate('180ms ease-out', style({ opacity: 1, transform: 'none' }))),
+        ], { optional: true }),
+      ]),
+    ]),
   ],
   templateUrl: './pedido-detail.component.html',
   styleUrl: './pedido-detail.component.scss'
 })
 export class PedidoDetailComponent {
 
-  
+
   private inventoryService = inject(InventoryService);
   private snackBar = inject(MatSnackBar);
   private navService = inject(NavService);
@@ -48,6 +68,11 @@ export class PedidoDetailComponent {
   private pedidoService = inject(PedidoService);
   public pedido: Pedido;
   private id: string = '';
+
+  private detallesAbiertos = signal<Set<string>>(new Set());
+  private checkerService = inject(InventarioCheckerService);
+  entradas = signal<EntradaReceta[]>([this.nuevaEntrada()]);
+  resultado = signal<ResultadoAnalisis | null>(null);
 
   isFavoriteView: boolean = false;
   panelOpenState = false;
@@ -62,6 +87,8 @@ export class PedidoDetailComponent {
   isOpen: boolean = false;
   isFabOpen = false;
   esEncurso: boolean = false;
+  toggleEsCursoResultado = false;
+
 
   constructor() {
     this.setNav();
@@ -72,9 +99,10 @@ export class PedidoDetailComponent {
     }
     if (!this.pedido) {
       this.router.navigate(['/app/pedido/list']);
-    } else {
-      console.log(this.pedido);
-    }
+    } 
+    // else {
+    //   console.log(this.pedido);
+    // }
   }
 
 
@@ -82,36 +110,51 @@ export class PedidoDetailComponent {
 
 
   toggleEsCurso(): void {
-    this.pedido.enCurso = !this.pedido.enCurso;
-    this.guardar();
 
-    // if(this.pedido.enCurso){
-    //   this. confirmarPedido(this.pedido);
-    // }
-    
+    if (this.pedido.enCurso) {
+      this.pedido.enCurso = false;
+      this.toggleEsCursoResultado = false;
+    } else {
+      this.analizar();
+
+      if (this.resultado()) {
+        this.toggleEsCursoResultado = true;
+      }
+
+      if (this.resultado()!.todoAlcanza) {
+        this.pedido.enCurso = true;
+        // TODO: Descuento de inventario
+        // if(this.pedido.enCurso){
+        // this. confirmarPedido(this.pedido);
+        // }
+      } else {
+        this.pedido.enCurso = false;
+      }
+    }
+    this.guardar();
   }
 
   confirmarPedido(pedido: Pedido) {
-  this.inventoryService.procesarDescuentoStock(pedido)
-    .then(() => {
-      // Notificación de éxito
-      this.snackBar.open('Inventario actualizado con éxito', 'Cerrar', {
-        duration: 3000,
-        horizontalPosition: 'center',
-        verticalPosition: 'bottom',
-        panelClass: ['success-snackbar']
+    this.inventoryService.procesarDescuentoStock(pedido)
+      .then(() => {
+        // Notificación de éxito
+        this.snackBar.open('Inventario actualizado con éxito', 'Cerrar', {
+          duration: 3000,
+          horizontalPosition: 'center',
+          verticalPosition: 'bottom',
+          panelClass: ['success-snackbar']
+        });
+        // Aquí podrías navegar a otra pantalla si quieres
+        // this.router.navigate(['/pedidos']); 
+      })
+      .catch((error) => {
+        // Notificación de error
+        this.snackBar.open('Error al actualizar inventario', 'Reintentar', {
+          duration: 5000,
+          panelClass: ['error-snackbar']
+        });
       });
-      // Aquí podrías navegar a otra pantalla si quieres
-      // this.router.navigate(['/pedidos']); 
-    })
-    .catch((error) => {
-      // Notificación de error
-      this.snackBar.open('Error al actualizar inventario', 'Reintentar', {
-        duration: 5000,
-        panelClass: ['error-snackbar']
-      });
-    });
-}
+  }
 
 
 
@@ -262,6 +305,66 @@ export class PedidoDetailComponent {
       return 'En Curso';
     }
     return '---'
+  }
+
+  analizar() {
+    const solicitudes: RecetaConCantidad[] = this.entradas()
+      .filter(e => e.receta !== null)
+      .map(e => ({ receta: e.receta!, cantidad: e.cantidad }));
+
+    const res = this.checkerService.analizar(solicitudes);
+    this.resultado.set(res);
+    // console.log('this.resultado',this.resultado());
+    const conFaltantes = new Set(
+      res.resultados.filter(r => !r.puedeCompletarse).map(r => r.receta.id!)
+    );
+    this.detallesAbiertos.set(conFaltantes);
+  }
+
+  // ── ────────────────────── EntradaReceta ───────────────────────────────────────
+
+  private nuevaEntrada(): EntradaReceta {
+    return { uid: crypto.randomUUID(), receta: null, cantidad: 1, maximoPosible: 0 };
+  }
+
+
+  addNuevaEntrada(receta: Receta): EntradaReceta {
+    return {
+      uid: crypto.randomUUID(),
+      receta: receta,
+      cantidad: 1,
+      maximoPosible: 0
+    };
+  }
+
+  agregarEntrada(entrda: EntradaReceta) {
+    this.entradas.update(arr => [...arr, entrda]);
+  }
+
+  // ── DETALLE TOGGLE ────────────────────────────────────────────────────────
+  toggleDetalle(id: string) {
+    this.detallesAbiertos.update(s => {
+      const next = new Set(s);
+      next.has(id) ? next.delete(id) : next.add(id);
+      return next;
+    });
+  }
+
+  detalleAbierto(id: string): boolean {
+    return this.detallesAbiertos().has(id);
+  }
+
+  fmt(v: number): string {
+    return new Intl.NumberFormat('es', { style: 'currency', currency: 'USD' }).format(v);
+  }
+
+  now(): string {
+    return new Date().toLocaleString('es');
+  }
+
+
+  imprimir() {
+    window.print();
   }
 
 

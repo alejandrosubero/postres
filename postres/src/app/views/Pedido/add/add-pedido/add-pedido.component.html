@@ -183,12 +183,16 @@
                     </div>
                 </section>
 
-         @if(checkInventory){
+            </mat-expansion-panel>
+        </mat-accordion>
+
+
+  @if(checkInventory){
                 <mat-accordion>
-                    <mat-expansion-panel hideToggle>
+                    <mat-expansion-panel hideToggle  style="width: 100%;">
                         <mat-expansion-panel-header>
                             <mat-panel-title>
-                                Inventario disponibilidad
+                                Inventario
                             </mat-panel-title>
                             <mat-panel-description>
                                 {{this.customerExist ? 'check' : 'Disponibilidad'}}
@@ -287,8 +291,7 @@
                                                 <div class="vr-compra-item__info">
                                                     <span class="vr-compra-item__nombre">{{ item.nombre }}</span>
                                                     <span class="vr-compra-item__detalle">
-                                                        {{ item.cantidadFaltante | number:'1.0-2' }} {{
-                                                        item.presentacion }}
+                                                        {{ item.cantidadFaltante | number:'1.0-2' }} {{item.presentacion }}
                                                         · {{ fmt(item.precioPorUnidad) }} / unid.
                                                     </span>
                                                 </div>
@@ -313,9 +316,6 @@
                 </mat-accordion>
          }
 
-
-            </mat-expansion-panel>
-        </mat-accordion>
 
 
         <!-- Costos -->

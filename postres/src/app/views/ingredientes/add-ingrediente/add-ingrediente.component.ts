@@ -59,7 +59,7 @@ export class AddIngredienteComponent implements OnInit {
   }
   ngOnInit(): void {
     this.form.get('notificar')?.valueChanges.subscribe(valor => {
-      console.log('El nuevo valor del toggle es:', valor);
+      // console.log('El nuevo valor del toggle es:', valor);
     });
   }
 

@@ -78,7 +78,7 @@ export class EditRecetaComponent {
       this.recetaForm.patchValue(this.receta);
 
       this.recetaId = this.receta.id!;
-      console.log("EDIT: ", this.receta);
+      // console.log("EDIT: ", this.receta);
     }
     // } else {
     //   this.recetaForm.patchValue(this.receta);

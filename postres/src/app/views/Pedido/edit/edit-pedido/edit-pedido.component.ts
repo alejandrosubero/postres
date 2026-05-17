@@ -126,11 +126,11 @@ export class EditPedidoComponent implements OnInit {
 
     const navigation = this.router.getCurrentNavigation();
     this.pedido = navigation?.extras.state?.['pedido'];
-    console.log("navigation?.extras.state?.['pedido']: ", this.pedido);
+    // console.log("navigation?.extras.state?.['pedido']: ", this.pedido);
     if (this.pedido.customer) {
       this.customer = this.pedido.customer;
       this.customerExist = true;
-      console.log("EDIT customer: ", this.customer);
+      // console.log("EDIT customer: ", this.customer);
     }
 
     if (!this.pedido) {
@@ -149,7 +149,7 @@ export class EditPedidoComponent implements OnInit {
 
       this.pedidoForm.patchValue(this.pedido);
 
-      console.log("EDIT Pedido: ", this.pedido);
+      // console.log("EDIT Pedido: ", this.pedido);
     }
   }
 
@@ -168,7 +168,7 @@ export class EditPedidoComponent implements OnInit {
 
     this.pedidoForm.get('dayDue')?.valueChanges.subscribe(nuevaFecha => {
       this.newDate = nuevaFecha;
-      console.log('La nueva fecha seleccionada es:', nuevaFecha);
+      // console.log('La nueva fecha seleccionada es:', nuevaFecha);
       this.verificarFecha(nuevaFecha);
     });
   }
@@ -200,7 +200,7 @@ export class EditPedidoComponent implements OnInit {
         this.customer = res;
         if (this.customer.name !== '') {
           this.customerExist = true;
-          console.log('El Customer:', this.customer);
+          // console.log('El Customer:', this.customer);
         }
         this.pedidoForm.patchValue({
           customer: this.customer,
@@ -310,7 +310,7 @@ export class EditPedidoComponent implements OnInit {
     editPedido.wasPriority = editPedido.ispriority
     editPedido.editDay = new Date();
 
-    console.log('EL_PEDIDO: ->', editPedido);
+    // console.log('EL_PEDIDO: ->', editPedido);
 
     await this.pedidoService.editar(this.pedidoId, editPedido);
 

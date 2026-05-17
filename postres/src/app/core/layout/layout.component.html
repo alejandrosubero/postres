@@ -17,10 +17,10 @@
           <p> Add Receta</p>
         </div>
 
-         <div class="buto" (click)="addPedido(sidenav)">
+        <div class="buto" (click)="addPedido(sidenav)">
           <p> Add Pedido</p>
         </div>
-       
+
         <div class="buto" (click)="magerInventario(sidenav)">
           <p>Inventario</p>
         </div>
@@ -30,8 +30,12 @@
         </div>
 
         @if( this.isAdmin){
+        <div class="buto" (click)="addGastosOperativos(sidenav)">
+          <p>Gastos Operativos</p>
+        </div>
+
         <div class="buto" (click)=" magerUsusers(sidenav)">
-          <mat-icon style="margin-right: 4px;">account_box</mat-icon> 
+          <mat-icon style="margin-right: 4px;">account_box</mat-icon>
           <p>Usuarios </p>
         </div>
 
@@ -77,34 +81,28 @@
           <h2>{{navConfig().title}}</h2>
         </a>
 
-       <span class="spacer"></span>
+        <span class="spacer"></span>
 
         <nav aria-label="Navegación principal">
 
-            @if (navConfig().ico.cart) {
-               <mat-icon 
-                [matBadge]="this.lowStockCount" 
-                matBadgeColor="warn" 
-                matBadgeOverlap="false" 
-                aria-hidden="false" 
-                role="button" 
-                (click)="navigateToInventory()" 
-                style="cursor: pointer; margin-right: 20px;"
-              >shopping_cart</mat-icon>
+          @if (navConfig().ico.cart) {
+          <mat-icon [matBadge]="this.lowStockCount" matBadgeColor="warn" matBadgeOverlap="false" aria-hidden="false"
+            role="button" (click)="navigateToInventory()"
+            style="cursor: pointer; margin-right: 20px;">shopping_cart</mat-icon>
           }
 
           @if (navConfig().ico.favorite) {
-            <mat-icon (click)="goFavorites()"> {{ navConfig().favorite.active ? 'star' : 'star_border'}}</mat-icon>
+          <mat-icon (click)="goFavorites()"> {{ navConfig().favorite.active ? 'star' : 'star_border'}}</mat-icon>
           }
-          
+
           @if (navConfig().ico.source) {
-            <a mat-icon-button (click)="goToSourceDetail()">
-              <mat-icon (click)="goToSourceDetail()">description</mat-icon>
-           </a>
+          <a mat-icon-button (click)="goToSourceDetail()">
+            <mat-icon (click)="goToSourceDetail()">description</mat-icon>
+          </a>
           }
 
           @if (navConfig().ico.logut) {
-            <mat-icon (click)="logout()">exit_to_app</mat-icon>
+          <mat-icon (click)="logout()">exit_to_app</mat-icon>
           }
 
         </nav>

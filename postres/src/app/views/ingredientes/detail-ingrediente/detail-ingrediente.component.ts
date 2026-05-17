@@ -31,7 +31,7 @@ export class DetailIngredienteComponent {
     if (!this.ingrediente) {
       this.router.navigate(['/app/ingredient/list']);
     } else {
-      console.log("DETAIL: ", this.ingrediente);
+      // console.log("DETAIL: ", this.ingrediente);
     }
   }
 

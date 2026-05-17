@@ -1,0 +1,703 @@
+<div class="container">
+
+  <nav class="go-tab-bar" role="tablist">
+    <button class="go-tab-item" [class.go-tab-item--active]="vistaActual() === 'lista'" (click)="irALista()" role="tab"
+      aria-label="Lista de gastos">
+      <span class="go-tab-item__icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+          stroke-linejoin="round">
+          <rect x="3" y="4" width="18" height="3" rx="1.5" />
+          <rect x="3" y="10.5" width="18" height="3" rx="1.5" />
+          <rect x="3" y="17" width="18" height="3" rx="1.5" />
+        </svg>
+      </span>
+      <span class="go-tab-item__label">Gastos</span>
+    </button>
+
+    <button class="go-tab-item" [class.go-tab-item--active]="vistaActual() === 'detalle'"
+      [disabled]="!gastoSeleccionado()" (click)="vistaActual.set('detalle')" role="tab" aria-label="Detalle del gasto">
+      <span class="go-tab-item__icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+          stroke-linejoin="round">
+          <circle cx="12" cy="12" r="9" />
+          <line x1="12" y1="8" x2="12" y2="12.5" />
+          <circle cx="12" cy="15.5" r=".9" fill="currentColor" stroke="none" />
+        </svg>
+      </span>
+      <span class="go-tab-item__label">Detalle</span>
+    </button>
+
+    <button class="go-tab-item" [class.go-tab-item--active]="vistaActual() === 'formulario'"
+      (click)="abrirFormularioNuevo()" role="tab" aria-label="Añadir nuevo gasto">
+      <span class="go-tab-item__icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+          <circle cx="12" cy="12" r="9" />
+          <line x1="12" y1="8" x2="12" y2="16" />
+          <line x1="8" y1="12" x2="16" y2="12" />
+        </svg>
+      </span>
+      <span class="go-tab-item__label">Añadir</span>
+    </button>
+  </nav>
+
+  @if (mensaje()) {
+  <div class="go-toast" [class.go-toast--error]="mensaje()!.tipo === 'error'">
+    <span class="go-toast__icon">
+      {{ mensaje()!.tipo === 'exito' ? '✓' : '✕' }}
+    </span>
+    {{ mensaje()!.texto }}
+  </div>
+  }
+
+  @if (vistaActual() === 'lista') {
+  <div class="go-view go-view--lista">
+
+    <header class="go-header">
+      <div class="go-header__top">
+        <div>
+
+          <h3 class="go-header__title">Finanzas</h3>
+        </div>
+        <button class="go-fab" (click)="abrirFormularioNuevo()" aria-label="Añadir gasto">
+          <span class="go-fab__icon">+</span>
+        </button>
+      </div>
+
+      <div class="go-summary">
+        <div class="go-summary__card go-summary__card--primary">
+          <span class="go-summary__label">Total registros</span>
+          <span class="go-summary__value">{{ totalGastos() }}</span>
+        </div>
+        <div class="go-summary__card">
+          <span class="go-summary__label">Total filtrado</span>
+          <span class="go-summary__value">
+            {{ sumaFiltrada() | currency:'USD':'symbol':'1.2-2' }}
+          </span>
+        </div>
+      </div>
+    </header>
+
+
+    <select class="go-year-select" [value]="anioFiltro()" (change)="onAnioChange($event)" aria-label="Filtrar por año">
+      <option value="">Todos los años</option>
+      @for (anio of aniosDisponibles(); track anio) {
+      <option [value]="anio">{{ anio }}</option>
+      }
+    </select>
+
+    <div class="go-search-bar__input-wrap">
+      <span class="go-search-bar__icon">⌕</span>
+      <input class="go-search-bar__input" type="text" placeholder="Buscar por año, cantidad, descripción o fecha…"
+        [value]="terminoBusqueda()" (input)="onBusqueda($event)" aria-label="Buscar gastos" />
+      @if (terminoBusqueda()) {
+      <button class="go-search-bar__clear" (click)="limpiarBusqueda()" aria-label="Limpiar búsqueda">✕</button>
+      }
+    </div>
+
+
+
+    @if (cargando()) {
+    <div class="go-loading">
+      <div class="go-loading__spinner"></div>
+      <span>Cargando…</span>
+    </div>
+    }
+
+    @if (!cargando()) {
+    @if (gastosFiltrados().length === 0) {
+    <div class="go-empty">
+      <div class="go-empty__icon">📋</div>
+      <p class="go-empty__title">Sin resultados</p>
+      <p class="go-empty__sub">Ajusta el filtro o registra un nuevo gasto</p>
+      <button class="go-btn go-btn--primary" (click)="abrirFormularioNuevo()">
+        Registrar gasto
+      </button>
+    </div>
+    } @else {
+
+    <div class="list-scroll">
+      @for (gasto of gastosFiltrados(); track trackById($index, gasto)) {
+      <div class="ios-card" (click)="verDetalle(gasto)" role="button" tabindex="0" (keydown.enter)="verDetalle(gasto)"
+        aria-label="Ver detalle de gasto">
+
+        <div class="go-list__badge">
+          <span class="go-list__year">{{ gasto.year }}</span>
+        </div>
+
+        <div class="go-list__body">
+          <p class="go-list__desc">{{ gasto.descripcion }}</p>
+          <p class="go-list__date">{{ gasto.fecha | date:'dd MMM yyyy':'UTC' }}</p>
+        </div>
+
+        <div class="go-list__amount">
+          <span class="go-list__amount-value">
+            {{ gasto.cantidad | currency:'USD':'symbol':'1.2-2' }}
+          </span>
+          <span class="go-list__chevron">›</span>
+        </div>
+
+      </div>
+      } @empty {
+      <div class="empty-state">No se encontraron gastos</div>
+      }
+    </div>
+
+    }
+    }
+
+  </div>
+  }
+
+
+  @if (vistaActual() === 'detalle' && gastoSeleccionado()) {
+  <div class="go-view go-view--detalle">
+
+    <nav class="go-nav">
+      <button class="go-nav__back" (click)="irALista()">
+        <span class="go-nav__back-arrow">‹</span> Gastos
+      </button>
+      <button class="go-nav__edit" (click)="abrirFormularioEdicion(gastoSeleccionado()!)">
+        Editar
+      </button>
+    </nav>
+
+    <div class="go-detail-hero">
+      <p class="go-detail-hero__label">Cantidad</p>
+      <h2 class="go-detail-hero__amount">
+        {{ gastoSeleccionado()!.cantidad | currency:'USD':'symbol':'1.2-2' }}
+      </h2>
+      <span class="go-detail-hero__year">{{ gastoSeleccionado()!.year }}</span>
+    </div>
+
+    <div class="go-detail-card">
+      <div class="go-detail-row">
+        <span class="go-detail-row__label">Descripción</span>
+        <span class="go-detail-row__value">{{ gastoSeleccionado()!.descripcion }}</span>
+      </div>
+      <div class="go-detail-row">
+        <span class="go-detail-row__label">Fecha</span>
+        <span class="go-detail-row__value">
+          {{ gastoSeleccionado()!.fecha | date:'EEEE, dd MMMM yyyy':'UTC' | titlecase }}
+        </span>
+      </div>
+      <div class="go-detail-row">
+        <span class="go-detail-row__label">Año fiscal</span>
+        <span class="go-detail-row__value">{{ gastoSeleccionado()!.year }}</span>
+      </div>
+      @if (gastoSeleccionado()!.id) {
+      <div class="go-detail-row">
+        <span class="go-detail-row__label">ID</span>
+        <span class="go-detail-row__value go-detail-row__value--id">{{ gastoSeleccionado()!.id }}</span>
+      </div>
+      }
+    </div>
+
+    <div class="go-detail-actions">
+      <button class="go-btn go-btn--primary go-btn--full" (click)="abrirFormularioEdicion(gastoSeleccionado()!)">
+        ✎ Editar gasto
+      </button>
+      <button class="go-btn go-btn--danger go-btn--full" (click)="confirmarEliminar()">
+        Eliminar gasto
+      </button>
+    </div>
+
+  </div>
+  }
+
+
+  @if (vistaActual() === 'formulario') {
+  <div class="go-view go-view--formulario">
+
+    <nav class="go-nav">
+      <button class="go-nav__back" (click)="irALista()">
+        <span class="go-nav__back-arrow">‹</span> Cancelar
+      </button>
+      <h2 class="go-nav__title">
+        {{ modoEdicion() ? 'Editar Gasto' : 'Nuevo Gasto' }}
+      </h2>
+      <button class="go-nav__save" [disabled]="form.invalid || cargando()" (click)="guardar()">
+        {{ cargando() ? '…' : 'Guardar' }}
+      </button>
+    </nav>
+
+    <div class="go-form-body" [formGroup]="form">
+
+      <div class="go-form-section">
+        <p class="go-form-section__title">Monto</p>
+        <div class="go-form-field" [class.go-form-field--error]="esInvalido('cantidad')">
+          <label class="go-form-field__label" for="cantidad">Cantidad (USD)</label>
+          <input id="cantidad" class="go-form-field__input go-form-field__input--large" type="number"
+            inputmode="decimal" placeholder="0.00" formControlName="cantidad" min="0.01" step="0.01" />
+          @if (esInvalido('cantidad')) {
+          <span class="go-form-field__error">Ingresa una cantidad válida mayor a $0</span>
+          }
+        </div>
+      </div>
+
+      <div class="go-form-section">
+        <p class="go-form-section__title">Detalles</p>
+
+        <div class="go-form-field" [class.go-form-field--error]="esInvalido('descripcion')">
+          <label class="go-form-field__label" for="descripcion">Descripción</label>
+          <textarea id="descripcion" class="go-form-field__input go-form-field__textarea"
+            placeholder="Ej. Renta de oficina, compra de materiales…" formControlName="descripcion" rows="3"></textarea>
+          @if (esInvalido('descripcion')) {
+          <span class="go-form-field__error">La descripción debe tener al menos 3 caracteres</span>
+          }
+        </div>
+
+        <div class="go-form-field" [class.go-form-field--error]="esInvalido('fecha')">
+          <label class="go-form-field__label" for="fecha">Fecha del gasto</label>
+          <input id="fecha" class="go-form-field__input" type="date" formControlName="fecha"
+            (change)="onFechaChange()" />
+          @if (esInvalido('fecha')) {
+          <span class="go-form-field__error">Selecciona una fecha válida</span>
+          }
+        </div>
+
+        <div class="go-form-field" [class.go-form-field--error]="esInvalido('year')">
+          <label class="go-form-field__label" for="year">Año fiscal</label>
+          <input id="year" class="go-form-field__input" type="number" inputmode="numeric" placeholder="{{ 2026 }}"
+            formControlName="year" min="2000" />
+          @if (esInvalido('year')) {
+          <span class="go-form-field__error">Ingresa un año válido (ej. 2026)</span>
+          }
+        </div>
+      </div>
+
+      <div class="go-form-actions">
+        <button class="go-btn go-btn--primary go-btn--full" [disabled]="form.invalid || cargando()" (click)="guardar()">
+          @if (cargando()) {
+          <span class="go-btn__spinner"></span> Guardando…
+          } @else {
+          {{ modoEdicion() ? '✎ Actualizar gasto' : '+ Registrar gasto' }}
+          }
+        </button>
+      </div>
+
+    </div>
+  </div>
+  }
+
+
+  @if (mostrarConfirmEliminar()) {
+  <div class="go-overlay" role="dialog" aria-modal="true" aria-labelledby="confirm-title">
+    <div class="go-confirm">
+      <div class="go-confirm__icon">🗑️</div>
+      <h3 class="go-confirm__title" id="confirm-title">Eliminar gasto</h3>
+      <p class="go-confirm__body">
+        Esta acción es permanente y no podrá deshacerse.
+        ¿Confirmas eliminar <strong>{{ gastoSeleccionado()?.descripcion }}</strong>?
+      </p>
+      <div class="go-confirm__actions">
+        <button class="go-btn go-btn--ghost go-btn--full" (click)="cancelarEliminar()">
+          Cancelar
+        </button>
+        <button class="go-btn go-btn--danger go-btn--full" [disabled]="cargando()" (click)="eliminar()">
+          @if (cargando()) { Eliminando… } @else { Eliminar }
+        </button>
+      </div>
+    </div>
+  </div>
+  }
+
+</div>
+
+
+
+<!-- ╔══════════════════════════════════════════════════════════════╗
+     ║  GASTOS OPERATIVOS — Módulo Angular 17 + Material Design    ║
+     ╚══════════════════════════════════════════════════════════════╝ 
+<div class="container">
+<div class="go-shell">
+
+   ── Tab Bar iOS — siempre visible, optimizada para touch ──────── 
+  <nav class="go-tab-bar" role="tablist">
+    <button
+      class="go-tab-item"
+      [class.go-tab-item--active]="vistaActual() === 'lista'"
+      (click)="irALista()"
+      role="tab"
+      aria-label="Lista de gastos"
+    >
+      <span class="go-tab-item__icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+             stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="4" width="18" height="3" rx="1.5"/>
+          <rect x="3" y="10.5" width="18" height="3" rx="1.5"/>
+          <rect x="3" y="17" width="18" height="3" rx="1.5"/>
+        </svg>
+      </span>
+      <span class="go-tab-item__label">Gastos</span>
+    </button>
+
+    <button
+      class="go-tab-item"
+      [class.go-tab-item--active]="vistaActual() === 'detalle'"
+      [disabled]="!gastoSeleccionado()"
+      (click)="vistaActual.set('detalle')"
+      role="tab"
+      aria-label="Detalle del gasto"
+    >
+      <span class="go-tab-item__icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+             stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="9"/>
+          <line x1="12" y1="8" x2="12" y2="12.5"/>
+          <circle cx="12" cy="15.5" r=".9" fill="currentColor" stroke="none"/>
+        </svg>
+      </span>
+      <span class="go-tab-item__label">Detalle</span>
+    </button>
+
+    <button
+      class="go-tab-item"
+      [class.go-tab-item--active]="vistaActual() === 'formulario'"
+      (click)="abrirFormularioNuevo()"
+      role="tab"
+      aria-label="Añadir nuevo gasto"
+    >
+      <span class="go-tab-item__icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+             stroke-linecap="round">
+          <circle cx="12" cy="12" r="9"/>
+          <line x1="12" y1="8" x2="12" y2="16"/>
+          <line x1="8" y1="12" x2="16" y2="12"/>
+        </svg>
+      </span>
+      <span class="go-tab-item__label">Añadir</span>
+    </button>
+  </nav>
+
+   ── Notificación Toast ─────────────────────────────────────────── 
+  @if (mensaje()) {
+    <div class="go-toast" [class.go-toast--error]="mensaje()!.tipo === 'error'">
+      <span class="go-toast__icon">
+        {{ mensaje()!.tipo === 'exito' ? '✓' : '✕' }}
+      </span>
+      {{ mensaje()!.texto }}
+    </div>
+  }
+
+   ══════════════════════════════════════════════════════════════════
+       VISTA: LISTA (Dashboard principal)
+  ══════════════════════════════════════════════════════════════════ 
+  @if (vistaActual() === 'lista') {
+    <div class="go-view go-view--lista">
+
+       Encabezado 
+      <header class="go-header">
+        <div class="go-header__top">
+          <div>
+            <p class="go-header__eyebrow">Finanzas</p>
+            <h1 class="go-header__title">Gastos Operativos</h1>
+          </div>
+          <button class="go-fab" (click)="abrirFormularioNuevo()" aria-label="Añadir gasto">
+            <span class="go-fab__icon">+</span>
+          </button>
+        </div>
+
+         Tarjetas de resumen 
+        <div class="go-summary">
+          <div class="go-summary__card go-summary__card--primary">
+            <span class="go-summary__label">Total registros</span>
+            <span class="go-summary__value">{{ totalGastos() }}</span>
+          </div>
+          <div class="go-summary__card">
+            <span class="go-summary__label">Total filtrado</span>
+            <span class="go-summary__value">
+              {{  sumaFiltrada() | currency:'USD':'symbol':'1.2-2' }}
+            </span>
+          </div>
+        </div>
+      </header>
+
+       Barra de búsqueda + filtro de año 
+      <div class="go-search-bar">
+        <div class="go-search-bar__input-wrap">
+          <span class="go-search-bar__icon">⌕</span>
+          <input
+            class="go-search-bar__input"
+            type="text"
+            placeholder="Buscar por año, cantidad, descripción o fecha…"
+            [value]="terminoBusqueda()"
+            (input)="onBusqueda($event)"
+            aria-label="Buscar gastos"
+          />
+          @if (terminoBusqueda()) {
+            <button class="go-search-bar__clear" (click)="limpiarBusqueda()" aria-label="Limpiar búsqueda">✕</button>
+          }
+        </div>
+
+        <select
+          class="go-year-select"
+          [value]="anioFiltro()"
+          (change)="onAnioChange($event)"
+          aria-label="Filtrar por año"
+        >
+          <option value="">Todos los años</option>
+          @for (anio of aniosDisponibles(); track anio) {
+            <option [value]="anio">{{ anio }}</option>
+          }
+        </select>
+      </div>
+
+       Indicador de carga 
+      @if (cargando()) {
+        <div class="go-loading">
+          <div class="go-loading__spinner"></div>
+          <span>Cargando…</span>
+        </div>
+      }
+
+       Lista de gastos 
+      @if (!cargando()) {
+        @if (gastosFiltrados().length === 0) {
+          <div class="go-empty">
+            <div class="go-empty__icon">📋</div>
+            <p class="go-empty__title">Sin resultados</p>
+            <p class="go-empty__sub">Ajusta el filtro o registra un nuevo gasto</p>
+            <button class="go-btn go-btn--primary" (click)="abrirFormularioNuevo()">
+              Registrar gasto
+            </button>
+          </div>
+        } @else {
+          <ul class="go-list" role="list">
+            @for (gasto of gastosFiltrados(); track trackById($index, gasto)) {
+              <li class="go-list__item" (click)="verDetalle(gasto)" role="button" tabindex="0"
+                  (keydown.enter)="verDetalle(gasto)" aria-label="Ver detalle de gasto">
+                <div class="go-list__badge">
+                  <span class="go-list__year">{{ gasto.year }}</span>
+                </div>
+                <div class="go-list__body">
+                  <p class="go-list__desc">{{ gasto.descripcion }}</p>
+                  <p class="go-list__date">{{ gasto.fecha | date:'dd MMM yyyy':'UTC':'es-MX' }}</p>
+                </div>
+                <div class="go-list__amount">
+                  <span class="go-list__amount-value">
+                    
+                     {{  gasto.cantidad  | currency:'USD':'symbol':'1.2-2' }}
+                    
+                  </span>
+                  <span class="go-list__chevron">›</span>
+                </div>
+              </li>
+            }
+          </ul>
+        }
+      }
+
+    </div>
+  }
+
+
+   ══════════════════════════════════════════════════════════════════
+       VISTA: DETALLE
+  ══════════════════════════════════════════════════════════════════ 
+  @if (vistaActual() === 'detalle' && gastoSeleccionado()) {
+    <div class="go-view go-view--detalle">
+
+       Navbar de detalle 
+      <nav class="go-nav">
+        <button class="go-nav__back" (click)="irALista()">
+          <span class="go-nav__back-arrow">‹</span> Gastos
+        </button>
+        <button class="go-nav__edit" (click)="abrirFormularioEdicion(gastoSeleccionado()!)">
+          Editar
+        </button>
+      </nav>
+
+       Hero de cantidad 
+      <div class="go-detail-hero">
+        <p class="go-detail-hero__label">Cantidad</p>
+        <h2 class="go-detail-hero__amount">
+          {{ gastoSeleccionado()!.cantidad | currency:'MXN':'symbol-narrow':'1.2-2':'es-MX' }}
+        </h2>
+        <span class="go-detail-hero__year">{{ gastoSeleccionado()!.year }}</span>
+      </div>
+
+       Tarjeta de detalles 
+      <div class="go-detail-card">
+        <div class="go-detail-row">
+          <span class="go-detail-row__label">Descripción</span>
+          <span class="go-detail-row__value">{{ gastoSeleccionado()!.descripcion }}</span>
+        </div>
+        <div class="go-detail-row">
+          <span class="go-detail-row__label">Fecha</span>
+          <span class="go-detail-row__value">
+            {{ gastoSeleccionado()!.fecha | date:'EEEE, dd \'de\' MMMM yyyy':'UTC':'es-MX' | titlecase }}
+          </span>
+        </div>
+        <div class="go-detail-row">
+          <span class="go-detail-row__label">Año fiscal</span>
+          <span class="go-detail-row__value">{{ gastoSeleccionado()!.year }}</span>
+        </div>
+        @if (gastoSeleccionado()!.id) {
+          <div class="go-detail-row">
+            <span class="go-detail-row__label">ID</span>
+            <span class="go-detail-row__value go-detail-row__value--id">{{ gastoSeleccionado()!.id }}</span>
+          </div>
+        }
+      </div>
+
+       Acciones 
+      <div class="go-detail-actions">
+        <button class="go-btn go-btn--primary go-btn--full"
+          (click)="abrirFormularioEdicion(gastoSeleccionado()!)">
+          ✎ Editar gasto
+        </button>
+        <button class="go-btn go-btn--danger go-btn--full"
+          (click)="confirmarEliminar()">
+          Eliminar gasto
+        </button>
+      </div>
+
+    </div>
+  }
+
+
+   ══════════════════════════════════════════════════════════════════
+       VISTA: FORMULARIO (Añadir / Editar)
+  ══════════════════════════════════════════════════════════════════ 
+  @if (vistaActual() === 'formulario') {
+    <div class="go-view go-view--formulario">
+
+       Navbar del formulario 
+      <nav class="go-nav">
+        <button class="go-nav__back" (click)="irALista()">
+          <span class="go-nav__back-arrow">‹</span> Cancelar
+        </button>
+        <h2 class="go-nav__title">
+          {{ modoEdicion() ? 'Editar Gasto' : 'Nuevo Gasto' }}
+        </h2>
+        <button
+          class="go-nav__save"
+          [disabled]="form.invalid || cargando()"
+          (click)="guardar()"
+        >
+          {{ cargando() ? '…' : 'Guardar' }}
+        </button>
+      </nav>
+
+       Formulario 
+      <div class="go-form-body" [formGroup]="form">
+
+         Sección: Monto 
+        <div class="go-form-section">
+          <p class="go-form-section__title">Monto</p>
+          <div class="go-form-field" [class.go-form-field--error]="esInvalido('cantidad')">
+            <label class="go-form-field__label" for="cantidad">Cantidad (MXN)</label>
+            <input
+              id="cantidad"
+              class="go-form-field__input go-form-field__input--large"
+              type="number"
+              inputmode="decimal"
+              placeholder="0.00"
+              formControlName="cantidad"
+              min="0.01"
+              step="0.01"
+            />
+            @if (esInvalido('cantidad')) {
+              <span class="go-form-field__error">Ingresa una cantidad válida mayor a $0</span>
+            }
+          </div>
+        </div>
+
+         Sección: Detalles 
+        <div class="go-form-section">
+          <p class="go-form-section__title">Detalles</p>
+
+          <div class="go-form-field" [class.go-form-field--error]="esInvalido('descripcion')">
+            <label class="go-form-field__label" for="descripcion">Descripción</label>
+            <textarea
+              id="descripcion"
+              class="go-form-field__input go-form-field__textarea"
+              placeholder="Ej. Renta de oficina, compra de materiales…"
+              formControlName="descripcion"
+              rows="3"
+            ></textarea>
+            @if (esInvalido('descripcion')) {
+              <span class="go-form-field__error">La descripción debe tener al menos 3 caracteres</span>
+            }
+          </div>
+
+          <div class="go-form-field" [class.go-form-field--error]="esInvalido('fecha')">
+            <label class="go-form-field__label" for="fecha">Fecha del gasto</label>
+            <input
+              id="fecha"
+              class="go-form-field__input"
+              type="date"
+              formControlName="fecha"
+              (change)="onFechaChange()"
+            />
+            @if (esInvalido('fecha')) {
+              <span class="go-form-field__error">Selecciona una fecha válida</span>
+            }
+          </div>
+
+          <div class="go-form-field" [class.go-form-field--error]="esInvalido('year')">
+            <label class="go-form-field__label" for="year">Año fiscal</label>
+            <input
+              id="year"
+              class="go-form-field__input"
+              type="number"
+              inputmode="numeric"
+              placeholder="{{ 2025 }}"
+              formControlName="year"
+              min="2000"
+            />
+            @if (esInvalido('year')) {
+              <span class="go-form-field__error">Ingresa un año válido (ej. 2025)</span>
+            }
+          </div>
+        </div>
+
+         Botón guardar (alternativo al navbar) 
+        <div class="go-form-actions">
+          <button
+            class="go-btn go-btn--primary go-btn--full"
+            [disabled]="form.invalid || cargando()"
+            (click)="guardar()"
+          >
+            @if (cargando()) {
+              <span class="go-btn__spinner"></span> Guardando…
+            } @else {
+              {{ modoEdicion() ? '✎ Actualizar gasto' : '+ Registrar gasto' }}
+            }
+          </button>
+        </div>
+
+      </div>
+    </div>
+  }
+
+
+   ══════════════════════════════════════════════════════════════════
+       MODAL: Confirmar eliminación
+  ══════════════════════════════════════════════════════════════════ 
+  @if (mostrarConfirmEliminar()) {
+    <div class="go-overlay" role="dialog" aria-modal="true" aria-labelledby="confirm-title">
+      <div class="go-confirm">
+        <div class="go-confirm__icon">🗑️</div>
+        <h3 class="go-confirm__title" id="confirm-title">Eliminar gasto</h3>
+        <p class="go-confirm__body">
+          Esta acción es permanente y no podrá deshacerse.
+          ¿Confirmas eliminar <strong>{{ gastoSeleccionado()?.descripcion }}</strong>?
+        </p>
+        <div class="go-confirm__actions">
+          <button class="go-btn go-btn--ghost go-btn--full" (click)="cancelarEliminar()">
+            Cancelar
+          </button>
+          <button
+            class="go-btn go-btn--danger go-btn--full"
+            [disabled]="cargando()"
+            (click)="eliminar()"
+          >
+            @if (cargando()) { Eliminando… } @else { Eliminar }
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+
+</div> -->

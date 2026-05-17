@@ -386,6 +386,20 @@ mat-expansion-panel {
   width: 100%;
 }
 
+
+     /* --- Contenedor de Botones --- */
+        .section-groupe {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            padding: none;
+            background: rgba(0, 0, 0, 0.3);
+            /* Fondo sutil para destacar los botones */
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
 // ??????????????????????????????????????????????
 
 .input-row {
@@ -729,7 +743,7 @@ mat-icon {
 
   mat-icon { font-size: 16px; color: #0a84ff; }
 
-  &--compra { color: #f2f2f7; font-size: 15px; text-transform: none; letter-spacing: 0; }
+  &--compra { color: #000000; font-size: 15px; text-transform: none; letter-spacing: 0; }
 }
 
 .vr-compra-total {
@@ -855,6 +869,11 @@ mat-icon {
   display: flex;
   align-items: center;
   gap: 2px;
+  color: #f2f2f7;
+}
+
+:host ::ng-deep .vr-ing-row--err {
+    color: white; /* El color que tú quieras */
 }
 
 .ic-ok { color: #30d158; font-size: 16px; }
@@ -915,7 +934,8 @@ mat-icon {
 
 .vr-compra-item__detalle {
   font-size: 11px;
-  color: #636366;
+  // color: #636366;
+   color: #f2f2f7;
 }
 
 .vr-compra-item__right { flex-shrink: 0; }

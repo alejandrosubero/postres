@@ -157,6 +157,11 @@ logout(): void {
   }
 
 
+   addGastosOperativos(sidenav: any): void {
+    const routeBase = '/app/mager/Gastos/Operativos' ;
+    sidenav.toggle();
+    this.navigate(routeBase);
+  }
 
 
  magerStadistic(sidenav: any): void {

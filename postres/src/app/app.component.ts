@@ -7,6 +7,7 @@ import { RecetaService } from './services/data/receta.service';
 import { DataLoaderService } from './services/data/data-loader.service';
 import { PedidoService } from './services/data/pedido.service';
 import { Ingrediente } from './models/ingrediente.model';
+import { GastoOperativoService } from './services/data/gasto-operativo.service';
 
 @Component({
   selector: 'app-root',
@@ -20,6 +21,7 @@ export class AppComponent implements OnInit {
   private dataService = inject(DataLoaderService);
   private recetaService = inject(RecetaService);
   private pedidoService = inject(PedidoService);
+  private gastoOperativosService = inject(GastoOperativoService);
 
   private encryptionService = inject(EncryptionService);
   private userSvc = inject(UsuarioService);
@@ -32,12 +34,13 @@ export class AppComponent implements OnInit {
 
   constructor() {
     effect(() => {
-      console.log("Datos recibidos desde Firebase: ", this.ingredientes());
+      // console.log("Datos recibidos desde Firebase: ", this.ingredientes());
       // this.editIngredientes();
     });
     this.recetaService.obtenerTodas();
     this.pedidoService.obtenerTodas();
     this.userSvc.obtenerTodos();
+    this.gastoOperativosService.obtenerTodas();
   }
 
   ngOnInit() { }
@@ -50,9 +53,9 @@ export class AppComponent implements OnInit {
 
     encrypted = this.encryptionService.encrypt(original);
     decrypted = this.encryptionService.decrypt(encrypted);
-    console.log('original ', original);
-    console.log(' encrypted', encrypted);
-    console.log('decrypted', decrypted);
+    // console.log('original ', original);
+    // console.log(' encrypted', encrypted);
+    // console.log('decrypted', decrypted);
 
   }
 

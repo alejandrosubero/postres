@@ -6,7 +6,7 @@ export const routes: Routes = [
 
   { path: '', redirectTo: '/login', pathMatch: 'full' },
   { path: 'login', loadComponent: () => import('./views/login/login.component').then(m => m.LoginComponent) },
-  {
+  {  
     path: 'app',
     loadComponent: () => import('../app/core/layout/layout.component').then(c => c.LayoutComponent),
     data: { animation: 'pro' },
@@ -52,6 +52,7 @@ export const routes: Routes = [
           { path: 'usuarios', loadComponent: () => import('./views/user/admin-usuarios/admin-usuarios.component').then(m => m.AdminUsuariosComponent), data: { animation: 'calendar' }, canActivate: [adminGuard] },
           { path: 'inventario', loadComponent: () => import('./views/inventario/inventory/inventory.component').then(m => m.InventoryComponent), data: { animation: 'calendar' }, canActivate: [authGuard] },
           { path: 'estadisticas', loadComponent: () => import('./views/ShellDashboard/dashboard-shell/dashboard-shell.component').then(m => m.DashboardShellComponent), data: { animation: 'calendar' }, canActivate: [adminGuard] },
+          { path: 'Gastos/Operativos', loadComponent: () => import('./views/operativeFeed/gastos-operativos/gastos-operativos.component').then(m => m.GastosOperativosComponent), data: { animation: 'calendar' }, canActivate: [adminGuard] },
         ]
       },
            {
@@ -60,8 +61,6 @@ export const routes: Routes = [
         children: [
           { path: 'management', loadComponent: () => import('./views/inventario/inventory/inventory.component').then(m => m.InventoryComponent), data: { animation: 'calendar' }, canActivate: [authGuard] },
           { path: 'checker', loadComponent: () => import('./views/inventario/verificador-recetas/verificador-recetas.component').then(m => m.VerificadorRecetasComponent), data: { animation: 'calendar' }, canActivate: [authGuard] },
-    
-
         ]
       },
 

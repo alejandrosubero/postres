@@ -11,6 +11,8 @@ export interface Pedido{
     deliveryDay:Date;
     
     enCurso:boolean;
+    confirInventory:boolean;
+
     pendy:boolean; 
     ispriority:boolean;
     charges:boolean;

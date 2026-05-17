@@ -42,7 +42,7 @@ export class InventoryService {
     // 4. Ejecutar todas las actualizaciones simultáneamente
     try {
       await Promise.all(tareasDeActualizacion);
-      console.log('✅ Inventario actualizado correctamente tras el pedido.');
+      // console.log('✅ Inventario actualizado correctamente tras el pedido.');
     } catch (error) {
       console.error('❌ Error al actualizar el inventario:', error);
       throw error;

@@ -85,7 +85,7 @@ export class PedidoService {
   async editar(id: string, data: Partial<Pedido>) {
     const snapshot = await get(ref(this.db, `pedidos/${id}`));
     const currentData = snapshot.val() as DataObject;
-    console.log('EL_PEDIDO editado : ->', currentData);
+    // console.log('EL_PEDIDO editado : ->', currentData);
     const decryptedJson = this.encryptionService.decrypt(currentData.object);
     const currentPedido = this.converter.jsonToPedido(decryptedJson);
 
@@ -97,7 +97,6 @@ export class PedidoService {
       await update(ref(this.db, `pedidos/${id}`), { object: encryptedJson });
       await this.obtenerTodas(); // Recargamos para refrescar ambas signals
     }
-    
   }
 
   async borrar(id: string) {

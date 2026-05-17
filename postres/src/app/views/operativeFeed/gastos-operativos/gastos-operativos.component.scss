@@ -1,0 +1,1007 @@
+// ╔══════════════════════════════════════════════════════════════════════════╗
+// ║  GASTOS OPERATIVOS — Estilos iOS-inspired (SCSS)                         ║
+// ║  Angular 17 · Material Design 3 tokens · Mobile-first                    ║
+// ╚══════════════════════════════════════════════════════════════════════════╝
+
+// ── Tokens de diseño ─────────────────────────────────────────────────────────
+$accent:       #007AFF;       // iOS Blue
+$accent-light: #E8F2FF;
+$danger:       #FF3B30;       // iOS Red
+$danger-light: #FFF0EF;
+$success:      #34C759;       // iOS Green
+$success-light:#F0FBF4;
+$label:        #1C1C1E;       // iOS Label
+$label-2:      #3C3C43;
+$label-3:      #8E8E93;
+$separator:    rgba(60,60,67,.18);
+$fill:         rgba(120,120,128,.12);
+$fill-2:       rgba(120,120,128,.08);
+$bg:           #F2F2F7;       // iOS Grouped Background
+$bg-card:      #FFFFFF;
+$radius-sm:    10px;
+$radius-md:    14px;
+$radius-lg:    20px;
+$shadow-card:  0 1px 3px rgba(0,0,0,.08), 0 0 0 .5px rgba(0,0,0,.06);
+$font:         -apple-system, 'SF Pro Text', 'SF Pro Display', 'Helvetica Neue', Arial, sans-serif;
+
+.container {
+  background: #000;
+  min-height: 100vh;
+  padding: 20px;
+  color: white;
+}
+
+
+// ── Reset / Shell ─────────────────────────────────────────────────────────────
+.go-shell {
+  font-family: $font;
+  color: $label;
+  background: $bg;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+  padding: 20px;
+}
+
+// ── iOS Tab Bar (siempre visible, fija abajo) ─────────────────────────────────
+.go-tab-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  height: 70px;
+  background: rgba(249,249,249,.96);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-top: .5px solid $separator;
+  display: flex;
+  align-items: stretch;
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+.go-tab-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-family: $font;
+  padding: 8px 4px 10px;
+  -webkit-tap-highlight-color: transparent;
+  transition: opacity .1s;
+  min-height: 44px;
+  color: $label-3;
+
+  &:active:not(:disabled) { opacity: .5; }
+
+  &:disabled {
+    opacity: .3;
+    cursor: not-allowed;
+  }
+
+  &--active {
+    color: $accent;
+
+    .go-tab-item__label { color: $accent; font-weight: 600; }
+  }
+
+  &__icon {
+    width: 26px;
+    height: 26px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    svg { width: 24px; height: 24px; }
+  }
+
+  &__label {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: .1px;
+    color: inherit;
+    line-height: 1;
+  }
+}
+
+// ── Vistas ────────────────────────────────────────────────────────────────────
+.go-view {
+  max-width: 430px;
+  margin: 0 auto;
+  // Espacio para tab bar fija + safe-area de iPhone
+  padding: 0 0 calc(70px + env(safe-area-inset-bottom, 0px) + 16px);
+  animation: goFadeIn .22s ease;
+
+  &--lista   { padding-top: 0; }
+  &--detalle { padding-top: 0; }
+  &--formulario { padding-top: 0; }
+}
+
+@keyframes goFadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: none; }
+}
+
+// ── Header (Lista) ────────────────────────────────────────────────────────────
+.go-header {
+  background: linear-gradient(160deg, #007AFF 0%, #0063CC 100%);
+  padding: 56px 20px 24px;
+  color: #fff;
+  border-radius: 0 0 $radius-lg $radius-lg;
+
+  &__top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 8px;
+  }
+
+  &__eyebrow {
+    font-size: 13px;
+    font-weight: 400;
+    opacity: .75;
+    margin: 0 0 2px;
+    letter-spacing: .4px;
+    text-transform: uppercase;
+  }
+
+  &__title {
+    font-size: 28px;
+    font-weight: 700;
+    margin: 0;
+    letter-spacing: -.5px;
+  }
+}
+
+// ── FAB ───────────────────────────────────────────────────────────────────────
+.go-fab {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.22);
+  border: 1.5px solid rgba(255,255,255,.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background .18s, transform .12s;
+  flex-shrink: 0;
+
+  &:active { transform: scale(.94); background: rgba(255,255,255,.35); }
+
+  &__icon {
+    color: #fff;
+    font-size: 22px;
+    line-height: 1;
+    font-weight: 300;
+    margin-top: -1px;
+  }
+}
+
+// ── Tarjetas de resumen ────────────────────────────────────────────────────────
+.go-summary {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+
+  &__card {
+    background: rgba(255,255,255,.18);
+    border: 1px solid rgba(255,255,255,.25);
+    border-radius: $radius-md;
+    padding: 12px 14px;
+    backdrop-filter: blur(8px);
+
+    &--primary {
+      background: rgba(255,255,255,.28);
+    }
+  }
+
+  &__label {
+    font-size: 11px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+    opacity: .75;
+    margin: 0 0 4px;
+    color: #fff;
+  }
+
+  &__value {
+    font-size: 20px;
+    font-weight: 600;
+    color: #fff;
+    letter-spacing: -.3px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
+  }
+}
+
+// ── Barra de búsqueda ─────────────────────────────────────────────────────────
+.go-search-bar {
+  padding: 14px 16px 8px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: $bg;
+
+  &__input-wrap {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    background: $bg-card;
+    border-radius: $radius-sm;
+    box-shadow: $shadow-card;
+    padding: 0 10px;
+    height: 38px;
+    gap: 6px;
+    margin-top: 10px;
+    margin-bottom: 11px;
+  }
+
+  &__icon {
+    font-size: 17px;
+    color: $label-3;
+    line-height: 1;
+    flex-shrink: 0;
+  }
+
+  &__input {
+    flex: 1;
+    border: none;
+    background: transparent;
+    font-size: 15px;
+    color: $label;
+    font-family: $font;
+    outline: none;
+    min-width: 0;
+
+    &::placeholder { color: $label-3; }
+  }
+
+  &__clear {
+    background: $fill;
+    border: none;
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    color: $label-3;
+    cursor: pointer;
+    flex-shrink: 0;
+    padding: 0;
+    line-height: 1;
+  }
+}
+
+.go-year-select {
+  height: 38px;
+  width: 100%;
+  margin-top: 8px;
+
+  border: none;
+  background: $bg-card;
+  border-radius: $radius-sm;
+  box-shadow: $shadow-card;
+  font-size: 14px;
+  font-family: $font;
+  color: $label;
+  padding: 0 8px;
+  cursor: pointer;
+  outline: none;
+  // min-width: 90px;
+  // max-width: 110px;
+  flex-shrink: 0;
+}
+
+// .element{
+//   margin-top: 5px;
+//   margin-bottom: 5px;
+// }
+
+// // ── Lista de gastos ────────────────────────────────────────────────────────────
+// .go-list {
+//   // list-style: none;
+//   // margin: 8px 16px 0;
+//   // padding: 0;
+//   background: $bg-card;
+//   border-radius: $radius-md;
+//   box-shadow: $shadow-card;
+//   // overflow: hidden;
+//   // margin-top: 8px;
+
+//   // display: flex;          // <--- Añade esto
+//   // flex-direction: column; // <--- Añade esto
+//   // gap: 12px;
+//   list-style: none;
+//   padding: 0;
+//   margin: 0;
+//   display: flex;          // <--- Añade esto
+//   flex-direction: column; // <--- Añade esto
+//   gap: 12px;
+
+//   &__item {
+//     display: flex;
+//     align-items: center;
+//     gap: 12px;
+//     padding: 13px 14px;
+//     cursor: pointer;
+//     transition: background .12s;
+//     border-bottom: .5px solid $separator;
+//     -webkit-tap-highlight-color: transparent;
+
+//     &:last-child { border-bottom: none; }
+//     &:active     { background: $fill-2; }
+//     &:focus-visible {
+//       outline: 2px solid $accent;
+//       outline-offset: -2px;
+//     }
+//   }
+
+//   &__badge {
+//     width: 44px;
+//     height: 44px;
+//     border-radius: $radius-sm;
+//     background: $accent-light;
+//     display: flex;
+//     align-items: center;
+//     justify-content: center;
+//     flex-shrink: 0;
+//   }
+
+//   &__year {
+//     font-size: 13px;
+//     font-weight: 700;
+//     color: $accent;
+//     letter-spacing: -.3px;
+//   }
+
+//   &__body {
+//     flex: 1;
+//     min-width: 0;
+//   }
+
+//   &__desc {
+//     font-size: 15px;
+//     font-weight: 500;
+//     color: $label;
+//     margin: 0 0 2px;
+//     white-space: nowrap;
+//     overflow: hidden;
+//     text-overflow: ellipsis;
+//   }
+
+//   &__date {
+//     font-size: 12px;
+//     color: $label-3;
+//     margin: 0;
+//     text-transform: capitalize;
+//   }
+
+//   &__amount {
+//     display: flex;
+//     align-items: center;
+//     gap: 4px;
+//     flex-shrink: 0;
+//   }
+
+//   &__amount-value {
+//     font-size: 15px;
+//     font-weight: 600;
+//     color: $label;
+//     letter-spacing: -.3px;
+//   }
+
+//   &__chevron {
+//     font-size: 18px;
+//     color: $label-3;
+//     line-height: 1;
+//     margin-top: -1px;
+//   }
+
+// }
+
+// ── Empty state ────────────────────────────────────────────────────────────────
+.go-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 60px 32px 40px;
+  gap: 10px;
+
+  &__icon  { font-size: 52px; }
+  &__title { font-size: 18px; font-weight: 600; color: $label; margin: 0; }
+  &__sub   { font-size: 14px; color: $label-3; margin: 0 0 16px; }
+}
+
+// ── Loading ────────────────────────────────────────────────────────────────────
+.go-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  padding: 60px 0;
+  font-size: 14px;
+  color: $label-3;
+
+  &__spinner {
+    width: 28px;
+    height: 28px;
+    border: 3px solid $fill;
+    border-top-color: $accent;
+    border-radius: 50%;
+    animation: goSpin .8s linear infinite;
+  }
+}
+
+@keyframes goSpin {
+  to { transform: rotate(360deg); }
+}
+
+// ── Nav (Detalle / Formulario) ────────────────────────────────────────────────
+.go-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px 10px;
+  background: rgba($bg, .92);
+  backdrop-filter: blur(10px);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  border-bottom: .5px solid $separator;
+
+  &__back {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    background: none;
+    border: none;
+    font-size: 16px;
+    color: $accent;
+    cursor: pointer;
+    font-family: $font;
+    font-weight: 400;
+    padding: 0;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  &__back-arrow {
+    font-size: 22px;
+    line-height: 1;
+    margin-top: -1px;
+  }
+
+  &__title {
+    font-size: 16px;
+    font-weight: 600;
+    color: $label;
+    margin: 0;
+    letter-spacing: -.2px;
+  }
+
+  &__edit,
+  &__save {
+    background: none;
+    border: none;
+    font-size: 16px;
+    color: $accent;
+    cursor: pointer;
+    font-family: $font;
+    font-weight: 500;
+    padding: 0;
+
+    &:disabled {
+      color: $label-3;
+      cursor: not-allowed;
+    }
+  }
+}
+
+// ── Detalle Hero ──────────────────────────────────────────────────────────────
+.go-detail-hero {
+  background: linear-gradient(150deg, #007AFF 0%, #0055CC 100%);
+  padding: 32px 24px 28px;
+  border-radius: 0 0 $radius-lg $radius-lg;
+  text-align: center;
+  color: #fff;
+
+  &__label {
+    font-size: 13px;
+    font-weight: 500;
+    opacity: .75;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+    margin: 0 0 8px;
+  }
+
+  &__amount {
+    font-size: 38px;
+    font-weight: 700;
+    letter-spacing: -1px;
+    margin: 0 0 10px;
+  }
+
+  &__year {
+    display: inline-block;
+    background: rgba(255,255,255,.2);
+    border: 1px solid rgba(255,255,255,.35);
+    border-radius: 20px;
+    padding: 4px 14px;
+    font-size: 13px;
+    font-weight: 600;
+  }
+}
+
+// ── Tarjeta de Detalle ────────────────────────────────────────────────────────
+.go-detail-card {
+  margin: 20px 16px 0;
+  background: $bg-card;
+  border-radius: $radius-md;
+  box-shadow: $shadow-card;
+  overflow: hidden;
+}
+
+.go-detail-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 13px 16px;
+  border-bottom: .5px solid $separator;
+  gap: 16px;
+
+  &:last-child { border-bottom: none; }
+
+  &__label {
+    font-size: 14px;
+    color: $label-3;
+    flex-shrink: 0;
+    padding-top: 1px;
+  }
+
+  &__value {
+    font-size: 14px;
+    font-weight: 500;
+    color: $label;
+    text-align: right;
+    word-break: break-word;
+
+    &--id {
+      font-family: 'SF Mono', 'Menlo', 'Courier New', monospace;
+      font-size: 11px;
+      color: $label-3;
+      background: $fill;
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+  }
+}
+
+// ── Acciones del detalle ──────────────────────────────────────────────────────
+.go-detail-actions {
+  margin: 20px 16px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+// ── Formulario ────────────────────────────────────────────────────────────────
+.go-form-body {
+  padding: 8px 16px 20px;
+}
+
+.go-form-section {
+  margin-bottom: 24px;
+
+  &__title {
+    font-size: 12px;
+    font-weight: 600;
+    color: $label-3;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+    margin: 0 0 10px 4px;
+  }
+}
+
+.go-form-field {
+  background: $bg-card;
+  border-radius: $radius-md;
+  box-shadow: $shadow-card;
+  padding: 12px 14px;
+  margin-bottom: 10px;
+  border: 1.5px solid transparent;
+  transition: border-color .15s;
+
+  &:focus-within {
+    border-color: $accent;
+  }
+
+  &--error {
+    border-color: $danger !important;
+    background: $danger-light;
+  }
+
+  &__label {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    color: $label-3;
+    text-transform: uppercase;
+    letter-spacing: .4px;
+    margin-bottom: 6px;
+  }
+
+  &__input {
+    width: 100%;
+    border: none;
+    background: transparent;
+    font-size: 16px;
+    color: $label;
+    font-family: $font;
+    outline: none;
+    appearance: none;
+    -webkit-appearance: none;
+    box-sizing: border-box;
+
+    &::placeholder { color: $label-3; }
+
+    &--large {
+      font-size: 28px;
+      font-weight: 600;
+      letter-spacing: -.5px;
+    }
+  }
+
+  &__textarea {
+    resize: none;
+    line-height: 1.5;
+    font-size: 15px;
+  }
+
+  &__error {
+    display: block;
+    font-size: 12px;
+    color: $danger;
+    margin-top: 6px;
+    font-weight: 500;
+  }
+}
+
+// ── Acciones del formulario ────────────────────────────────────────────────────
+.go-form-actions {
+  margin-top: 8px;
+}
+
+// ── Botones ───────────────────────────────────────────────────────────────────
+.go-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 50px;
+  border-radius: $radius-md;
+  font-size: 16px;
+  font-weight: 600;
+  font-family: $font;
+  cursor: pointer;
+  border: none;
+  transition: transform .12s, opacity .15s;
+  -webkit-tap-highlight-color: transparent;
+  letter-spacing: -.2px;
+
+  &:active:not(:disabled) { transform: scale(.97); }
+
+  &:disabled {
+    opacity: .4;
+    cursor: not-allowed;
+  }
+
+  &--full { width: 100%; }
+
+  &--primary {
+    background: $accent;
+    color: #fff;
+  }
+
+  &--danger {
+    background: $danger-light;
+    color: $danger;
+  }
+
+  &--ghost {
+    background: $fill;
+    color: $label;
+  }
+
+  &__spinner {
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(255,255,255,.4);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: goSpin .7s linear infinite;
+    flex-shrink: 0;
+  }
+}
+
+// ── Toast ─────────────────────────────────────────────────────────────────────
+.go-toast {
+  position: fixed;
+  top: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
+  background: rgba($label, .9);
+  color: #fff;
+  backdrop-filter: blur(12px);
+  border-radius: 24px;
+  padding: 10px 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  animation: goToastIn .25s cubic-bezier(.3,1.4,.5,1);
+  white-space: nowrap;
+  max-width: 90vw;
+  box-shadow: 0 4px 16px rgba(0,0,0,.2);
+
+  &--error { background: rgba($danger, .92); }
+
+  &__icon {
+    font-size: 16px;
+    font-weight: 700;
+  }
+}
+
+@keyframes goToastIn {
+  from { opacity: 0; transform: translateX(-50%) translateY(-12px) scale(.9); }
+  to   { opacity: 1; transform: translateX(-50%) translateY(0) scale(1); }
+}
+
+
+
+// ── Modal de confirmación ─────────────────────────────────────────────────────
+.go-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.5);
+  z-index: 200;
+  display: flex;
+  align-items: flex-end;
+  animation: goOverlayIn .2s ease;
+}
+
+@keyframes goOverlayIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.go-confirm {
+  width: 100%;
+  max-width: 430px;
+  margin: 0 auto;
+  background: $bg-card;
+  border-radius: $radius-lg $radius-lg 0 0;
+  padding: 28px 20px 36px;
+  animation: goSheetIn .28s cubic-bezier(.3,1.1,.5,1);
+  text-align: center;
+
+  &__icon {
+    font-size: 48px;
+    margin-bottom: 12px;
+  }
+
+  &__title {
+    font-size: 18px;
+    font-weight: 700;
+    color: $label;
+    margin: 0 0 8px;
+  }
+
+  &__body {
+    font-size: 14px;
+    color: $label-3;
+    margin: 0 0 24px;
+    line-height: 1.5;
+
+    strong { color: $label; }
+  }
+
+  &__actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+}
+
+@keyframes goSheetIn {
+  from { transform: translateY(100%); }
+  to   { transform: translateY(0); }
+}
+
+// ── Responsive tablet ─────────────────────────────────────────────────────────
+@media (min-width: 600px) {
+  .go-view {
+    max-width: 560px;
+    margin: 0 auto;
+  }
+
+  .go-header {
+    border-radius: $radius-lg;
+    margin: 16px 16px 0;
+    padding-top: 10px;
+  }
+
+  .go-search-bar {
+    // top: 0;
+    // padding: 16px 0 8px;
+  }
+
+  .go-confirm,
+  .go-overlay { align-items: center; }
+
+  .go-confirm {
+    border-radius: $radius-lg;
+    max-width: 380px;
+    padding: 32px;
+  }
+}
+
+
+
+// --------------------------------------------
+.ios-card {
+  background: #f8f8f7; 
+    // background: #f5f5dc; /* Blanco Hueso */
+  color: #000;
+  padding: 16px 20px;
+  border-radius: 16px;
+  margin-bottom: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 8px rgba(255,255,255,0.05);
+  transition: transform 0.2s;
+  cursor: pointer;
+}
+
+.ios-card:active { transform: scale(0.98); }
+
+.card-info h3 { margin: 0; font-size: 18px; font-weight: 600; }
+.card-info p { margin: 4px 0 0 0; color: #555; font-size: 14px; }
+
+.card-price span {
+  font-weight: 700;
+  font-size: 16px;
+}
+
+
+
+
+
+.element{
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+// ── Lista de gastos ────────────────────────────────────────────────────────────
+.go-list {
+  // list-style: none;
+  // margin: 8px 16px 0;
+  // padding: 0;
+  background: $bg-card;
+  border-radius: $radius-md;
+  box-shadow: $shadow-card;
+  // overflow: hidden;
+  // margin-top: 8px;
+
+  // display: flex;          // <--- Añade esto
+  // flex-direction: column; // <--- Añade esto
+  // gap: 12px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;          // <--- Añade esto
+  flex-direction: column; // <--- Añade esto
+  gap: 12px;
+
+}
+
+  .go-list__item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 13px 14px;
+    cursor: pointer;
+    transition: background .12s;
+    border-bottom: .5px solid $separator;
+    -webkit-tap-highlight-color: transparent;
+
+    &:last-child { border-bottom: none; }
+    &:active     { background: $fill-2; }
+    &:focus-visible {
+      outline: 2px solid $accent;
+      outline-offset: -2px;
+    }
+  }
+
+  .go-list__badge {
+    width: 44px;
+    height: 44px;
+    border-radius: $radius-sm;
+    background: $accent-light;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .go-list__year {
+    font-size: 13px;
+    font-weight: 700;
+    color: $accent;
+    letter-spacing: -.3px;
+  }
+
+  .go-list__body {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .go-list__desc {
+    font-size: 15px;
+    font-weight: 500;
+    color: $label;
+    margin: 0 0 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .go-list__date {
+    font-size: 12px;
+    color: $label-3;
+    margin: 0;
+    text-transform: capitalize;
+  }
+
+  .go-list__amount {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex-shrink: 0;
+  }
+
+  .go-list__amount-value {
+    font-size: 15px;
+    font-weight: 600;
+    color: $label;
+    letter-spacing: -.3px;
+  }
+
+  .go-list__chevron {
+    font-size: 18px;
+    color: $label-3;
+    line-height: 1;
+    margin-top: -1px;
+  }
+
+

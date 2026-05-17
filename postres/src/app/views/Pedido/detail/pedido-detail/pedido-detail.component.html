@@ -19,10 +19,38 @@
 
   </div>
 
+
+    <!-- Sección de chequeo de inventario -->
+ @if ( this.toggleEsCursoResultado) {
+  <div class="ios-section">
+  <section class="section-group">
+    <ng-container>
+      <div class="vr-status" @fadeSlide [class.vr-status--ok]="resultado()!.todoAlcanza"
+        [class.vr-status--err]="!resultado()!.todoAlcanza">
+        <mat-icon>{{ resultado()!.todoAlcanza ? 'check_circle' : 'error' }}</mat-icon>
+        <span>
+          {{ resultado()!.todoAlcanza
+          ? '✅ Tienes todo en inventario para preparar lo solicitado'
+          : '⚠️ Faltan ingredientes — revisa la lista de compra abajo' }}
+        </span>
+      </div>
+
+      @if(!resultado()!.todoAlcanza) {
+          <button type="button" class="vr-print-btn" (click)="imprimir()" matRipple>
+            <mat-icon>print</mat-icon>
+              Imprimir lista de compra
+          </button>
+    }
+    </ng-container>
+
+  </section>
+  </div>
+  }
+
   <!-- Sección de estados interactivos (botones y toggles) -->
   <div class="ios-section">
     <div class="section-title lineBottom ">Estados</div>
-    
+
     <div class="status-grid">
 
       <!-- Prioridad: botón mini-fab -->
@@ -239,4 +267,46 @@
     <mat-icon>delete</mat-icon>
   </button>
   }
+</div>
+
+
+<!-- PRINT TEMPLATE (invisible, solo para impresión) -->
+<div class="vr-print-area" id="vr-print-area" style="display:none">
+  <ng-container *ngIf="resultado()">
+    <h2>Lista de compra</h2>
+    <p>Generada: {{ now() }}</p>
+    <hr />
+    <div *ngFor="let r of resultado()!.resultados" style="margin-bottom:8px">
+      <strong>{{ r.receta.Name }}</strong> — solicitadas: {{ r.cantidadSolicitada }}, posibles: {{
+      r.cantidadPosible }}
+    </div>
+    <hr />
+    <table style="width:100%;border-collapse:collapse">
+      <thead>
+        <tr>
+          <th style="text-align:left;padding:4px;border-bottom:1px solid #ccc">Ingrediente</th>
+          <th style="text-align:left;padding:4px;border-bottom:1px solid #ccc">Cantidad</th>
+          <th style="text-align:left;padding:4px;border-bottom:1px solid #ccc">Presentación</th>
+          <th style="text-align:right;padding:4px;border-bottom:1px solid #ccc">Costo est.</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of resultado()!.listaCompra">
+          <td style="padding:4px;border-bottom:1px solid #eee">{{ item.nombre }}</td>
+          <td style="padding:4px;border-bottom:1px solid #eee">{{ item.cantidadFaltante | number:'1.0-2' }}
+          </td>
+          <td style="padding:4px;border-bottom:1px solid #eee">{{ item.presentacion }}</td>
+          <td style="padding:4px;border-bottom:1px solid #eee;text-align:right">{{ fmt(item.costoEstimado) }}
+          </td>
+        </tr>
+      </tbody>
+      <tfoot>
+        <tr>
+          <td colspan="3" style="padding:6px;font-weight:bold">Total estimado</td>
+          <td style="padding:6px;font-weight:bold;text-align:right">{{ fmt(resultado()!.costoTotalCompra) }}
+          </td>
+        </tr>
+      </tfoot>
+    </table>
+  </ng-container>
 </div>
