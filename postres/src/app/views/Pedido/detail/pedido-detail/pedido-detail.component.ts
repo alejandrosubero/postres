@@ -21,6 +21,8 @@ import { InventarioCheckerService, RecetaConCantidad, ResultadoAnalisis, Resulta
 import { Receta } from '../../../../models/receta.model';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { trigger, transition, style, animate, query, stagger } from '@angular/animations';
+import { MatDialog } from '@angular/material/dialog';
+import { IosAlertDialogComponent, IosDialogData } from '../../../../share/ios-alert-dialog/ios-alert-dialog.component';
 
 @Component({
   selector: 'app-pedido-detail',
@@ -61,6 +63,7 @@ import { trigger, transition, style, animate, query, stagger } from '@angular/an
 export class PedidoDetailComponent {
 
 
+  private dialog = inject(MatDialog);
   private inventoryService = inject(InventoryService);
   private snackBar = inject(MatSnackBar);
   private navService = inject(NavService);
@@ -99,10 +102,7 @@ export class PedidoDetailComponent {
     }
     if (!this.pedido) {
       this.router.navigate(['/app/pedido/list']);
-    } 
-    // else {
-    //   console.log(this.pedido);
-    // }
+    }
   }
 
 
@@ -110,7 +110,6 @@ export class PedidoDetailComponent {
 
 
   toggleEsCurso(): void {
-
     if (this.pedido.enCurso) {
       this.pedido.enCurso = false;
       this.toggleEsCursoResultado = false;
@@ -123,10 +122,9 @@ export class PedidoDetailComponent {
 
       if (this.resultado()!.todoAlcanza) {
         this.pedido.enCurso = true;
-        // TODO: Descuento de inventario
-        // if(this.pedido.enCurso){
-        // this. confirmarPedido(this.pedido);
-        // }
+        if (this.pedido.enCurso) {
+           this.confirmarReservaInventario( this.pedido); 
+        }
       } else {
         this.pedido.enCurso = false;
       }
@@ -157,6 +155,30 @@ export class PedidoDetailComponent {
   }
 
 
+  confirmarReservaInventario( miPedido: Pedido) {
+    const dialogData: IosDialogData = {
+      title: 'Alerta', // Título requerido con símbolo
+      message: 'Los Ingredientes seran sacados de inventario y puesto en reserva hasta el Delivery.',
+      btnLeft: {
+        label: 'none',
+        value: 'none'
+      },
+      btnRight: {
+        label: 'ok',
+        value: true
+      }
+    };
+    // Abrimos el MatDialog pasándole el componente y la configuración
+    const dialogRef = this.dialog.open(IosAlertDialogComponent, {
+      data: dialogData,
+      panelClass: 'ios-custom-panel',
+      disableClose: true
+    });
+
+    dialogRef.afterClosed().subscribe((respuesta: any) => {
+    this.confirmarPedido(miPedido);
+    });
+  }
 
 
   togglePriority(): void {
@@ -186,9 +208,41 @@ export class PedidoDetailComponent {
     this.guardar();
   }
 
+
+  processOfEndPedido() {
+    // Definimos los datos con la interfaz estricta que creamos
+    const dialogData: IosDialogData = {
+      title: 'Alerta', // Título requerido con símbolo
+      message: '¿Los Ingredientes fueron consumidos?',
+      btnLeft: {
+        label: 'No',
+        value: false
+      },
+      btnRight: {
+        label: 'Sí',
+        value: true
+      }
+    };
+    // Abrimos el MatDialog pasándole el componente y la configuración
+    const dialogRef = this.dialog.open(IosAlertDialogComponent, {
+      data: dialogData,
+      panelClass: 'ios-custom-panel',
+      disableClose: true
+    });
+
+    dialogRef.afterClosed().subscribe((respuesta: any) => {
+      if (respuesta) {
+         this.pedido.itWasconsume = true;
+         this.inventoryService.procesarReducedStockReserved(this.pedido);
+      } else {
+        this.pedido.itWasconsume = false;
+      }
+    });
+  }
+
+
   toggleDelivery(): void {
     this.pedido.delivery = !this.pedido.delivery;
-
     if (this.pedido.delivery) {
       this.pedido.pendy = false;
       this.pedido.enCurso = false;
@@ -196,10 +250,13 @@ export class PedidoDetailComponent {
       this.pedido.onPausa = false;
       this.pedido.cancel = false;
       this.pedido.deliveryDay = new Date();
+      this. processOfEndPedido();
     } else {
       this.pedido.pendy = true;
       this.pedido.enCurso = true;
       this.pedido.deliveryDay = this.pedido.dayDue;
+      this.inventoryService.cancelReducetoStockReserved(this.pedido);
+      this.pedido.itWasconsume = false;
     }
     this.guardar();
   }
@@ -208,6 +265,34 @@ export class PedidoDetailComponent {
     this.pedido.on_delivery = !this.pedido.on_delivery;
     this.guardar();
   }
+
+
+revertCancelReducetoStockReserved() {
+    const dialogData: IosDialogData = {
+      title: 'Alerta', // Título requerido con símbolo
+      message: 'Se revertira el proceso de consumo a reserva.',
+      btnLeft: {
+        label: 'none',
+        value: 'none'
+      },
+      btnRight: {
+        label: 'ok',
+        value: true
+      }
+    };
+    // Abrimos el MatDialog pasándole el componente y la configuración
+    const dialogRef = this.dialog.open(IosAlertDialogComponent, {
+      data: dialogData,
+      panelClass: 'ios-custom-panel',
+      disableClose: true
+    });
+
+    dialogRef.afterClosed().subscribe((respuesta: any) => {
+       this.inventoryService.cancelReducetoStockReserved(this.pedido);
+      this.pedido.itWasconsume = false;
+    });
+  }
+
 
   toggleCancel(): void {
     this.pedido.cancel = !this.pedido.cancel;
@@ -218,14 +303,14 @@ export class PedidoDetailComponent {
       this.pedido.onPausa = false;
       this.pedido.on_delivery = false;
       this.pedido.delivery = false;
+      this.processOfEndPedido();
     } else {
       this.pedido.pendy = true;
       this.pedido.enCurso = true;
+      this.revertCancelReducetoStockReserved();
     }
     this.guardar();
   }
-
-
 
 
   // Helper para formato de moneda

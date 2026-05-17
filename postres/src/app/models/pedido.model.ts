@@ -14,13 +14,18 @@ export interface Pedido{
     confirInventory:boolean;
 
     pendy:boolean; 
-    ispriority:boolean;
     charges:boolean;
     onPausa:boolean;
-    cancel:boolean;
+    
     on_delivery:boolean;
     delivery:boolean;
+    
+    cancel:boolean;
+    itWasconsume: boolean;
+    
+    howEndThePedido:string;
 
+    ispriority:boolean;
     wasPriority:boolean;
     
     cost_total:number;
@@ -41,4 +46,5 @@ export interface Pedido{
     notas:string;
     note_of_miscellaneous_Cost:string;
 
+   
 }

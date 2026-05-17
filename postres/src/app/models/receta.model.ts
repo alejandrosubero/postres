@@ -12,8 +12,9 @@ export interface Receta {
 
 export interface RecetaIngredientes {
   idIngrediente?: string
-  Name: string
-  Cantidad: number
+  Name: string;
+  Cantidad: number;
+  reservedStock:number;
   presentacion: string;
   Cost: number
 }

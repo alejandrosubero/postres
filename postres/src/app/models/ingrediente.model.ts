@@ -11,5 +11,6 @@ export interface Ingrediente {
   cantidad:number;
   notificar:boolean;
   cantidadMinima:number;
+  reservedStock:number;
 }
 

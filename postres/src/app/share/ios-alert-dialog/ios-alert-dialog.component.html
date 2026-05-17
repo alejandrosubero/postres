@@ -1,0 +1,28 @@
+<div class="ios-dialog-container">
+
+  <div class="ios-dialog-content">
+    <span class="ios-alert-icon">⚠️</span>
+
+    <h3 class="ios-title">{{ data.title || 'Alerta' }}</h3>
+    <p class="ios-message">{{ data.message }}</p>
+  </div>
+
+  <div class="ios-actions">
+
+    @if(showLeft){
+    <button mat-button (click)="cerrar(data.btnLeft.value)" class="ios-btn border-r">
+      {{ data.btnLeft.label }}
+    </button>
+    }
+
+
+
+    @if(showRight){
+    <button mat-button (click)="cerrar(data.btnRight.value)" class="ios-btn font-bold">
+      {{ data.btnRight.label }}
+    </button>
+    }
+
+  </div>
+
+</div>

@@ -226,7 +226,7 @@ private checkerService = inject(InventarioCheckerService);
 
   // Método para agregar una receta y recalcular el costo
   agregarReceta(receta: Receta) {
-    const recetasActuales = this.pedidoForm.get('recetas')?.value || [];
+    let recetasActuales = this.pedidoForm.get('recetas')?.value || [];
     const nuevasRecetas = [...recetasActuales, receta];
     this.actualizarRecetasYCostos(nuevasRecetas);
   }
@@ -313,10 +313,7 @@ private checkerService = inject(InventarioCheckerService);
     newPedido.editDay = new Date();
     newPedido.deliveryDay = newPedido.dayDue;
     newPedido.confirInventory = this.resultado()!.todoAlcanza;
-
-    if(newPedido.ispriority){
-      newPedido.enCurso = true;
-    }
+    newPedido.itWasconsume = false;
 
     await this.pedidoService.guardar(newPedido);
     this.router.navigate(['/app/pedido/list']);
