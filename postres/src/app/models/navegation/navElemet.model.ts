@@ -5,6 +5,7 @@ export class NavConfig {
     public sds: string;
     public favorite: Favorite;
     public goto: string;
+     public goto2: string;
     public noteSource: string;
     public hideNemu: boolean;
     public ico: IcoConfig;
@@ -16,6 +17,7 @@ export class NavConfig {
         this.sds = "";
         this.favorite = new Favorite();
         this.goto = "";
+        this.goto2 = "";
         this.noteSource = "";
         this.hideNemu = false;
         this.ico = new IcoConfig();

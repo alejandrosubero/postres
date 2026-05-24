@@ -78,7 +78,7 @@
     </header>
 
 
-    <select class="go-year-select" [value]="anioFiltro()" (change)="onAnioChange($event)" aria-label="Filtrar por año">
+    <!-- <select class="go-year-select" [value]="anioFiltro()" (change)="onAnioChange($event)" aria-label="Filtrar por año">
       <option value="">Todos los años</option>
       @for (anio of aniosDisponibles(); track anio) {
       <option [value]="anio">{{ anio }}</option>
@@ -92,7 +92,37 @@
       @if (terminoBusqueda()) {
       <button class="go-search-bar__clear" (click)="limpiarBusqueda()" aria-label="Limpiar búsqueda">✕</button>
       }
-    </div>
+    </div> -->
+
+
+<header>
+  <div class="search-bar">
+    <span class="icon">🔍</span>
+    
+    <input 
+      type="text" 
+      placeholder="Buscar por año, cantidad, descripción..."
+      [value]="terminoBusqueda()" 
+      (input)="onBusqueda($event)" 
+      aria-label="Buscar gastos" />
+
+    @if (terminoBusqueda()) {
+      <button class="clear-btn" (click)="limpiarBusqueda()" aria-label="Limpiar búsqueda">✕</button>
+    }
+
+    <div class="select-divider"></div>
+    
+    <select [value]="anioFiltro()" (change)="onAnioChange($event)" aria-label="Filtrar por año">
+      <option value="">Todos</option>
+      @for (anio of aniosDisponibles(); track anio) {
+        <option [value]="anio">{{ anio }}</option>
+      }
+    </select>
+  </div>
+</header>
+
+
+
 
 
 
@@ -117,7 +147,7 @@
 
     <div class="list-scroll">
       @for (gasto of gastosFiltrados(); track trackById($index, gasto)) {
-      <div class="ios-card" (click)="verDetalle(gasto)" role="button" tabindex="0" (keydown.enter)="verDetalle(gasto)"
+      <!-- <div class="ios-card" (click)="verDetalle(gasto)" role="button" tabindex="0" (keydown.enter)="verDetalle(gasto)"
         aria-label="Ver detalle de gasto">
 
         <div class="go-list__badge">
@@ -136,7 +166,23 @@
           <span class="go-list__chevron">›</span>
         </div>
 
-      </div>
+      </div> -->
+
+
+<div class="ios-card" (click)="verDetalle(gasto)" role="button" tabindex="0" (keydown.enter)="verDetalle(gasto)" aria-label="Ver detalle de gasto">
+
+  <div class="card-info">
+    <h3>{{ gasto.descripcion }}</h3>
+    <p>{{ gasto.fecha | date:'dd MMM yyyy':'UTC' }}</p>
+  </div>
+
+  <div class="total-row">
+    <span>Monto:</span>
+    <strong>{{ gasto.cantidad | currency:'USD':'symbol':'1.2-2' }}</strong>
+  </div>
+
+</div>
+
       } @empty {
       <div class="empty-state">No se encontraron gastos</div>
       }

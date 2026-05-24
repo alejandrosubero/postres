@@ -71,7 +71,7 @@ export class PedidoDetailComponent {
   private navService = inject(NavService);
   private router = inject(Router);
   private pedidoService = inject(PedidoService);
-
+  private errorEnPedidoService = inject(CalculoPerdidaErrorEnPedidoService);
   public pedido: Pedido;
   private id: string = '';
 
@@ -104,9 +104,9 @@ export class PedidoDetailComponent {
       this.id = this.pedido.id;
 
       // corrige el error que se envia a colocar el error pero no se salva el orderIssue
-      if(this.pedido.issue && this.pedido.orderIssue === undefined || this.pedido.orderIssue === null){
+      if (this.pedido.issue && this.pedido.orderIssue === undefined || this.pedido.orderIssue === null) {
         this.pedido.issue = false;
-         this.guardar();
+        this.guardar();
       }
 
     }
@@ -269,8 +269,12 @@ export class PedidoDetailComponent {
       this.pedido.deliveryDay = new Date();
 
       this.processOfEndPedido();
-    } else {
 
+      if (this.pedido.issue && this.pedido.orderIssue != undefined && this.pedido.orderIssue != null) {
+        this.processErrorDescount();
+      }
+
+    } else {
       this.pedido.pendy = true;
       this.pedido.enCurso = true;
       this.pedido.deliveryDay = this.pedido.dayDue;
@@ -279,9 +283,48 @@ export class PedidoDetailComponent {
         this.revertProccessOfconsume();
       }
     }
-
     this.guardar();
   }
+
+
+
+  processErrorDescount() {
+    // Definimos los datos con la interfaz estricta que creamos
+    const dialogData: IosDialogData = {
+      title: 'Alerta', // Título requerido con símbolo
+      message: 'Se procesara el descuento por error sobre las Ganancias',
+      btnLeft: {
+        label: 'none',
+        value: 'none'
+      },
+      btnRight: {
+        label: 'OK',
+        value: true
+      }
+    };
+    const dialogRef = this.dialog.open(IosAlertDialogComponent, {
+      data: dialogData,
+      panelClass: 'ios-custom-panel',
+      disableClose: true
+    });
+
+    dialogRef.afterClosed().subscribe((respuesta: any) => {
+
+      if (respuesta) {
+        if (this.pedido.orderIssue != undefined && this.pedido.orderIssue != null) {
+          this.errorEnPedidoService.procesarErrorPedido(this.pedido, this.pedido.orderIssue.porcentajeError)
+            .then(nuevoProfit => {
+              this.pedido.profit = nuevoProfit;
+            });
+        }
+      }
+    });
+  }
+
+
+
+
+
 
   toggleOnDelivery(): void {
     this.pedido.on_delivery = !this.pedido.on_delivery;

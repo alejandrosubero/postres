@@ -1,6 +1,6 @@
 
 <div class="custom-tabs">
-  <mat-tab-group animationDuration="200ms">
+  <mat-tab-group [selectedIndex]="activeTab()" (selectedIndexChange)="activeTab.set($event)" animationDuration="200ms">
     
     <!-- PESTAÑA CALENDARIO -->
     <mat-tab>

@@ -49,7 +49,7 @@
 
   <!-- Sección de estados interactivos (botones y toggles) -->
   <div class="ios-section">
-    <div class="section-title lineBottom ">Estados</div>
+    <div class="section-title lineBottomt">Estados</div>
 
     <div class="status-grid">
 
@@ -120,7 +120,7 @@
 
   <!-- Sección de cliente -->
   <div class="ios-section">
-    <div class="section-title lineBottom">Cliente</div>
+    <div class="section-title lineBottomt">Cliente</div>
     <div class="info-row">
       <span class="info-label">Nombre:</span>
       <span class="info-value">{{ pedido.customer.name }}</span>
@@ -148,7 +148,7 @@
 
   <!-- Sección de dirección de entrega -->
   <div class="ios-section" *ngIf="pedido.address_Of_delivery">
-    <div class="section-title lineBottom">Dirección de entrega</div>
+    <div class="section-title lineBottomt">Dirección de entrega</div>
     <div class="info-row">
       <span class="info-label">Dirección:</span>
       <span class="info-value  clickable-address" [cdkCopyToClipboard]="pedido.address_Of_delivery"
@@ -162,7 +162,7 @@
 
   <!-- Sección de fechas -->
   <div class="ios-section">
-    <div class="section-title lineBottom">Fechas</div>
+    <div class="section-title lineBottomt">Fechas</div>
     <div class="info-row">
       <span class="info-label">Fecha creación:</span>
       <span class="info-value">{{ pedido.createDay | date:'dd/MM/yyyy hh:mm a' }}</span>
@@ -175,7 +175,7 @@
 
   <!-- Sección de costos -->
   <div class="ios-section">
-    <div class="section-title lineBottom">Costos</div>
+    <div class="section-title lineBottomt">Costos</div>
     <div class="cost-grid">
       <div class="cost-item">
         <span class="cost-label">Costo base:</span>
@@ -247,24 +247,26 @@
       </div>
     </mat-expansion-panel>
   </mat-accordion>
-   }
-}
+  }
+  }
   <!-- Sección de recetas (expansión) -->
   <div class="ios-section">
-    <div class="section-title lineBottom">Recetas</div>
+    <div class="section-title lineBottomt">Recetas</div>
     <mat-accordion>
       <mat-expansion-panel *ngFor="let receta of pedido.recetas; let i = index" class="receta-panel">
         <mat-expansion-panel-header>
           <mat-panel-title>
-            {{ receta.Name }}
+            {{ receta.Name }} Costo Total:{{ formatCurrency(receta.CostoTotal) }}
           </mat-panel-title>
-          <mat-panel-description>
+          <!-- <mat-panel-description>
             {{ formatCurrency(receta.CostoTotal) }}
-          </mat-panel-description>
+          </mat-panel-description> -->
         </mat-expansion-panel-header>
 
         <!-- Ingredientes -->
         <div class="sub-section-title">Ingredientes</div>
+ <!-- <div class="sub-section-title" style="color: black;">Ingredientes</div> -->
+        
         <div class="ingredients-list">
           <div *ngFor="let ing of receta.Lista_ingredientes" class="ingredient-item">
             <span class="ingredient-name">{{ ing.Name }}</span>
@@ -275,9 +277,14 @@
 
         <!-- Instrucciones -->
         <div *ngIf="receta.instrucciones" class="instrucciones">
-          <div class="sub-section-title lineBottom">Instrucciones</div>
-          <p>{{ receta.instrucciones }}</p>
+          <div class="sub-section-title lineBottomt">Instrucciones</div>
+          <div class="pedido-notas">
+            <div class="pedido-texto ">
+              {{ receta.instrucciones }}
+            </div>
+          </div>
         </div>
+
 
         <!-- Notas -->
         <div *ngIf="receta.Notes && receta.Notes.length">
@@ -292,13 +299,13 @@
 
   <!-- Notas generales del pedido -->
   <div class="ios-section" *ngIf="pedido.notas">
-    <div class="section-title lineBottom">Notas del pedido</div>
+    <div class="section-title lineBottomt">Notas del pedido</div>
     <p class="pedido-notas">{{ pedido.notas }}</p>
   </div>
 
   <!-- Campo adicional pedido (texto libre) -->
   <div class="ios-section" *ngIf="pedido.pedido">
-    <div class="section-title lineBottom ">Detalle pedido</div>
+    <div class="section-title lineBottomt">Detalle pedido</div>
     <p class="pedido-texto">{{ pedido.pedido }}</p>
   </div>
 </div>

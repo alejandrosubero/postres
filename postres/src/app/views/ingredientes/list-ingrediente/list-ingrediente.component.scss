@@ -1,68 +1,132 @@
 .list-container {
-  background: #000;
+  background: #000; // Fondo negro puro para que el relieve destaque al máximo
   min-height: 100vh;
   padding: 20px;
+  box-sizing: border-box;
 }
 
-header { padding: 40px 0 20px 0; color: white; }
+header { 
+  padding: 20px 0 10px 0; 
+  color: white; 
+}
 
+/* --- BARRA DE BÚSQUEDA FLOTANTE --- */
+.search-bar {
+  display: flex;
+  align-items: center;
+  background: #1c1c1e; // Gris oscuro profundo (estilo iOS Dark)
+  border-radius: 12px;
+  padding: 12px 16px;
+  margin-bottom: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  
+  // Relieve tridimensional exterior con iluminación en el borde superior interno
+  box-shadow: 
+    0 10px 25px rgba(0, 0, 0, 0.7),
+    0 1px 0px rgba(255, 255, 255, 0.15) inset;
+  
+  input {
+    background: transparent;
+    border: none;
+    color: white;
+    width: 100%;
+    font-size: 16px;
+    outline: none;
+
+    &::placeholder {
+      color: #8e8e93;
+    }
+  }
+
+  .icon {
+    font-size: 18px;
+    color: #8e8e93;
+  }
+}
+
+/* --- TARJETAS DE INGREDIENTES CON RELIEVE 3D --- */
 .ios-card {
-  background: #f8f8f7; 
-    // background: #f5f5dc; /* Blanco Hueso */
-  color: #000;
-  padding: 16px 20px;
+  background: #1c1c1e; // Gris oscuro para romper el fondo negro con volumen
+  color: #ffffff;
+  padding: 18px 20px;
   border-radius: 16px;
-  margin-bottom: 12px;
+  margin-bottom: 16px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  box-shadow: 0 2px 8px rgba(255,255,255,0.05);
-  transition: transform 0.2s;
+  position: relative;
+  
+  // Simulación de iluminación física (borde superior claro, inferior oscuro)
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-top-color: rgba(255, 255, 255, 0.14);
+  border-bottom-color: rgba(0, 0, 0, 0.6);
+
+  // Extrusión multi-capa para descolgar el elemento de la pantalla
+  box-shadow: 
+    0 1px 0px rgba(255, 255, 255, 0.1) inset,     // Luz interna superior
+    0 4px 6px rgba(0, 0, 0, 0.4),                  // Sombra base suave
+    0 14px 28px rgba(0, 0, 0, 0.75),               // Sombra de oclusión profunda sobre negro
+    0 0 0 1px rgba(255, 255, 255, 0.02);           // Definición de contorno
+
+  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), 
+              box-shadow 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   cursor: pointer;
+
+  // Efecto dinámico: el ingrediente se eleva al pasar el cursor
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 
+      0 1px 0px rgba(255, 255, 255, 0.15) inset,
+      0 8px 12px rgba(0, 0, 0, 0.5),
+      0 22px 36px rgba(0, 0, 0, 0.85),             // La sombra se proyecta más lejos al subir
+      0 0 0 1px rgba(255, 255, 255, 0.05);
+  }
+
+  // Al presionar la tarjeta, se genera un hundimiento físico mecánico
+  &:active { 
+    transform: translateY(2px);
+    box-shadow: 
+      0 1px 3px rgba(0, 0, 0, 0.7),
+      inset 0 2px 4px rgba(0, 0, 0, 0.85);         // Sombras internas (efecto ranura)
+    transition: transform 0.05s ease;
+  }
 }
 
-.ios-card:active { transform: scale(0.98); }
-
-.card-info h3 { margin: 0; font-size: 18px; font-weight: 600; }
-.card-info p { margin: 4px 0 0 0; color: #555; font-size: 14px; }
-
-.card-price span {
-  font-weight: 700;
-  font-size: 16px;
+.card-info {
+  h3 { 
+    margin: 0; 
+    font-size: 18px; 
+    font-weight: 700; 
+    letter-spacing: -0.3px;
+    color: #f9f9f9;
+  }
+  p { 
+    margin: 6px 0 0 0; 
+    color: #aeaeae; // Gris claro para la presentación y unidad base
+    font-size: 14px; 
+  }
 }
 
-.search-bar {
-  background: #1c1c1e;
-  padding: 10px 15px;
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 20px;
+/* --- PRECIO ESTILIZADO EN CÁPSULA FLOTANTE --- */
+.card-price {
+  background: rgba(255, 255, 255, 0.04);
+  padding: 6px 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  text-align: right;
+
+  span {
+    font-weight: 700;
+    font-size: 18px;
+    color: #34C759; // Verde Apple vibrante neón para destacar el precio
+    text-shadow: 0 0 10px rgba(52, 199, 89, 0.25); // Resplandor sutil
+  }
 }
 
-.search-bar input {
-  background: transparent;
-  border: none;
-  color: white;
-  width: 100%;
-  font-size: 16px;
-  outline: none;
-}
-
-.search-bar input::placeholder {
-  color: #8e8e93;
-}
-
-.icon {
-  font-size: 18px;
-}
-
-
+/* --- BOTÓN FLOTANTE (FAB) ULTRA PROFUNDIDAD --- */
 .fab-container {
   position: fixed;
- bottom: 20px;
-// top: 24px;
+  bottom: 24px;
   right: 24px;
   display: flex;
   flex-direction: column-reverse;
@@ -71,33 +135,127 @@ header { padding: 40px 0 20px 0; color: white; }
 
   button {
     margin-top: 12px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-    transition: transform 0.3s ease, opacity 0.3s ease;
-  }
+    box-shadow: 
+      0 8px 24px rgba(0, 0, 0, 0.6),
+      0 16px 40px rgba(52, 199, 89, 0.35),           // Aura verde proyectada en la base oscura
+      0 1px 0 rgba(255, 255, 255, 0.4) inset;        // Brillo de borde superior
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s;
 
-  .fab-action {
-    opacity: 1;
-    transform: translateY(0);
-    animation: slide-up 0.3s ease forwards;
-  }
-
-  @keyframes slide-up {
-    from {
-      opacity: 0;
-      transform: translateY(10px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
+    &:hover {
+      transform: scale(1.1) translateY(-4px);
+      box-shadow: 
+        0 12px 30px rgba(0, 0, 0, 0.7),
+        0 20px 48px rgba(52, 199, 89, 0.55),
+        0 1px 0 rgba(255, 255, 255, 0.5) inset;
     }
   }
 }
 
 .green-fab {
-  background-color: #217724 !important; // tono verde Material Design
+  background-color: #34C759 !important; // Match perfecto con el ecosistema visual de la app
   color: white;
-
-  &:hover {
-    background-color: #43a047 !important; // tono más oscuro al hover
-  }
 }
+
+// .list-container {
+//   background: #000;
+//   min-height: 100vh;
+//   padding: 20px;
+// }
+
+// header { padding: 40px 0 20px 0; color: white; }
+
+// .ios-card {
+//   background: #f8f8f7; 
+//     // background: #f5f5dc; /* Blanco Hueso */
+//   color: #000;
+//   padding: 16px 20px;
+//   border-radius: 16px;
+//   margin-bottom: 12px;
+//   display: flex;
+//   justify-content: space-between;
+//   align-items: center;
+//   box-shadow: 0 2px 8px rgba(255,255,255,0.05);
+//   transition: transform 0.2s;
+//   cursor: pointer;
+// }
+
+// .ios-card:active { transform: scale(0.98); }
+
+// .card-info h3 { margin: 0; font-size: 18px; font-weight: 600; }
+// .card-info p { margin: 4px 0 0 0; color: #555; font-size: 14px; }
+
+// .card-price span {
+//   font-weight: 700;
+//   font-size: 16px;
+// }
+
+// .search-bar {
+//   background: #1c1c1e;
+//   padding: 10px 15px;
+//   border-radius: 12px;
+//   display: flex;
+//   align-items: center;
+//   gap: 10px;
+//   margin-bottom: 20px;
+// }
+
+// .search-bar input {
+//   background: transparent;
+//   border: none;
+//   color: white;
+//   width: 100%;
+//   font-size: 16px;
+//   outline: none;
+// }
+
+// .search-bar input::placeholder {
+//   color: #8e8e93;
+// }
+
+// .icon {
+//   font-size: 18px;
+// }
+
+
+// .fab-container {
+//   position: fixed;
+//  bottom: 20px;
+// // top: 24px;
+//   right: 24px;
+//   display: flex;
+//   flex-direction: column-reverse;
+//   align-items: flex-end;
+//   z-index: 100;
+
+//   button {
+//     margin-top: 12px;
+//     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+//     transition: transform 0.3s ease, opacity 0.3s ease;
+//   }
+
+//   .fab-action {
+//     opacity: 1;
+//     transform: translateY(0);
+//     animation: slide-up 0.3s ease forwards;
+//   }
+
+//   @keyframes slide-up {
+//     from {
+//       opacity: 0;
+//       transform: translateY(10px);
+//     }
+//     to {
+//       opacity: 1;
+//       transform: translateY(0);
+//     }
+//   }
+// }
+
+// .green-fab {
+//   background-color: #217724 !important; // tono verde Material Design
+//   color: white;
+
+//   &:hover {
+//     background-color: #43a047 !important; // tono más oscuro al hover
+//   }
+// }

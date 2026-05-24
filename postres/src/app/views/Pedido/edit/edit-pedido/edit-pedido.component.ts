@@ -54,7 +54,7 @@ export class EditPedidoComponent implements OnInit {
   private router = inject(Router);
   private pedidoService = inject(PedidoService);
   private snackBar = inject(MatSnackBar);
-  private errorEnPedidoService = inject(CalculoPerdidaErrorEnPedidoService);
+
 
   isMenuOpen = signal(false);
   isFavoriteView: boolean = false;
@@ -323,23 +323,7 @@ export class EditPedidoComponent implements OnInit {
   }
 
 
-  setNav() {
-    // this.checkFavorites();
-    let navConfig: NavConfig = new NavConfig();
-    navConfig.title = 'Edit Pedido';
-    navConfig.ico.menu = false;
-    navConfig.ico.favorite = false;
-    navConfig.ico.logut = false;
-    navConfig.ico.back = true;
-    navConfig.goto = "/app/pedido/list";
-    navConfig.ico.cart = false;
-    if (this.isFavoriteView) {
-      navConfig.favorite.active = this.isFavoriteView;
-    }
-    // navConfig.favorite.url = 'favorites';
-    this.navService.setNavConfig(navConfig);
-  }
-
+  
   notificarCopiado() {
     this.snackBar.open('Dirección copiada al portapapeles', 'Cerrar', {
       duration: 2000,
@@ -353,10 +337,15 @@ export class EditPedidoComponent implements OnInit {
     if (document.activeElement instanceof HTMLElement) {
       document.activeElement.blur();
     }
+
+      const editPedido: Pedido = {
+      ...this.pedidoForm.value,
+    };
+
     const dialogRef = this.dialog.open(OrderIssueDialogComponent, {
       width: '95vw',
       maxWidth: '450px',
-      data: { ...this.pedido },
+      data: { ...editPedido },
       panelClass: 'dark-dialog-overlay',
       autoFocus: 'first-tabbable', 
       restoreFocus: true  
@@ -374,20 +363,42 @@ export class EditPedidoComponent implements OnInit {
             pedidoTemp.orderIssue.costOfIssue = valorTotalPorcentaje;
           }
         }
-
-        this.errorEnPedidoService.procesarErrorPedido(result, result.orderIssue.porcentajeError)
-          .then(nuevoProfit => {
-            result.profit = nuevoProfit;
-          });
         
         this.showPedidoIssue = true;
-        this.pedido = result;
-        this.pedidoForm.patchValue(this.pedido);
+        this.pedido = pedidoTemp;
+        this.guardarError();
+        // this.pedidoForm.patchValue(this.pedido);
       }
     });
   }
 
 
+  async guardarError() {
+    const newPedido: Pedido = this.pedido;
+    newPedido.editDay = new Date();
+    await this.pedidoService.editar(this.pedidoId, newPedido);
+  }
+
+
+
+  setNav() {
+    // this.checkFavorites();
+    let navConfig: NavConfig = new NavConfig();
+    navConfig.title = 'Edit Pedido';
+    navConfig.ico.menu = false;
+    navConfig.ico.favorite = false;
+    navConfig.ico.logut = false;
+    navConfig.ico.back = true;
+    navConfig.goto = "/app/pedido/list";
+    navConfig.ico.cart = false;
+    if (this.isFavoriteView) {
+      navConfig.favorite.active = this.isFavoriteView;
+    }
+    // navConfig.favorite.url = 'favorites';
+    this.navService.setNavConfig(navConfig);
+  }
+
+  
 }
 
 

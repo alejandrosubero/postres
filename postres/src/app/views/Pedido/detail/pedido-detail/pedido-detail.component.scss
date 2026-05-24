@@ -26,6 +26,18 @@
   width: 100%;
 }
 
+.lineBottomt {
+  margin-top: 6px;
+  padding-top: 6px;
+  border: 0.9px solid #c6c6c8;;
+  margin-bottom: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  width: 100%;
+  text-align: center;
+}
+
 .buletInfo {
   display: flex;
   justify-content: flex-end;
@@ -65,11 +77,21 @@
 .ios-section {
   background-color: white;
   border-radius: 12px;
-  padding: 16px;
+  padding: 15px;
   margin-bottom: 16px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
   border: 0.5px solid #e5e5ea;
 }
+
+  .ios-sectionI {
+    background-color: #1c1c1e;
+    border-color: #2c2c2e;
+
+  background: #000;
+  min-height: 100vh;
+  padding: 20px;
+  color: white;
+  }
 
 .section-title {
   font-size: 17px;
@@ -79,12 +101,12 @@
   letter-spacing: -0.2px;
 }
 
-.sub-section-title {
-  font-size: 15px;
-  font-weight: 600;
-  color: #3a3a3c;
-  margin: 12px 0 8px 0;
-}
+// .sub-section-title {
+//   font-size: 15px;
+//   font-weight: 600;
+//   color: black;
+//   margin: 12px 0 8px 0;
+// }
 
 // Grid de estados (botones y toggles)
 // .status-grid {
@@ -215,57 +237,66 @@
 }
 
 // Recetas
-.receta-panel {
-  margin-bottom: 12px !important;
-  border-radius: 10px !important;
-  box-shadow: none !important;
-  border: 0.5px solid #e5e5ea !important;
+// .receta-panel {
+//   margin-bottom: 12px !important;
+//   border-radius: 10px !important;
+//   box-shadow: none !important;
+//   border: 0.5px solid #e5e5ea !important;
 
-  &:last-child {
-    margin-bottom: 0;
-  }
-}
+//   &:last-child {
+//     margin-bottom: 0;
+//   }
+// }
 
-.ingredients-list {
-  margin: 8px 0;
-}
+// .ingredients-list {
+//   background-color: #000000;
+//  margin-top: 5px;
+//  margin-bottom: 5px;
+//  margin-left: 8px;
+//  margin-right: 8px;
+//  padding: 5px;
+//  width: 100%;
+  
+// }
 
-.ingredient-item {
-  display: flex;
-  justify-content: space-between;
-  padding: 8px 0;
-  border-bottom: 0.5px solid #e5e5ea;
-  font-size: 14px;
+// .ingredient-item {
+//   display: flex;
+//   justify-content: space-between;
+//   padding: 8px 0;
+//   border-bottom: 0.5px solid #e5e5ea;
+//   font-size: 14px;
 
-  .ingredient-name {
-    flex: 2;
-    font-weight: 500;
-  }
+//   .ingredient-name {
+//     flex: 2;
+//     font-weight: 500;
+//     color: white;
+//   }
 
-  .ingredient-quantity {
-    flex: 1;
-    text-align: center;
-    color: #6c6c70;
-  }
+//   .ingredient-quantity {
+//     flex: 1;
+//     text-align: center;
+//     color: white;
+//   }
 
-  .ingredient-cost {
-    flex: 1;
-    text-align: right;
-    font-weight: 500;
-  }
-}
+//   .ingredient-cost {
+//     flex: 1;
+//     text-align: right;
+//     font-weight: 500;
+//     color: #30d158;
+//   }
+// }
 
-.instrucciones,
-.pedido-notas,
-.pedido-texto {
-  background-color: #f9f9fb;
-  padding: 12px;
-  border-radius: 8px;
-  font-size: 14px;
-  line-height: 1.4;
-  color: #3a3a3c;
-  margin-top: 8px;
-}
+// .instrucciones,
+// .pedido-notas,
+// .pedido-texto {
+//   background-color: #f9f9fb;
+//   padding: 12px;
+//   border-radius: 8px;
+//   font-size: 14px;
+//   line-height: 1.4;
+//   color: #3a3a3c;
+//   margin-top: 8px;
+// }
 
 .notes-list {
   margin: 8px 0;
@@ -890,5 +921,252 @@
     width: 100%;
     color: black;
     background: white;
+  }
+}
+
+
+
+
+// ==========================================================================
+// REFACTOR: PANELES DE RECETAS ESTILO iOS CLEAN
+// ==========================================================================
+
+// .receta-panel {
+//   background-color: #f2f2f7 !important; // Fondo gris claro oficial de iOS (System Gray 6)
+//   margin-bottom: 14px !important;
+//   border-radius: 14px !important;       // Esquinas curvas y suaves estilo Apple
+//   box-shadow: none !important;
+//   border: 0.5px solid #e5e5ea !important; // Borde fino sutil de separación
+//   overflow: hidden;
+
+//   // Rompemos el padding por defecto de Angular Material para controlar el layout al 90%
+//   ::ng-deep .mat-expansion-panel-body {
+//     padding: 16px 0 !important; 
+//     display: flex;
+//     flex-direction: column;
+//     align-items: center;        // Centra perfectamente todos los elementos hijos
+//   }
+// }
+
+// // Títulos de sub-secciones (Ingredientes, Instrucciones, Notas)
+// .sub-section-title {
+//   width: 90%;                   // Mismo espacio alineado verticalmente
+//   font-size: 13px;
+//   text-transform: uppercase;    // Look limpio tipo sección de Ajustes de iPhone
+//   color: #6c6c70;               // Gris secundario nativo de iOS
+//   margin: 14px 0 6px 0;
+//   font-weight: 600;
+//   letter-spacing: 0.3px;
+//   text-align: left;             // Alineación perfecta a la izquierda
+// }
+
+// // Contenedor de la lista de ingredientes (Efecto "Card dentro de Card")
+// .ingredients-list {
+//   width: 90%;
+//   background-color: #ffffff;    // Blanco puro para contrastar sobre el gris claro
+//   border-radius: 12px;
+//   padding: 4px 16px;
+//   margin: 4px 0;
+//   box-sizing: border-box;
+//   border: 0.5px solid rgba(0, 0, 0, 0.05);
+// }
+
+// // Filas de cada ingrediente individual
+// .ingredient-item {
+//   display: flex;
+//   justify-content: space-between;
+//   align-items: center;
+//   padding: 12px 0;
+//   font-size: 15px;
+//   border-bottom: 0.5px solid #e5e5ea; // Línea divisoria muy delgada entre ítems
+
+//   &:last-child {
+//     border-bottom: none; // La última fila del bloque no lleva línea divisoria
+//   }
+
+//   .ingredient-name {
+//     flex: 2;
+//     font-weight: 500;
+//     color: #1c1c1e; // Negro de texto principal iOS
+//   }
+
+//   .ingredient-quantity {
+//     flex: 1;
+//     text-align: center;
+//     color: #8e8e93; // Gris neutro para cantidades secundarias
+//     font-weight: 400;
+//   }
+
+//   .ingredient-cost {
+//     flex: 1;
+//     text-align: right;
+//     font-weight: 600;
+//     color: #34c759; // Verde iOS del sistema para indicadores financieros/costos
+//   }
+// }
+
+// // Bloques contenedores de texto libre (Instrucciones y Notas)
+// .instrucciones,
+// .pedido-notas,
+// .pedido-texto {
+//   width: 100%; // Se expande para ocupar el ancho de su contenedor padre
+//   background-color: #ffffff; // Fondo blanco para unificar el estilo visual
+//   padding: 14px;
+//   border-radius: 12px;
+//   font-size: 15px;
+//   line-height: 1.4;
+//   color: #1c1c1e;
+//   box-sizing: border-box;
+//   border: 0.5px solid rgba(0, 0, 0, 0.05);
+// }
+
+// // Contenedor padre de instrucciones para que respete el 90% centrado
+// div.instrucciones {
+//   width: 90% !important;
+//   background-color: transparent !important; // El contenedor base no lleva fondo
+//   border: none !important;
+//   padding: 0 !important;
+//   margin-top: 4px;
+// }
+
+// // Cabecera del Panel de Expansión de Material
+// ::ng-deep .mat-expansion-panel-header {
+//   background-color: #ffffff !important; // Cabecera blanca y limpia
+//   height: 58px !important;
+  
+//   .mat-panel-title {
+//     font-weight: 600 !important;
+//     color: #000000 !important;
+//     font-size: 16px;
+//   }
+  
+//   .mat-panel-description {
+//     color: #0a84ff !important; // Azul eléctrico de Apple para destacar el precio del pedido
+//     font-weight: 600;
+//     font-size: 15px;
+//     justify-content: flex-end;
+//   }
+// }
+
+// ==========================================================================
+// REFACTOR: PANELES DE RECETAS ESTILO iOS CLEAN (SIN CLASES EN EL HTML)
+// ==========================================================================
+
+mat-expansion-panel {
+  background-color: #f2f2f7 !important; // Fondo gris claro oficial de iOS (System Gray 6)
+  margin-bottom: 14px !important;
+  border-radius: 14px !important;       // Esquinas curvas y suaves estilo Apple
+  box-shadow: none !important;
+  border: 0.5px solid #e5e5ea !important; // Borde fino sutil de separación
+  overflow: hidden;
+
+  // Rompemos el padding por defecto de Angular Material para controlar el layout al 90%
+  ::ng-deep .mat-expansion-panel-body {
+    padding: 16px 0 !important; 
+    display: flex;
+    flex-direction: column;
+    align-items: center;        // Centra perfectamente todos los elementos hijos al 90%
+  }
+}
+
+// Títulos de sub-secciones (Ingredientes, Instrucciones, Notas)
+.sub-section-title {
+  width: 90% !important;        // Mismo espacio alineado verticalmente
+  font-size: 13px !important;
+  text-transform: uppercase !important; // Look limpio tipo sección de Ajustes de iPhone
+  color: #080808 !important;    // Gris secundario nativo de iOS
+  margin: 14px 0 6px 0 !important;
+  // font-weight: 600 !important;
+  letter-spacing: 0.3px !important;
+  text-align: left !important;  // Alineación perfecta a la izquierda
+}
+
+// Contenedor de la lista de ingredientes (Efecto "Card blanca dentro de fondo gris")
+.ingredients-list {
+  width: 90% !important;
+  background-color: #000000 !important; // Blanco puro para contrastar sobre el gris claro
+  
+  border-radius: 12px !important;
+  padding: 4px 16px !important;
+  margin: 4px 0 !important;
+  box-sizing: border-box !important;
+  border: 0.5px solid rgba(0, 0, 0, 0.05) !important;
+}
+
+// Filas de cada ingrediente individual
+.ingredient-item {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  padding: 12px 0 !important;
+  font-size: 15px !important;
+  border-bottom: 0.5px solid #e5e5ea !important; // Línea divisoria muy delgada entre ítems
+  &:last-child {
+    border-bottom: none !important; // La última fila del bloque no lleva línea divisoria
+  }
+
+  .ingredient-name {
+    flex: 2 !important;
+    font-weight: 500 !important;
+    // color: #1c1c1e !important; // Negro de texto principal iOS
+    color: white;
+  }
+
+  .ingredient-quantity {
+    flex: 1 !important;
+    text-align: center !important;
+    // color: #8e8e93 !important; // Gris neutro para cantidades secundarias
+    color: white;
+    font-weight: 400 !important;
+  }
+
+  .ingredient-cost {
+    flex: 1 !important;
+    text-align: right !important;
+    font-weight: 600 !important;
+    color: #34c759 !important; // Verde de éxito iOS para el costo
+  }
+}
+
+// Bloques contenedores de texto libre (Instrucciones y Notas)
+.instrucciones,
+.pedido-notas,
+.pedido-texto {
+  width: 100% !important; // Se expande para ocupar el ancho de su contenedor padre
+  background-color: #090909 !important; // Fondo blanco para unificar el estilo de tarjetas iOS
+  padding: 14px !important;
+  border-radius: 12px !important;
+  font-size: 15px !important;
+  line-height: 1.4 !important;
+  color: #fdfdff !important;
+  box-sizing: border-box !important;
+  border: 0.5px solid rgba(0, 0, 0, 0.05) !important;
+}
+
+// Contenedor padre de instrucciones para que respete el 90% centrado
+div.instrucciones {
+  width: 90% !important;
+  background-color: transparent !important; // El contenedor base no lleva fondo, lo lleva el texto interior
+  border: none !important;
+  padding: 0 !important;
+  margin-top: 4px !important;
+}
+
+// Cabecera del Panel de Expansión de Material
+::ng-deep .mat-expansion-panel-header {
+  background-color: #eeeeee !important; // Cabecera blanca y limpia
+  height: 58px !important;
+  
+  .mat-panel-title {
+    font-weight: 600 !important;
+    color: #000000 !important;
+    font-size: 16px !important;
+  }
+  
+  .mat-panel-description {
+    color: #0a84ff !important; // Azul eléctrico de Apple para destacar el precio del pedido
+    font-weight: 600 !important;
+    font-size: 15px !important;
+    justify-content: flex-end !important;
   }
 }

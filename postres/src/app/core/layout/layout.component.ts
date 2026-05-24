@@ -1,6 +1,6 @@
 import { Component, computed, effect, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, RouterModule } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
@@ -17,7 +17,7 @@ import { MatBadgeModule } from '@angular/material/badge';
 import { DomSanitizer } from '@angular/platform-browser';
 import { NavegateService } from '../../services/navegate/navegateService';
 import { NavConfig } from '../../models/navegation/navElemet.model';
-import { Ingrediente } from '../../models/ingrediente.model'; 
+import { Ingrediente } from '../../models/ingrediente.model';
 
 @Component({
   selector: 'app-layout',
@@ -36,12 +36,12 @@ import { Ingrediente } from '../../models/ingrediente.model';
   templateUrl: './layout.component.html',
   styleUrl: './layout.component.scss'
 })
-export class LayoutComponent  implements OnInit {
+export class LayoutComponent implements OnInit {
 
   private navService = inject(NavService);
   public navConfig = this.navService.config;
   private breakpointObserver = inject(BreakpointObserver);
-  private fbService = inject(FirebaseService); 
+  private fbService = inject(FirebaseService);
   private authService = inject(AuthService);
 
   public isAdmin = false;
@@ -53,22 +53,22 @@ export class LayoutComponent  implements OnInit {
     // private navegateService: NavegateService,    
     // private matIconRegistry: MatIconRegistry,
     // private domSanitizer: DomSanitizer
-  ){ 
-    this.isAdmin = this.authService.getRolValue() === 'admin'? true:false;
-     effect(() => {
+  ) {
+    this.isAdmin = this.authService.getRolValue() === 'admin' ? true : false;
+    effect(() => {
       this.navConfig = this.navService.config;
-     });
+    });
   }
 
   ngOnInit(): void {
-   this.getlowStockCount()
+    this.getlowStockCount()
   }
 
 
-  getlowStockCount(){
+  getlowStockCount() {
     const ingredientes = this.fbService.ingredientesSignal();
-    if(ingredientes != undefined && ingredientes != null && ingredientes.length > 0){
-        this.lowStockCount = ingredientes.filter(i => i.cantidad <= i.cantidadMinima).length;
+    if (ingredientes != undefined && ingredientes != null && ingredientes.length > 0) {
+      this.lowStockCount = ingredientes.filter(i => i.cantidad <= i.cantidadMinima).length;
     }
   }
 
@@ -96,29 +96,43 @@ export class LayoutComponent  implements OnInit {
 
 
 
-//  ============ logout and back================
-   
-home(): void {
-    const routeBase = "/app/dashboard";
-    this.navigate(routeBase);
-  }
+  //  ============ logout and back================
 
-logout(): void {
+
+
+  logout(): void {
     this.authService.logout();
     this.router.navigate(['/login']);
   }
 
-   goHome(sidenav: any): void {
+  goHome(sidenav: any): void {
     const routeBase = "/app/dashboard";
     sidenav.toggle();
     this.navigate(routeBase);
   }
 
-    
+  home(): void {
+    const goto: string = this.navConfig().goto2;
+    if (goto != undefined && goto != null && goto != '') {
+      const urlTree = this.router.parseUrl(goto);
+      this.router.navigateByUrl(urlTree);
+    } else {
+      const routeBase = "/app/dashboard";
+      this.navigate(routeBase);
+    }
+  }
 
   back() {
+    const goto: string = this.navConfig().goto;
+    if (!goto) return;
+    // Creamos un UrlTree para separar limpiamente la ruta base de los queryParams
+    const urlTree = this.router.parseUrl(goto);
+    this.router.navigateByUrl(urlTree);
+  }
+
+  back1() {
     let goto: string = this.navConfig().goto;
-       this.navigate(goto);
+    this.navigate(goto);
 
     // switch (goto) {
     //   case 'app/favorites':
@@ -144,55 +158,55 @@ logout(): void {
     this.navigate(routeBase);
   }
 
-    addRecipe(sidenav: any): void {
+  addRecipe(sidenav: any): void {
     const routeBase = '/app/receta/add';
     sidenav.toggle();
     this.navigate(routeBase);
   }
 
-    addPedido(sidenav: any): void {
-    const routeBase = '/app/pedido/add' ;
+  addPedido(sidenav: any): void {
+    const routeBase = '/app/pedido/add';
     sidenav.toggle();
     this.navigate(routeBase);
   }
 
 
-   addGastosOperativos(sidenav: any): void {
-    const routeBase = '/app/mager/Gastos/Operativos' ;
+  addGastosOperativos(sidenav: any): void {
+    const routeBase = '/app/mager/Gastos/Operativos';
     sidenav.toggle();
     this.navigate(routeBase);
   }
 
 
- magerStadistic(sidenav: any): void {
+  magerStadistic(sidenav: any): void {
     const routeBase = '/app/mager/estadisticas';
     sidenav.toggle();
     this.navigate(routeBase);
   }
 
-   magerUsusers(sidenav: any): void {
+  magerUsusers(sidenav: any): void {
     const routeBase = '/app/mager/usuarios';
     sidenav.toggle();
     this.navigate(routeBase);
   }
 
-   magerInventario(sidenav: any): void {
+  magerInventario(sidenav: any): void {
     const routeBase = '/app/inventory/management';
     sidenav.toggle();
     this.navigate(routeBase);
   }
 
-   navegateInventario(): void {
+  navegateInventario(): void {
     const routeBase = '/app/inventory/management';
     this.navigate(routeBase);
   }
-  
-   checkeInventario(sidenav: any): void {
-     const routeBase = '/app/inventory/checker';
-     sidenav.toggle();
-     this.navigate(routeBase);
+
+  checkeInventario(sidenav: any): void {
+    const routeBase = '/app/inventory/checker';
+    sidenav.toggle();
+    this.navigate(routeBase);
   }
-   
+
 
   goCompareTecnnical(sidenav: any): void {
     // const routeBase = "app/technical/notes/compare";
@@ -206,7 +220,7 @@ logout(): void {
     // this.navigate(routeBase);
   }
 
- goMix(sidenav: any): void {
+  goMix(sidenav: any): void {
     // const routeBase = 'app/technical/notes/mix';
     // sidenav.toggle();
     // this.navigate(routeBase);
@@ -222,26 +236,26 @@ logout(): void {
     // this.navegateService.goToDetail(routeBase, this.navConfig().sourceId, 'mix');
   }
 
- goBackup(sidenav: any): void {
+  goBackup(sidenav: any): void {
     // const routeBase = "app/backup";
     // sidenav.toggle();
     // this.navigate(routeBase);
   }
 
-//  ============ ********** ================
+  //  ============ ********** ================
 
- goToPhrase(sidenav: any): void {
+  goToPhrase(sidenav: any): void {
     // const routeBase = "app/phrase/main";
     // sidenav.toggle();
     // this.navigate(routeBase);
   }
 
 
-// ======= ********** =============== //
+  // ======= ********** =============== //
 
 
 
-   downloadPdf(): void {
+  downloadPdf(): void {
     // const pdfUrl = this.navConfig().label;
     // const pdfName = `${new Date()}.pdf`;
     // // Crea un enlace temporal.
@@ -264,22 +278,22 @@ logout(): void {
   }
 
   // backs(): void {
-      // if(this.navConfig().goto === 'app/favorites'){
-      //    this.navegateService.goFavorites('favorites', 1);
-      // }else{
-      //   this.navigate(this.navConfig().goto);
-      // }
-      // if(this.navConfig().goto === 'formulations' &&  this.navConfig().favorite.url === 'formulations'){
-      //   this.navegateService.goFavorites('formulations', this.navConfig().favorite.id);
-      //  let title = 'Formulations';
-      // //  this.navService.updateTitle(title);
-      
-      // }
-      // if(this.navConfig().goto === 'storage' &&  this.navConfig().favorite.url === 'storage'){
-      //   this.navegateService.goFavorites('storage', 1);
-      //   let title = 'Storage';
-      //   // this.navService.updateTitle(title);
-      // }
+  // if(this.navConfig().goto === 'app/favorites'){
+  //    this.navegateService.goFavorites('favorites', 1);
+  // }else{
+  //   this.navigate(this.navConfig().goto);
+  // }
+  // if(this.navConfig().goto === 'formulations' &&  this.navConfig().favorite.url === 'formulations'){
+  //   this.navegateService.goFavorites('formulations', this.navConfig().favorite.id);
+  //  let title = 'Formulations';
+  // //  this.navService.updateTitle(title);
+
+  // }
+  // if(this.navConfig().goto === 'storage' &&  this.navConfig().favorite.url === 'storage'){
+  //   this.navegateService.goFavorites('storage', 1);
+  //   let title = 'Storage';
+  //   // this.navService.updateTitle(title);
+  // }
   // }
 
 

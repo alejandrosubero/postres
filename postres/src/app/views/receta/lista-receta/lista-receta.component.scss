@@ -1,69 +1,139 @@
 .list-container {
-  background: #000;
+  background: #000; // Fondo negro puro ideal para resaltar el relieve 3D
   min-height: 100vh;
   padding: 20px;
+  box-sizing: border-box;
 }
 
-header { padding: 40px 0 20px 0; color: white; }
-
-.ios-card {
-  background: #f8f8f7; 
-    // background: #f5f5dc; /* Blanco Hueso */
-  color: #000;
-  padding: 16px 20px;
-  border-radius: 16px;
-  margin-bottom: 12px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  box-shadow: 0 2px 8px rgba(255,255,255,0.05);
-  transition: transform 0.2s;
-  cursor: pointer;
-}
-
-.ios-card:active { transform: scale(0.98); }
-
-.card-info h3 { margin: 0; font-size: 18px; font-weight: 600; }
-.card-info p { margin: 4px 0 0 0; color: #555; font-size: 14px; }
-
-.card-price span {
-  font-weight: 700;
-  font-size: 16px;
+header { 
+  padding: 20px 0 10px 0; 
+  color: white; 
 }
 
 .search-bar {
-  background: #1c1c1e;
-  padding: 10px 15px;
-  border-radius: 12px;
   display: flex;
   align-items: center;
-  gap: 10px;
-  margin-bottom: 20px;
+  background: #1c1c1e; // Gris oscuro profundo estilo iOS Dark Mode
+  border-radius: 12px;
+  padding: 12px 16px;
+  margin-bottom: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  
+  // Relieve exterior marcado e iluminación interna para simular volumen flotante
+  box-shadow: 
+    0 10px 25px rgba(0, 0, 0, 0.7),
+    0 1px 0px rgba(255, 255, 255, 0.15) inset;
+  
+  input {
+    background: transparent;
+    border: none;
+    color: white; // Texto blanco para legibilidad total
+    width: 100%;
+    font-size: 16px;
+    outline: none;
+
+    &::placeholder {
+      color: #8e8e93;
+    }
+  }
+
+  .icon {
+    font-size: 18px;
+    color: #8e8e93;
+  }
 }
 
-.search-bar input {
-  background: transparent;
-  border: none;
-  color: white;
-  width: 100%;
-  font-size: 16px;
-  outline: none;
+/* --- TARJETAS CON RELIEVE 3D EXTRACTADO --- */
+.ios-card {
+  background: #1c1c1e; // Cambiado a gris oscuro para fusionarse y contrastar con relieve
+  color: #ffffff;
+  padding: 18px 20px;
+  border-radius: 16px;
+  margin-bottom: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  
+  // Bordes nítidos de simulación de luz (Borde superior iluminado, inferior oscuro)
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-top-color: rgba(255, 255, 255, 0.14);
+  border-bottom-color: rgba(0, 0, 0, 0.6);
+
+  // Multi-capa de sombras para volumen real de extrusión física (Pop-out)
+  box-shadow: 
+    0 1px 0px rgba(255, 255, 255, 0.1) inset,     // Brillo interno superior
+    0 4px 6px rgba(0, 0, 0, 0.4),                  // Sombra base de caída
+    0 14px 28px rgba(0, 0, 0, 0.75),               // Sombra de oclusión profunda en el fondo negro
+    0 0 0 1px rgba(255, 255, 255, 0.02);           // Definición fina de contorno
+
+  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), 
+              box-shadow 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+
+  // Al pasar el cursor, el relieve se acentúa levantándose más de la pantalla
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 
+      0 1px 0px rgba(255, 255, 255, 0.15) inset,
+      0 8px 12px rgba(0, 0, 0, 0.5),
+      0 22px 36px rgba(0, 0, 0, 0.85),             // La sombra se proyecta más lejos al subir
+      0 0 0 1px rgba(255, 255, 255, 0.05);
+  }
+
+  // Al presionar, se hunde físicamente interactuando con la superficie
+  &:active { 
+    transform: translateY(2px);
+    box-shadow: 
+      0 1px 3px rgba(0, 0, 0, 0.7),
+      inset 0 2px 4px rgba(0, 0, 0, 0.85);         // Se convierte en sombra interna (hundido)
+    transition: transform 0.05s ease;
+  }
 }
 
-.search-bar input::placeholder {
-  color: #8e8e93;
+.card-info {
+  h3 { 
+    margin: 0; 
+    font-size: 18px; 
+    font-weight: 700; 
+    letter-spacing: -0.3px;
+    color: #fff;
+  }
+  p { 
+    margin: 6px 0 0 0; 
+    color: #aeaeae; 
+    font-size: 14px; 
+  }
 }
 
-.icon {
-  font-size: 18px;
+/* Contenedor del costo estilizado como píldora interna incrustada */
+.total-row {
+  text-align: right;
+  background: rgba(255, 255, 255, 0.04); 
+  padding: 6px 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+
+  span {
+    font-size: 13px;
+    color: #8e8e93;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+  
+  strong {
+    display: block;
+    font-weight: 700;
+    font-size: 18px;
+    color: #34C759; // Verde neón Apple vibrante para romper la oscuridad
+    text-shadow: 0 0 10px rgba(52, 199, 89, 0.25); // Sutil brillo neón
+  }
 }
 
-
-
+/* --- BOTÓN FLOTANTE (FAB) ULTRA RELIEVE --- */
 .fab-container {
   position: fixed;
- bottom: 20px;
-// top: 24px;
+  bottom: 24px;
   right: 24px;
   display: flex;
   flex-direction: column-reverse;
@@ -72,33 +142,129 @@ header { padding: 40px 0 20px 0; color: white; }
 
   button {
     margin-top: 12px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-    transition: transform 0.3s ease, opacity 0.3s ease;
-  }
+    box-shadow: 
+      0 8px 24px rgba(0, 0, 0, 0.6),
+      0 16px 40px rgba(52, 199, 89, 0.35),           // Iluminación ambiental verde en la base
+      0 1px 0 rgba(255, 255, 255, 0.4) inset;        // Línea de luz interna superior
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s;
 
-  .fab-action {
-    opacity: 1;
-    transform: translateY(0);
-    animation: slide-up 0.3s ease forwards;
-  }
-
-  @keyframes slide-up {
-    from {
-      opacity: 0;
-      transform: translateY(10px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
+    &:hover {
+      transform: scale(1.1) translateY(-4px);
+      box-shadow: 
+        0 12px 30px rgba(0, 0, 0, 0.7),
+        0 20px 48px rgba(52, 199, 89, 0.55),
+        0 1px 0 rgba(255, 255, 255, 0.5) inset;
     }
   }
 }
 
 .green-fab {
-  background-color: #217724 !important; // tono verde Material Design
+  background-color: #34C759 !important; // Match perfecto con el verde iOS Premium
   color: white;
-
-  &:hover {
-    background-color: #43a047 !important; // tono más oscuro al hover
-  }
 }
+
+
+// .list-container {
+//   background: #000;
+//   min-height: 100vh;
+//   padding: 20px;
+// }
+
+// header { padding: 40px 0 20px 0; color: white; }
+
+// .ios-card {
+//   background: #f8f8f7; 
+//     // background: #f5f5dc; /* Blanco Hueso */
+//   color: #000;
+//   padding: 16px 20px;
+//   border-radius: 16px;
+//   margin-bottom: 12px;
+//   display: flex;
+//   justify-content: space-between;
+//   align-items: center;
+//   box-shadow: 0 2px 8px rgba(255,255,255,0.05);
+//   transition: transform 0.2s;
+//   cursor: pointer;
+// }
+
+// .ios-card:active { transform: scale(0.98); }
+
+// .card-info h3 { margin: 0; font-size: 18px; font-weight: 600; }
+// .card-info p { margin: 4px 0 0 0; color: #555; font-size: 14px; }
+
+// .card-price span {
+//   font-weight: 700;
+//   font-size: 16px;
+// }
+
+// .search-bar {
+//   background: #1c1c1e;
+//   padding: 10px 15px;
+//   border-radius: 12px;
+//   display: flex;
+//   align-items: center;
+//   gap: 10px;
+//   margin-bottom: 20px;
+// }
+
+// .search-bar input {
+//   background: transparent;
+//   border: none;
+//   color: white;
+//   width: 100%;
+//   font-size: 16px;
+//   outline: none;
+// }
+
+// .search-bar input::placeholder {
+//   color: #8e8e93;
+// }
+
+// .icon {
+//   font-size: 18px;
+// }
+
+
+
+// .fab-container {
+//   position: fixed;
+//  bottom: 20px;
+// // top: 24px;
+//   right: 24px;
+//   display: flex;
+//   flex-direction: column-reverse;
+//   align-items: flex-end;
+//   z-index: 100;
+
+//   button {
+//     margin-top: 12px;
+//     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+//     transition: transform 0.3s ease, opacity 0.3s ease;
+//   }
+
+//   .fab-action {
+//     opacity: 1;
+//     transform: translateY(0);
+//     animation: slide-up 0.3s ease forwards;
+//   }
+
+//   @keyframes slide-up {
+//     from {
+//       opacity: 0;
+//       transform: translateY(10px);
+//     }
+//     to {
+//       opacity: 1;
+//       transform: translateY(0);
+//     }
+//   }
+// }
+
+// .green-fab {
+//   background-color: #217724 !important; // tono verde Material Design
+//   color: white;
+
+//   &:hover {
+//     background-color: #43a047 !important; // tono más oscuro al hover
+//   }
+// }

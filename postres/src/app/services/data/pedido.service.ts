@@ -10,7 +10,7 @@ import { DataObject } from '../../models/dataObject.model';
 @Injectable({ providedIn: 'root' })
 export class PedidoService {
 
-  private urlKey = 'pedidos/'; 
+  private urlKey = 'pedidos/';
   private db = inject(Database);
   private converter = inject(PedidoConverterService);
   private encryptionService = inject(EncryptionService);
@@ -21,9 +21,36 @@ export class PedidoService {
   // Nueva Signal para los clientes
   private _customers = signal<Customer[]>([]);
   public customers = this._customers.asReadonly();
-  
+
 
   public totalPedidos = computed(() => this._pedidos().length);
+
+  public newPedidoNumber = computed(() => {
+      const lista = this.pedidos();
+      const len = lista?.length ?? 0;
+      if (len === 0) return 1;
+
+      // Buscar primer numeroPedido válido para inicializar `max`
+      let i = 0;
+      let max = Number.NEGATIVE_INFINITY;
+      for (; i < len; i++) {
+        const n = Number(lista[i]?.orderNumber);
+        if (Number.isFinite(n)) { max = n; i++; break; }
+      }
+
+      // Si no se encontró ningún numero válido, el siguiente es 1
+      if (max === Number.NEGATIVE_INFINITY) return 1;
+
+      // Recorrer el resto buscando el máximo
+      for (; i < len; i++) {
+        const n = Number(lista[i]?.orderNumber);
+        if (Number.isFinite(n) && n > max) max = n;
+      }
+
+      return max + 1;
+    });
+
+
 
   async obtenerTodas(): Promise<Pedido[]> {
     const snapshot = await get(ref(this.db, 'pedidos'));
@@ -52,7 +79,7 @@ export class PedidoService {
         clientesMap.set(p.customer.id, p.customer);
       }
     });
-    
+
     // 3. Actualizamos la signal de clientes
     this._customers.set(Array.from(clientesMap.values()));
 
@@ -72,13 +99,13 @@ export class PedidoService {
 
     const nuevoPedidoConId = { ...pedido, id: nuevoRef.key || '' };
     this._pedidos.update(actuales => [...actuales, nuevoPedidoConId]);
-    
+
     // Si el cliente es nuevo, lo añadimos a la lista de clientes (opcional)
     if (nuevoPedidoConId.customer) {
-        this._customers.update(actuales => {
-            const existe = actuales.find(c => c.id === nuevoPedidoConId.customer.id);
-            return existe ? actuales : [...actuales, nuevoPedidoConId.customer];
-        });
+      this._customers.update(actuales => {
+        const existe = actuales.find(c => c.id === nuevoPedidoConId.customer.id);
+        return existe ? actuales : [...actuales, nuevoPedidoConId.customer];
+      });
     }
   }
 
@@ -103,7 +130,41 @@ export class PedidoService {
     await remove(ref(this.db, `pedidos/${id}`));
     this._pedidos.update(actuales => actuales.filter(p => p.id !== id));
     // Opcional: podrías re-evaluar la lista de clientes si es necesario
-    await this.obtenerTodas(); 
+    await this.obtenerTodas();
   }
+
+  getPedidoNumber() {
+
+    const siguienteNumero = computed(() => {
+      const lista = this.pedidos();
+      const len = lista?.length ?? 0;
+      if (len === 0) return 1;
+
+      // Buscar primer numeroPedido válido para inicializar `max`
+      let i = 0;
+      let max = Number.NEGATIVE_INFINITY;
+      for (; i < len; i++) {
+        const n = Number(lista[i]?.orderNumber);
+        if (Number.isFinite(n)) { max = n; i++; break; }
+      }
+
+      // Si no se encontró ningún numero válido, el siguiente es 1
+      if (max === Number.NEGATIVE_INFINITY) return 1;
+
+      // Recorrer el resto buscando el máximo
+      for (; i < len; i++) {
+        const n = Number(lista[i]?.orderNumber);
+        if (Number.isFinite(n) && n > max) max = n;
+      }
+
+      return max + 1;
+    });
+
+
+
+  }
+
+
+
 }
 

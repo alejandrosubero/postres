@@ -56,7 +56,6 @@ export class AppComponent implements OnInit {
     // console.log('original ', original);
     // console.log(' encrypted', encrypted);
     // console.log('decrypted', decrypted);
-
   }
 
   // async prueba() {

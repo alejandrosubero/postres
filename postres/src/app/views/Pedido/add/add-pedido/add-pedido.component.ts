@@ -24,7 +24,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button'; // Para mat-mini-fab
 import { ClipboardModule } from '@angular/cdk/clipboard';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { InventarioCheckerService,RecetaConCantidad, ResultadoAnalisis, ResultadoReceta, EntradaReceta } from '../../../../services/inventories/inventario-checker.service';
+import { InventarioCheckerService, RecetaConCantidad, ResultadoAnalisis, ResultadoReceta, EntradaReceta } from '../../../../services/inventories/inventario-checker.service';
 import { trigger, transition, style, animate, query, stagger } from '@angular/animations';
 
 @Component({
@@ -42,22 +42,22 @@ import { trigger, transition, style, animate, query, stagger } from '@angular/an
     MatIconModule,
   ],
   providers: [provideNativeDateAdapter()],
-    animations: [
-      trigger('fadeSlide', [
-        transition(':enter', [
-          style({ opacity: 0, transform: 'translateY(10px)' }),
-          animate('220ms ease-out', style({ opacity: 1, transform: 'none' })),
-        ]),
+  animations: [
+    trigger('fadeSlide', [
+      transition(':enter', [
+        style({ opacity: 0, transform: 'translateY(10px)' }),
+        animate('220ms ease-out', style({ opacity: 1, transform: 'none' })),
       ]),
-      trigger('listIn', [
-        transition('* => *', [
-          query(':enter', [
-            style({ opacity: 0, transform: 'translateY(8px)' }),
-            stagger(40, animate('180ms ease-out', style({ opacity: 1, transform: 'none' }))),
-          ], { optional: true }),
-        ]),
+    ]),
+    trigger('listIn', [
+      transition('* => *', [
+        query(':enter', [
+          style({ opacity: 0, transform: 'translateY(8px)' }),
+          stagger(40, animate('180ms ease-out', style({ opacity: 1, transform: 'none' }))),
+        ], { optional: true }),
       ]),
-    ],
+    ]),
+  ],
   templateUrl: './add-pedido.component.html',
   styleUrl: './add-pedido.component.scss'
 })
@@ -69,8 +69,8 @@ export class AddPedidoComponent implements OnInit {
   private router = inject(Router);
   private pedidoService = inject(PedidoService);
   private snackBar = inject(MatSnackBar);
-  
-  
+
+
   isMenuOpen = signal(false);
   isFavoriteView: boolean = false;
   panelOpenState = false;
@@ -108,9 +108,9 @@ export class AddPedidoComponent implements OnInit {
     pendy: [true],
     charges: [false],
     enCurso: [false],
-    ispriority:[false],
-    wasPriority:[false],
-    onPausa:[false],
+    ispriority: [false],
+    wasPriority: [false],
+    onPausa: [false],
     cost_total: [0, Validators.required],
     cost_base: [0, Validators.required],
     profit: [0],
@@ -125,10 +125,10 @@ export class AddPedidoComponent implements OnInit {
   });
 
 
-entradas = signal<EntradaReceta[]>([this.nuevaEntrada()]);
-resultado = signal<ResultadoAnalisis | null>(null);
-private detallesAbiertos = signal<Set<string>>(new Set());
-private checkerService = inject(InventarioCheckerService);
+  entradas = signal<EntradaReceta[]>([this.nuevaEntrada()]);
+  resultado = signal<ResultadoAnalisis | null>(null);
+  private detallesAbiertos = signal<Set<string>>(new Set());
+  private checkerService = inject(InventarioCheckerService);
 
   constructor() {
     this.setNav();
@@ -216,7 +216,7 @@ private checkerService = inject(InventarioCheckerService);
     }).afterClosed().subscribe(res => {
       if (res) {
         this.agregarReceta(res);
-        const entrda:EntradaReceta = this.addNuevaEntrada(res);
+        const entrda: EntradaReceta = this.addNuevaEntrada(res);
         this.agregarEntrada(entrda);
 
       }
@@ -287,12 +287,12 @@ private checkerService = inject(InventarioCheckerService);
   }
 
 
-   togglePrioridad() {
+  togglePrioridad() {
     this.esPrioritario = !this.esPrioritario;
   }
 
-  toggleCheckInventory(){
-    this.checkInventory = ! this.checkInventory;
+  toggleCheckInventory() {
+    this.checkInventory = !this.checkInventory;
     this.analizar();
   }
 
@@ -309,38 +309,54 @@ private checkerService = inject(InventarioCheckerService);
     newPedido.createDay = new Date();
     newPedido.charges = this.esSinCargos;
     newPedido.ispriority = this.esPrioritario;
-    newPedido.wasPriority = newPedido.ispriority 
+    newPedido.wasPriority = newPedido.ispriority
     newPedido.editDay = new Date();
     newPedido.deliveryDay = newPedido.dayDue;
-    newPedido.confirInventory = this.resultado()!.todoAlcanza;
+
+    if (this.resultado() != undefined && this.resultado() != null && this.resultado()!.todoAlcanza != null && this.resultado()!.todoAlcanza != undefined) {
+      newPedido.confirInventory = this.resultado()!.todoAlcanza;
+    } else {
+      this.toggleCheckInventory();
+      const alcanza = this.resultado()?.todoAlcanza;
+      if (alcanza !== undefined && alcanza !== null) {
+        newPedido.confirInventory = alcanza;
+      }
+    }
+
     newPedido.itWasconsume = false;
     newPedido.issue = false;
-    // newPedido.orderNumber = 0;
+    newPedido.orderNumber = this.pedidoService.newPedidoNumber();
+
     await this.pedidoService.guardar(newPedido);
+
+    console.log('pedido nuevo ', newPedido);
+
     this.router.navigate(['/app/pedido/list']);
   }
 
 
+
+
   notificarCopiado() {
-  this.snackBar.open('Dirección copiada al portapapeles', 'Cerrar', {
-    duration: 2000,
-    panelClass: ['ios-snackbar'] // Puedes darle estilo en tu CSS global
-  });
-}
+    this.snackBar.open('Dirección copiada al portapapeles', 'Cerrar', {
+      duration: 2000,
+      panelClass: ['ios-snackbar'] // Puedes darle estilo en tu CSS global
+    });
+  }
 
- // ── ────────────────────── EntradaReceta ───────────────────────────────────────
+  // ── ────────────────────── EntradaReceta ───────────────────────────────────────
 
- private nuevaEntrada(): EntradaReceta {
+  private nuevaEntrada(): EntradaReceta {
     return { uid: crypto.randomUUID(), receta: null, cantidad: 1, maximoPosible: 0 };
   }
 
 
-addNuevaEntrada(receta: Receta): EntradaReceta {
-    return { 
-      uid: crypto.randomUUID(), 
-      receta: receta, 
-      cantidad: 1, 
-      maximoPosible: 0 
+  addNuevaEntrada(receta: Receta): EntradaReceta {
+    return {
+      uid: crypto.randomUUID(),
+      receta: receta,
+      cantidad: 1,
+      maximoPosible: 0
     };
   }
 
@@ -348,7 +364,7 @@ addNuevaEntrada(receta: Receta): EntradaReceta {
     this.entradas.update(arr => [...arr, entrda]);
   }
 
-analizar() {
+  analizar() {
     const solicitudes: RecetaConCantidad[] = this.entradas()
       .filter(e => e.receta !== null)
       .map(e => ({ receta: e.receta!, cantidad: e.cantidad }));
@@ -362,7 +378,7 @@ analizar() {
     this.detallesAbiertos.set(conFaltantes);
   }
 
- // ── DETALLE TOGGLE ────────────────────────────────────────────────────────
+  // ── DETALLE TOGGLE ────────────────────────────────────────────────────────
   toggleDetalle(id: string) {
     this.detallesAbiertos.update(s => {
       const next = new Set(s);
@@ -371,11 +387,11 @@ analizar() {
     });
   }
 
-    detalleAbierto(id: string): boolean {
+  detalleAbierto(id: string): boolean {
     return this.detallesAbiertos().has(id);
   }
 
-   fmt(v: number): string {
+  fmt(v: number): string {
     return new Intl.NumberFormat('es', { style: 'currency', currency: 'USD' }).format(v);
   }
 
@@ -385,10 +401,10 @@ analizar() {
 
 
   imprimir() {
-  window.print();
-}
- // ── ─────────────────────────────────────────────────────────────
- setNav() {
+    window.print();
+  }
+  // ── ─────────────────────────────────────────────────────────────
+  setNav() {
     // this.checkFavorites();
     let navConfig: NavConfig = new NavConfig();
     navConfig.title = 'Nuevo Pedido';
@@ -397,7 +413,7 @@ analizar() {
     navConfig.ico.logut = false;
     navConfig.ico.back = true;
     navConfig.ico.cart = false;
-    navConfig.goto ='/app/pedido/list';
+    navConfig.goto = '/app/pedido/list';
     if (this.isFavoriteView) {
       navConfig.favorite.active = this.isFavoriteView;
     }

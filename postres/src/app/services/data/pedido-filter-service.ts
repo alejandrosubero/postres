@@ -46,7 +46,7 @@ export class PedidoFilterService {
       case 'pausa': case 'detenido':
         return pedidos.filter(p => p.onPausa);
       case 'donacion': case 'gratis': case 'regalo':
-        return pedidos.filter(p => !p.charges); // Si charges es true, se cobra. Si es false, es gratis.
+        return pedidos.filter(p => p.charges); // Si charges es true, se cobra. Si es false, es gratis.
       default:
         return pedidos;
     }

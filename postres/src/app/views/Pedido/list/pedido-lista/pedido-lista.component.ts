@@ -88,7 +88,9 @@ setSearch(val: string) {
     navConfig.ico.logut = false;
     navConfig.ico.home = true;
     navConfig.ico.cart = false;
-    navConfig.goto = "/app/dashboard";
+    navConfig.ico.back = false;
+    // navConfig.goto = "/app/dashboard";
+    navConfig.goto2 = '/app/dashboard?tab=1'
     if (this.isFavoriteView) {
       navConfig.favorite.active = this.isFavoriteView;
     }
