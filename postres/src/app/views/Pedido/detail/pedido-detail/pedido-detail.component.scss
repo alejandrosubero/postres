@@ -51,8 +51,8 @@
 }
 
 .pedido-name {
-  font-size: 28px;
-  font-weight: 600;
+  font-size: 20px;
+  // font-weight: 600;
   margin: 0;
   color: #000;
   letter-spacing: -0.3px;
@@ -342,6 +342,11 @@
     background-color: #1c1c1e;
     border-color: #2c2c2e;
   }
+
+.ios-header .lineBottom .pedido-orden{
+  color: rgb(11, 113, 231);
+}
+
 
   .pedido-name,
   .info-value,
@@ -1168,5 +1173,111 @@ div.instrucciones {
     font-weight: 600 !important;
     font-size: 15px !important;
     justify-content: flex-end !important;
+  }
+}
+
+
+/* ==========================================================================
+   REFÁCTOR PREMIUM: HÉROE DE PEDIDO CON RELIEVE 3D MARCADO
+   ========================================================================== */
+
+/* Contenedor principal que flota sobre el fondo OLED */
+.pedido-hero-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 30px; // Espacio con las secciones de estados
+  position: relative;
+  width: 100%;
+}
+
+/* --- CÁPSULA PREMIUM DE IMAGEN (EFECTO GEMA FLOTANTE/EXTRUIDA) --- */
+.pedido-image-capsule {
+  // Dimensiones coordinadas (cuadrada como la imagen genérica 1:1)
+  width: 160px;
+  height: 160px;
+  border-radius: 30px; // Esquinas súper suaves estilo iOS Premium
+  background: #1c1c1e; // Gris metálico oscuro iOS
+  overflow: hidden;    // Recorta la imagen a la forma curva
+  
+  // Bordes nítidos de simulación de luz (Borde superior iluminado, inferior oscuro)
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-top-color: rgba(255, 255, 255, 0.15);
+  border-bottom-color: rgba(0, 0, 0, 0.6);
+
+  // Multi-capa de sombras para volumen real de extrusión física (Pop-out)
+  // Asegura que la imagen parezca flotar muy por encima del fondo OLED negro.
+  box-shadow: 
+    0 1px 0px rgba(255, 255, 255, 0.1) inset,     // Brillo interno superior
+    0 4px 6px rgba(0, 0, 0, 0.4),                  // Sombra base suave
+    0 14px 28px rgba(0, 0, 0, 0.75),               // Oclusión profunda sobre fondo negro
+    0 0 0 1px rgba(255, 255, 255, 0.02);           // Definición fina de contorno
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2; // Asegura que la imagen flote sobre la ranura de información
+}
+
+/* Imagen dentro de la cápsula */
+.pedido-hero-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; // Asegura que la imagen llene el espacio cuadrado de forma premium
+  object-position: center;
+}
+
+/* --- INFORMACIÓN DEL PEDIDO INTEGRADA (EFECTO RANURA INCRUSTADA/HUNDIDO) --- */
+.pedido-info-slot {
+  width: 90%; // Ocupa el 90% centrado, alineado con las secciones
+  margin-top: -30px; // Superposición inteligente: la ranura de información "nace" detrás de la imagen flotante
+  background: rgba(28, 28, 30, 0.85); // Fondo oscuro esmerilado iOS Dark Mode
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  
+  padding: 40px 20px 20px; // Padding superior mayor para dejar ver la imagen superpuesta
+  border-radius: 20px;
+  
+  // Efecto de ranura: bordes de luz invertidos (Inward 3D)
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  border-top-color: rgba(0, 0, 0, 0.3); // Sombra superior para "hundirlo"
+  border-bottom-color: rgba(255, 255, 255, 0.08); // Luz inferior
+
+  // Multi-capa de sombras internas para "hundir" el texto en la ranura
+  box-shadow: 
+    inset 0 4px 6px rgba(0, 0, 0, 0.6),    // Sombra interna superior (profundidad)
+    inset 0 -1px 2px rgba(255, 255, 255, 0.03); // Brillo sutil inferior
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  z-index: 1; // Capa inferior respecto a la imagen flotante
+}
+
+/* Estilos de Texto Refinados para el Héroe */
+.pedido-name-hero {
+  font-size: 20px;
+  font-weight: 700;
+  color: #fff; // Texto blanco puro
+  letter-spacing: -0.3px;
+  margin: 0;
+  color: #fff;
+}
+
+.pedido-orden-hero {
+  font-size: 14px;
+  color: #8e8e93; // Gris iOS Dark Mode
+  margin: 6px 0 0;
+  font-weight: 500;
+  font-family: 'SF Mono', Menlo, Monaco, monospace; // Estilo código premium
+
+  span {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: #ff9500; // Naranja iOS para commands informativos, como lo definiste antes
+    margin-right: 2px;
   }
 }

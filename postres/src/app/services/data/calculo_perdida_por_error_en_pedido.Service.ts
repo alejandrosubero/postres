@@ -24,7 +24,7 @@ export class CalculoPerdidaErrorEnPedidoService {
 
       const nuevoGasto: GastoOperativo = {
         cantidad: cantidadGastoExcedente,
-        descripcion: `Gasto generado por error en la ejecucion de la receta ${pedido.name} #${pedidoIdDisplay}`,
+        descripcion: ` ${pedido.name} #${pedido.orderNumber} Gasto por error en la ejecucion de la receta #${pedidoIdDisplay}`,
         fecha: new Date(),
         year: new Date().getFullYear()
       };

@@ -309,9 +309,8 @@ export class PedidoDetailComponent {
     });
 
     dialogRef.afterClosed().subscribe((respuesta: any) => {
-
       if (respuesta) {
-        if (this.pedido.orderIssue != undefined && this.pedido.orderIssue != null) {
+        if (this.pedido.orderIssue != undefined && this.pedido.orderIssue != null && this.pedido.orderIssue.issueAffectsCosts){
           this.errorEnPedidoService.procesarErrorPedido(this.pedido, this.pedido.orderIssue.porcentajeError)
             .then(nuevoProfit => {
               this.pedido.profit = nuevoProfit;

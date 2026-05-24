@@ -98,3 +98,6 @@ export class AppComponent implements OnInit {
 
 }
 
+
+
+// ng build --configuration production --base-href="https://tu-usuario-github.github.io/nombre-de-tu-repositorio/"

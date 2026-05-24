@@ -1,368 +1,376 @@
 <div class="ios-detail-container">
   <!-- Header con nombre del pedido y estado -->
   <div class="ios-header">
-    <div class="lineBottom">
-      <h1 class="pedido-name">{{ pedido.name }}</h1>
-    </div>
-
-    <div class="buletInfo">
-      <div class="status-badge" [class.en-curso]="pedido.enCurso">
-        {{ this.status() }}
+    <div class="pedido-hero-wrapper">
+      <div class="pedido-image-capsule">
+        <img src="assets/images/pedido-hero-pastry.png" alt="Detalle del Postre Order" class="pedido-hero-image">
       </div>
 
-      @if(!pedido.cancel){
-      <div class="status-badge" [class.en-curso]="pedido.charges">
-        {{ pedido.cancel? 'Cancelado' : (pedido.charges && pedido.charges? 'Donar':'Normal') }}
+      <div class="pedido-info-slot">
+        <h2 class="pedido-name-hero">{{ pedido.name }}</h2>
+        <h4 class="pedido-orden-hero"><span>ORDEN</span> #{{ pedido.orderNumber }}</h4>
       </div>
-      }
     </div>
 
-  </div>
 
-
-  <!-- Sección de chequeo de inventario -->
-  @if ( this.toggleEsCursoResultado) {
-  <div class="ios-section">
-    <section class="section-group">
-      <ng-container>
-        <div class="vr-status" @fadeSlide [class.vr-status--ok]="resultado()!.todoAlcanza"
-          [class.vr-status--err]="!resultado()!.todoAlcanza">
-          <mat-icon>{{ resultado()!.todoAlcanza ? 'check_circle' : 'error' }}</mat-icon>
-          <span>
-            {{ resultado()!.todoAlcanza
-            ? '✅ Tienes todo en inventario para preparar lo solicitado'
-            : '⚠️ Faltan ingredientes — revisa la lista de compra abajo' }}
-          </span>
+      <div class="buletInfo">
+        <div class="status-badge" [class.en-curso]="pedido.enCurso">
+          {{ this.status() }}
         </div>
 
-        @if(!resultado()!.todoAlcanza) {
-        <button type="button" class="vr-print-btn" (click)="imprimir()" matRipple>
-          <mat-icon>print</mat-icon>
-          Imprimir lista de compra
-        </button>
-        }
-      </ng-container>
-
-    </section>
-  </div>
-  }
-
-  <!-- Sección de estados interactivos (botones y toggles) -->
-  <div class="ios-section">
-    <div class="section-title lineBottomt">Estados</div>
-
-    <div class="status-grid">
-
-      <!-- Prioridad: botón mini-fab -->
-      <div class="status-item">
-        <div class="status-label">Prioritario</div>
-        <button mat-mini-fab (click)="togglePriority()" [class.btn-active]="pedido.ispriority"
-          [class.btn-inactive]="!pedido.ispriority">
-          <mat-icon>{{ pedido.ispriority ? 'check' : 'add' }}</mat-icon>
-        </button>
-      </div>
-
-      <!-- En curso: botón mini-fab -->
-      <div class="status-item">
-        <div class="status-label">En Curso</div>
-        <button mat-mini-fab (click)="toggleEsCurso()" [class.btn-active]="pedido.enCurso"
-          [class.btn-inactive]="!pedido.enCurso">
-          <mat-icon>{{ pedido.enCurso ? 'check' : 'add' }}</mat-icon>
-        </button>
-      </div>
-
-      <!-- En pausa: botón mini-fab -->
-      <div class="status-item">
-        <div class="status-label">En pausa</div>
-        <button mat-mini-fab (click)="toggleOnPausa()" [class.btn-active]="pedido.onPausa"
-          [class.btn-inactive]="!pedido.onPausa">
-          <mat-icon>{{ pedido.onPausa ? 'pause' : 'play_arrow' }}</mat-icon>
-        </button>
-      </div>
-
-      <!-- Delivery: slide-toggle -->
-      <div class="status-item">
-        <div class="status-label">En Entregra:</div>
-        <button mat-mini-fab (click)="toggleOnDelivery()" [class.btn-active]="pedido.on_delivery"
-          [class.btn-inactive]="!pedido.on_delivery">
-          <mat-icon>{{ pedido.on_delivery ? 'check' : 'add' }}</mat-icon>
-        </button>
-      </div>
-
-      <div class="status-item">
-        <div class="status-label">Entregado:</div>
-        <button mat-mini-fab (click)="toggleDelivery()" [class.btn-active]="pedido.delivery"
-          [class.btn-inactive]="!pedido.delivery">
-          <mat-icon>{{ pedido.delivery ? 'check' : 'add' }}</mat-icon>
-        </button>
-      </div>
-
-      <!-- Cancelado -->
-      <div class="status-item">
-        <div class="status-label">Cancelar</div>
-        <button mat-mini-fab (click)="toggleCancel()" [class.btn-active]="pedido.cancel"
-          [class.btn-inactive]="!pedido.cancel">
-          <mat-icon>{{ pedido.cancel ? 'check' : 'add' }}</mat-icon>
-        </button>
-      </div>
-
-      <!-- Error en Preparacion  -->
-      <div class="status-item">
-        <div class="status-label">Error en Pedido</div>
-        <button mat-mini-fab (click)="toggleError()" [class.btn-active]="pedido.issue"
-          [class.btn-inactive]="!pedido.issue">
-          <mat-icon>{{ pedido.cancel ? 'check' : 'add' }}</mat-icon>
-        </button>
-      </div>
-
-    </div>
-  </div>
-
-  <!-- Sección de cliente -->
-  <div class="ios-section">
-    <div class="section-title lineBottomt">Cliente</div>
-    <div class="info-row">
-      <span class="info-label">Nombre:</span>
-      <span class="info-value">{{ pedido.customer.name }}</span>
-    </div>
-    <div class="info-row">
-      <span class="info-label">Teléfono:</span>
-      <span class="info-value clickable-address" [cdkCopyToClipboard]="this.pedido.customer.phoneNumber + ''"
-        (click)="notificarCopiado()">{{ pedido.customer.phoneNumber }}</span>
-    </div>
-    <div class="info-row" *ngIf="pedido.customer.email">
-      <span class="info-label">Email:</span>
-      <span class="info-value clickable-address" [cdkCopyToClipboard]="pedido.customer.email"
-        (click)="notificarCopiado()">{{ pedido.customer.email }}</span>
-    </div>
-    <div class="info-row">
-      <span class="info-label">Dirección:</span>
-      <span class="info-value clickable-address" [cdkCopyToClipboard]="this.pedido.customer.address "
-        (click)="notificarCopiado()">{{ pedido.customer.address }}</span>
-    </div>
-    <div class="info-row" *ngIf="pedido.customer.notas">
-      <span class="info-label">Notas del cliente:</span>
-      <span class="info-value">{{ pedido.customer.notas }}</span>
-    </div>
-  </div>
-
-  <!-- Sección de dirección de entrega -->
-  <div class="ios-section" *ngIf="pedido.address_Of_delivery">
-    <div class="section-title lineBottomt">Dirección de entrega</div>
-    <div class="info-row">
-      <span class="info-label">Dirección:</span>
-      <span class="info-value  clickable-address" [cdkCopyToClipboard]="pedido.address_Of_delivery"
-        (click)="notificarCopiado()">{{ pedido.address_Of_delivery }}</span>
-    </div>
-    <div class="info-row" *ngIf="pedido.address_Of_delivery_note">
-      <span class="info-label">Nota de entrega:</span>
-      <span class="info-value">{{ pedido.address_Of_delivery_note }}</span>
-    </div>
-  </div>
-
-  <!-- Sección de fechas -->
-  <div class="ios-section">
-    <div class="section-title lineBottomt">Fechas</div>
-    <div class="info-row">
-      <span class="info-label">Fecha creación:</span>
-      <span class="info-value">{{ pedido.createDay | date:'dd/MM/yyyy hh:mm a' }}</span>
-    </div>
-    <div class="info-row">
-      <span class="info-label">Fecha entrega:</span>
-      <span class="info-value">{{ pedido.dayDue | date:'dd/MM/yyyy' }}</span>
-    </div>
-  </div>
-
-  <!-- Sección de costos -->
-  <div class="ios-section">
-    <div class="section-title lineBottomt">Costos</div>
-    <div class="cost-grid">
-      <div class="cost-item">
-        <span class="cost-label">Costo base:</span>
-        <span class="cost-value">{{ formatCurrency(pedido.cost_base) }}</span>
-      </div>
-      <div class="cost-item">
-        <span class="cost-label">Costo total:</span>
-        <span class="cost-value">{{ formatCurrency(pedido.cost_total) }}</span>
-      </div>
-      <div class="cost-item">
-        <span class="cost-label">Ganancia:</span>
-        <span class="cost-value">{{ formatCurrency(pedido.profit) }}</span>
-      </div>
-      <div class="cost-item">
-        <span class="cost-label">% Ganancia:</span>
-        <span class="cost-value">{{ pedido.profit_Percentage }}%</span>
-      </div>
-      <div class="cost-item" *ngIf="pedido.delivery_cost">
-        <span class="cost-label">Costo delivery:</span>
-        <span class="cost-value">{{ formatCurrency(pedido.delivery_cost) }}</span>
-      </div>
-      <div class="cost-item " *ngIf="pedido.miscellaneous_cost">
-        <span class="cost-label">Costos varios:</span>
-        <span class="cost-value">{{ formatCurrency(pedido.miscellaneous_cost) }}</span>
-      </div>
-    </div>
-    <div class="lineBottom"></div>
-    <div class="info-row" *ngIf="pedido.note_of_miscellaneous_Cost">
-      <span class="info-label">Nota de costos varios:</span>
-      <span class="info-value">{{ pedido.note_of_miscellaneous_Cost }}</span>
-    </div>
-  </div>
-
-  <!-- error en pedido -->
-  @if(this.pedido.issue){
-  @if( pedido.orderIssue != undefined && pedido.orderIssue != null){
-  <mat-accordion>
-    <mat-expansion-panel *ngFor="let receta of pedido.recetas; let i = index" class="receta-panel">
-      <mat-expansion-panel-header>
-        <mat-panel-title>
-          Error en Pedido
-        </mat-panel-title>
-        <mat-panel-description>
-          {{ formatCurrency(pedido.orderIssue.costOfIssue) }}
-        </mat-panel-description>
-      </mat-expansion-panel-header>
-
-      <div class="ios-section">
-        <!-- <div class="section-title lineBottom">Error en Pedido</div> -->
-        @if(pedido.orderIssue.porcentajeError){
-        <div class="info-row">
-          <span class="info-label">Porcentaje Error:</span>
-          <span class="info-value">{{pedido.orderIssue.porcentajeError| number:'1.1-1'}} %</span>
-        </div>
-        }
-
-        @if(pedido.orderIssue.costOfIssue){
-        <div class="info-row">
-          <span class="info-label">Costo del Error:</span>
-          <span class="info-value">{{pedido.orderIssue.costOfIssue| number:'1.2-2'}} % </span>
-        </div>
-        }
-        @if(pedido.orderIssue.issueNote){
-        <div class="info-row">
-          <span class="info-label">Nota:</span>
-          <span class="info-value">{{pedido.orderIssue.issueNote }}</span>
+        @if(!pedido.cancel){
+        <div class="status-badge" [class.en-curso]="pedido.charges">
+          {{ pedido.cancel? 'Cancelado' : (pedido.charges && pedido.charges? 'Donar':'Normal') }}
         </div>
         }
       </div>
-    </mat-expansion-panel>
-  </mat-accordion>
-  }
-  }
-  <!-- Sección de recetas (expansión) -->
-  <div class="ios-section">
-    <div class="section-title lineBottomt">Recetas</div>
+
+    </div>
+
+
+    <!-- Sección de chequeo de inventario -->
+    @if ( this.toggleEsCursoResultado) {
+    <div class="ios-section">
+      <section class="section-group">
+        <ng-container>
+          <div class="vr-status" @fadeSlide [class.vr-status--ok]="resultado()!.todoAlcanza"
+            [class.vr-status--err]="!resultado()!.todoAlcanza">
+            <mat-icon>{{ resultado()!.todoAlcanza ? 'check_circle' : 'error' }}</mat-icon>
+            <span>
+              {{ resultado()!.todoAlcanza
+              ? '✅ Tienes todo en inventario para preparar lo solicitado'
+              : '⚠️ Faltan ingredientes — revisa la lista de compra abajo' }}
+            </span>
+          </div>
+
+          @if(!resultado()!.todoAlcanza) {
+          <button type="button" class="vr-print-btn" (click)="imprimir()" matRipple>
+            <mat-icon>print</mat-icon>
+            Imprimir lista de compra
+          </button>
+          }
+        </ng-container>
+
+      </section>
+    </div>
+    }
+
+    <!-- Sección de estados interactivos (botones y toggles) -->
+    <div class="ios-section">
+      <div class="section-title lineBottomt">Estados</div>
+
+      <div class="status-grid">
+
+        <!-- Prioridad: botón mini-fab -->
+        <div class="status-item">
+          <div class="status-label">Prioritario</div>
+          <button mat-mini-fab (click)="togglePriority()" [class.btn-active]="pedido.ispriority"
+            [class.btn-inactive]="!pedido.ispriority">
+            <mat-icon>{{ pedido.ispriority ? 'check' : 'add' }}</mat-icon>
+          </button>
+        </div>
+
+        <!-- En curso: botón mini-fab -->
+        <div class="status-item">
+          <div class="status-label">En Curso</div>
+          <button mat-mini-fab (click)="toggleEsCurso()" [class.btn-active]="pedido.enCurso"
+            [class.btn-inactive]="!pedido.enCurso">
+            <mat-icon>{{ pedido.enCurso ? 'check' : 'add' }}</mat-icon>
+          </button>
+        </div>
+
+        <!-- En pausa: botón mini-fab -->
+        <div class="status-item">
+          <div class="status-label">En pausa</div>
+          <button mat-mini-fab (click)="toggleOnPausa()" [class.btn-active]="pedido.onPausa"
+            [class.btn-inactive]="!pedido.onPausa">
+            <mat-icon>{{ pedido.onPausa ? 'pause' : 'play_arrow' }}</mat-icon>
+          </button>
+        </div>
+
+        <!-- Delivery: slide-toggle -->
+        <div class="status-item">
+          <div class="status-label">En Entregra:</div>
+          <button mat-mini-fab (click)="toggleOnDelivery()" [class.btn-active]="pedido.on_delivery"
+            [class.btn-inactive]="!pedido.on_delivery">
+            <mat-icon>{{ pedido.on_delivery ? 'check' : 'add' }}</mat-icon>
+          </button>
+        </div>
+
+        <div class="status-item">
+          <div class="status-label">Entregado:</div>
+          <button mat-mini-fab (click)="toggleDelivery()" [class.btn-active]="pedido.delivery"
+            [class.btn-inactive]="!pedido.delivery">
+            <mat-icon>{{ pedido.delivery ? 'check' : 'add' }}</mat-icon>
+          </button>
+        </div>
+
+        <!-- Cancelado -->
+        <div class="status-item">
+          <div class="status-label">Cancelar</div>
+          <button mat-mini-fab (click)="toggleCancel()" [class.btn-active]="pedido.cancel"
+            [class.btn-inactive]="!pedido.cancel">
+            <mat-icon>{{ pedido.cancel ? 'check' : 'add' }}</mat-icon>
+          </button>
+        </div>
+
+        <!-- Error en Preparacion  -->
+        <div class="status-item">
+          <div class="status-label">Error en Pedido</div>
+          <button mat-mini-fab (click)="toggleError()" [class.btn-active]="pedido.issue"
+            [class.btn-inactive]="!pedido.issue">
+            <mat-icon>{{ pedido.cancel ? 'check' : 'add' }}</mat-icon>
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Sección de cliente -->
+    <div class="ios-section">
+      <div class="section-title lineBottomt">Cliente</div>
+      <div class="info-row">
+        <span class="info-label">Nombre:</span>
+        <span class="info-value">{{ pedido.customer.name }}</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">Teléfono:</span>
+        <span class="info-value clickable-address" [cdkCopyToClipboard]="this.pedido.customer.phoneNumber + ''"
+          (click)="notificarCopiado()">{{ pedido.customer.phoneNumber }}</span>
+      </div>
+      <div class="info-row" *ngIf="pedido.customer.email">
+        <span class="info-label">Email:</span>
+        <span class="info-value clickable-address" [cdkCopyToClipboard]="pedido.customer.email"
+          (click)="notificarCopiado()">{{ pedido.customer.email }}</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">Dirección:</span>
+        <span class="info-value clickable-address" [cdkCopyToClipboard]="this.pedido.customer.address "
+          (click)="notificarCopiado()">{{ pedido.customer.address }}</span>
+      </div>
+      <div class="info-row" *ngIf="pedido.customer.notas">
+        <span class="info-label">Notas del cliente:</span>
+        <span class="info-value">{{ pedido.customer.notas }}</span>
+      </div>
+    </div>
+
+    <!-- Sección de dirección de entrega -->
+    <div class="ios-section" *ngIf="pedido.address_Of_delivery">
+      <div class="section-title lineBottomt">Dirección de entrega</div>
+      <div class="info-row">
+        <span class="info-label">Dirección:</span>
+        <span class="info-value  clickable-address" [cdkCopyToClipboard]="pedido.address_Of_delivery"
+          (click)="notificarCopiado()">{{ pedido.address_Of_delivery }}</span>
+      </div>
+      <div class="info-row" *ngIf="pedido.address_Of_delivery_note">
+        <span class="info-label">Nota de entrega:</span>
+        <span class="info-value">{{ pedido.address_Of_delivery_note }}</span>
+      </div>
+    </div>
+
+    <!-- Sección de fechas -->
+    <div class="ios-section">
+      <div class="section-title lineBottomt">Fechas</div>
+      <div class="info-row">
+        <span class="info-label">Fecha creación:</span>
+        <span class="info-value">{{ pedido.createDay | date:'dd/MM/yyyy hh:mm a' }}</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">Fecha entrega:</span>
+        <span class="info-value">{{ pedido.dayDue | date:'dd/MM/yyyy' }}</span>
+      </div>
+    </div>
+
+    <!-- Sección de costos -->
+    <div class="ios-section">
+      <div class="section-title lineBottomt">Costos</div>
+      <div class="cost-grid">
+        <div class="cost-item">
+          <span class="cost-label">Costo base:</span>
+          <span class="cost-value">{{ formatCurrency(pedido.cost_base) }}</span>
+        </div>
+        <div class="cost-item">
+          <span class="cost-label">Costo total:</span>
+          <span class="cost-value">{{ formatCurrency(pedido.cost_total) }}</span>
+        </div>
+        <div class="cost-item">
+          <span class="cost-label">Ganancia:</span>
+          <span class="cost-value">{{ formatCurrency(pedido.profit) }}</span>
+        </div>
+        <div class="cost-item">
+          <span class="cost-label">% Ganancia:</span>
+          <span class="cost-value">{{ pedido.profit_Percentage }}%</span>
+        </div>
+        <div class="cost-item" *ngIf="pedido.delivery_cost">
+          <span class="cost-label">Costo delivery:</span>
+          <span class="cost-value">{{ formatCurrency(pedido.delivery_cost) }}</span>
+        </div>
+        <div class="cost-item " *ngIf="pedido.miscellaneous_cost">
+          <span class="cost-label">Costos varios:</span>
+          <span class="cost-value">{{ formatCurrency(pedido.miscellaneous_cost) }}</span>
+        </div>
+      </div>
+      <div class="lineBottom"></div>
+      <div class="info-row" *ngIf="pedido.note_of_miscellaneous_Cost">
+        <span class="info-label">Nota de costos varios:</span>
+        <span class="info-value">{{ pedido.note_of_miscellaneous_Cost }}</span>
+      </div>
+    </div>
+
+    <!-- error en pedido -->
+    @if(this.pedido.issue){
+    @if( pedido.orderIssue != undefined && pedido.orderIssue != null){
     <mat-accordion>
       <mat-expansion-panel *ngFor="let receta of pedido.recetas; let i = index" class="receta-panel">
         <mat-expansion-panel-header>
           <mat-panel-title>
-            {{ receta.Name }} Costo Total:{{ formatCurrency(receta.CostoTotal) }}
+            Error en Pedido
           </mat-panel-title>
-          <!-- <mat-panel-description>
-            {{ formatCurrency(receta.CostoTotal) }}
-          </mat-panel-description> -->
+          <mat-panel-description>
+            {{ formatCurrency(pedido.orderIssue.costOfIssue) }}
+          </mat-panel-description>
         </mat-expansion-panel-header>
 
-        <!-- Ingredientes -->
-        <div class="sub-section-title">Ingredientes</div>
- <!-- <div class="sub-section-title" style="color: black;">Ingredientes</div> -->
-        
-        <div class="ingredients-list">
-          <div *ngFor="let ing of receta.Lista_ingredientes" class="ingredient-item">
-            <span class="ingredient-name">{{ ing.Name }}</span>
-            <span class="ingredient-quantity">{{ ing.Cantidad }} und.</span>
-            <span class="ingredient-cost">{{ formatCurrency(ing.Cost) }}</span>
+        <div class="ios-section">
+          <!-- <div class="section-title lineBottom">Error en Pedido</div> -->
+          @if(pedido.orderIssue.porcentajeError){
+          <div class="info-row">
+            <span class="info-label">Porcentaje Error:</span>
+            <span class="info-value">{{pedido.orderIssue.porcentajeError| number:'1.1-1'}} %</span>
           </div>
-        </div>
+          }
 
-        <!-- Instrucciones -->
-        <div *ngIf="receta.instrucciones" class="instrucciones">
-          <div class="sub-section-title lineBottomt">Instrucciones</div>
-          <div class="pedido-notas">
-            <div class="pedido-texto ">
-              {{ receta.instrucciones }}
-            </div>
+          @if(pedido.orderIssue.costOfIssue){
+          <div class="info-row">
+            <span class="info-label">Costo del Error:</span>
+            <span class="info-value">{{pedido.orderIssue.costOfIssue| number:'1.2-2'}} % </span>
           </div>
-        </div>
-
-
-        <!-- Notas -->
-        <div *ngIf="receta.Notes && receta.Notes.length">
-          <div class="sub-section-title">Notas</div>
-          <ul class="notes-list">
-            <li *ngFor="let note of receta.Notes">{{ note }}</li>
-          </ul>
+          }
+          @if(pedido.orderIssue.issueNote){
+          <div class="info-row">
+            <span class="info-label">Nota:</span>
+            <span class="info-value">{{pedido.orderIssue.issueNote }}</span>
+          </div>
+          }
         </div>
       </mat-expansion-panel>
     </mat-accordion>
-  </div>
+    }
+    }
+    <!-- Sección de recetas (expansión) -->
+    <div class="ios-section">
+      <div class="section-title lineBottomt">Recetas</div>
+      <mat-accordion>
+        <mat-expansion-panel *ngFor="let receta of pedido.recetas; let i = index" class="receta-panel">
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              {{ receta.Name }} Costo Total:{{ formatCurrency(receta.CostoTotal) }}
+            </mat-panel-title>
+            <!-- <mat-panel-description>
+            {{ formatCurrency(receta.CostoTotal) }}
+          </mat-panel-description> -->
+          </mat-expansion-panel-header>
 
-  <!-- Notas generales del pedido -->
-  <div class="ios-section" *ngIf="pedido.notas">
-    <div class="section-title lineBottomt">Notas del pedido</div>
-    <p class="pedido-notas">{{ pedido.notas }}</p>
-  </div>
+          <!-- Ingredientes -->
+          <div class="sub-section-title">Ingredientes</div>
+          <!-- <div class="sub-section-title" style="color: black;">Ingredientes</div> -->
 
-  <!-- Campo adicional pedido (texto libre) -->
-  <div class="ios-section" *ngIf="pedido.pedido">
-    <div class="section-title lineBottomt">Detalle pedido</div>
-    <p class="pedido-texto">{{ pedido.pedido }}</p>
-  </div>
-</div>
+          <div class="ingredients-list">
+            <div *ngFor="let ing of receta.Lista_ingredientes" class="ingredient-item">
+              <span class="ingredient-name">{{ ing.Name }}</span>
+              <span class="ingredient-quantity">{{ ing.Cantidad }} und.</span>
+              <span class="ingredient-cost">{{ formatCurrency(ing.Cost) }}</span>
+            </div>
+          </div>
 
-
-<div class="fab-container">
-  <button mat-fab color="primary" (click)="toggleFab()" aria-label="Menu">
-    <mat-icon>{{ isFabOpen ? 'close' : 'menu' }}</mat-icon>
-  </button>
-  @if (isFabOpen) {
-  <button mat-fab class="green-fab" (click)="edit()">
-    <mat-icon>edit</mat-icon>
-  </button>
-  <button mat-fab color="warn" (click)="confirmDelete()">
-    <mat-icon>delete</mat-icon>
-  </button>
-  }
-</div>
+          <!-- Instrucciones -->
+          <div *ngIf="receta.instrucciones" class="instrucciones">
+            <div class="sub-section-title lineBottomt">Instrucciones</div>
+            <div class="pedido-notas">
+              <div class="pedido-texto ">
+                {{ receta.instrucciones }}
+              </div>
+            </div>
+          </div>
 
 
-<!-- PRINT TEMPLATE (invisible, solo para impresión) -->
-<div class="vr-print-area" id="vr-print-area" style="display:none">
-  <ng-container *ngIf="resultado()">
-    <h2>Lista de compra</h2>
-    <p>Generada: {{ now() }}</p>
-    <hr />
-    <div *ngFor="let r of resultado()!.resultados" style="margin-bottom:8px">
-      <strong>{{ r.receta.Name }}</strong> — solicitadas: {{ r.cantidadSolicitada }}, posibles: {{
-      r.cantidadPosible }}
+          <!-- Notas -->
+          <div *ngIf="receta.Notes && receta.Notes.length">
+            <div class="sub-section-title">Notas</div>
+            <ul class="notes-list">
+              <li *ngFor="let note of receta.Notes">{{ note }}</li>
+            </ul>
+          </div>
+        </mat-expansion-panel>
+      </mat-accordion>
     </div>
-    <hr />
-    <table style="width:100%;border-collapse:collapse">
-      <thead>
-        <tr>
-          <th style="text-align:left;padding:4px;border-bottom:1px solid #ccc">Ingrediente</th>
-          <th style="text-align:left;padding:4px;border-bottom:1px solid #ccc">Cantidad</th>
-          <th style="text-align:left;padding:4px;border-bottom:1px solid #ccc">Presentación</th>
-          <th style="text-align:right;padding:4px;border-bottom:1px solid #ccc">Costo est.</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let item of resultado()!.listaCompra">
-          <td style="padding:4px;border-bottom:1px solid #eee">{{ item.nombre }}</td>
-          <td style="padding:4px;border-bottom:1px solid #eee">{{ item.cantidadFaltante | number:'1.0-2' }}
-          </td>
-          <td style="padding:4px;border-bottom:1px solid #eee">{{ item.presentacion }}</td>
-          <td style="padding:4px;border-bottom:1px solid #eee;text-align:right">{{ fmt(item.costoEstimado) }}
-          </td>
-        </tr>
-      </tbody>
-      <tfoot>
-        <tr>
-          <td colspan="3" style="padding:6px;font-weight:bold">Total estimado</td>
-          <td style="padding:6px;font-weight:bold;text-align:right">{{ fmt(resultado()!.costoTotalCompra) }}
-          </td>
-        </tr>
-      </tfoot>
-    </table>
-  </ng-container>
-</div>
+
+    <!-- Notas generales del pedido -->
+    <div class="ios-section" *ngIf="pedido.notas">
+      <div class="section-title lineBottomt">Notas del pedido</div>
+      <p class="pedido-notas">{{ pedido.notas }}</p>
+    </div>
+
+    <!-- Campo adicional pedido (texto libre) -->
+    <div class="ios-section" *ngIf="pedido.pedido">
+      <div class="section-title lineBottomt">Detalle pedido</div>
+      <p class="pedido-texto">{{ pedido.pedido }}</p>
+    </div>
+  </div>
+
+
+  <div class="fab-container">
+    <button mat-fab color="primary" (click)="toggleFab()" aria-label="Menu">
+      <mat-icon>{{ isFabOpen ? 'close' : 'menu' }}</mat-icon>
+    </button>
+    @if (isFabOpen) {
+    <button mat-fab class="green-fab" (click)="edit()">
+      <mat-icon>edit</mat-icon>
+    </button>
+    <button mat-fab color="warn" (click)="confirmDelete()">
+      <mat-icon>delete</mat-icon>
+    </button>
+    }
+  </div>
+
+
+  <!-- PRINT TEMPLATE (invisible, solo para impresión) -->
+  <div class="vr-print-area" id="vr-print-area" style="display:none">
+    <ng-container *ngIf="resultado()">
+      <h2>Lista de compra</h2>
+      <p>Generada: {{ now() }}</p>
+      <hr />
+      <div *ngFor="let r of resultado()!.resultados" style="margin-bottom:8px">
+        <strong>{{ r.receta.Name }}</strong> — solicitadas: {{ r.cantidadSolicitada }}, posibles: {{
+        r.cantidadPosible }}
+      </div>
+      <hr />
+      <table style="width:100%;border-collapse:collapse">
+        <thead>
+          <tr>
+            <th style="text-align:left;padding:4px;border-bottom:1px solid #ccc">Ingrediente</th>
+            <th style="text-align:left;padding:4px;border-bottom:1px solid #ccc">Cantidad</th>
+            <th style="text-align:left;padding:4px;border-bottom:1px solid #ccc">Presentación</th>
+            <th style="text-align:right;padding:4px;border-bottom:1px solid #ccc">Costo est.</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of resultado()!.listaCompra">
+            <td style="padding:4px;border-bottom:1px solid #eee">{{ item.nombre }}</td>
+            <td style="padding:4px;border-bottom:1px solid #eee">{{ item.cantidadFaltante | number:'1.0-2' }}
+            </td>
+            <td style="padding:4px;border-bottom:1px solid #eee">{{ item.presentacion }}</td>
+            <td style="padding:4px;border-bottom:1px solid #eee;text-align:right">{{ fmt(item.costoEstimado) }}
+            </td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr>
+            <td colspan="3" style="padding:6px;font-weight:bold">Total estimado</td>
+            <td style="padding:6px;font-weight:bold;text-align:right">{{ fmt(resultado()!.costoTotalCompra) }}
+            </td>
+          </tr>
+        </tfoot>
+      </table>
+    </ng-container>
+  </div>
