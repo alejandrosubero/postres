@@ -24,6 +24,8 @@ import { ClipboardModule } from '@angular/cdk/clipboard';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { EditPedidoRecetaDialogComponent } from '../edit-pedido-receta-dialog/edit-pedido-receta-dialog.component';
 import { EditPedidoCustomerDialogComponent } from '../edit-pedido-customer-dialog/edit-pedido-customer-dialog.component';
+import { OrderIssueDialogComponent } from '../../issue/order-issue-dialog.component';
+import { CalculoPerdidaErrorEnPedidoService } from '../../../../services/data/calculo_perdida_por_error_en_pedido.Service';
 
 
 @Component({
@@ -52,6 +54,7 @@ export class EditPedidoComponent implements OnInit {
   private router = inject(Router);
   private pedidoService = inject(PedidoService);
   private snackBar = inject(MatSnackBar);
+  private errorEnPedidoService = inject(CalculoPerdidaErrorEnPedidoService);
 
   isMenuOpen = signal(false);
   isFavoriteView: boolean = false;
@@ -65,6 +68,7 @@ export class EditPedidoComponent implements OnInit {
   esPrioritario: boolean = false;
   costosVariosDetalles = false;
   isOpen: boolean = false;
+  showPedidoIssue= false;
   newDate: Date = new Date();
   public pedidoForm: FormGroup;
   public pedido: Pedido;
@@ -342,6 +346,47 @@ export class EditPedidoComponent implements OnInit {
       panelClass: ['ios-snackbar']
     });
   }
+
+
+  reportarIssue() {
+
+    if (document.activeElement instanceof HTMLElement) {
+      document.activeElement.blur();
+    }
+    const dialogRef = this.dialog.open(OrderIssueDialogComponent, {
+      width: '95vw',
+      maxWidth: '450px',
+      data: { ...this.pedido },
+      panelClass: 'dark-dialog-overlay',
+      autoFocus: 'first-tabbable', 
+      restoreFocus: true  
+    });
+
+    dialogRef.afterClosed().subscribe((result: Pedido | undefined) => {
+      if (result && result.orderIssue != null && result.orderIssue != undefined) {
+        let pedidoTemp: Pedido = result;
+        if(pedidoTemp.orderIssue != undefined && pedidoTemp.orderIssue != null){
+          if(pedidoTemp.orderIssue.costOfIssue > 0){
+            const valorPorcentualCostError =  (pedidoTemp.orderIssue.costOfIssue * 100) /  pedidoTemp.profit; 
+            pedidoTemp.orderIssue.porcentajeError = valorPorcentualCostError;
+          }else {
+            const valorTotalPorcentaje = pedidoTemp.profit * (pedidoTemp.orderIssue.porcentajeError / 100);
+            pedidoTemp.orderIssue.costOfIssue = valorTotalPorcentaje;
+          }
+        }
+
+        this.errorEnPedidoService.procesarErrorPedido(result, result.orderIssue.porcentajeError)
+          .then(nuevoProfit => {
+            result.profit = nuevoProfit;
+          });
+        
+        this.showPedidoIssue = true;
+        this.pedido = result;
+        this.pedidoForm.patchValue(this.pedido);
+      }
+    });
+  }
+
 
 }
 

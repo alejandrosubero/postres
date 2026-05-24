@@ -1,0 +1,64 @@
+/* Estética OLED / Mobile First */
+.dialog-container {
+  background-color: #000000;
+  color: #ffffff;
+  padding: 16px;
+  border-radius: 12px;
+  max-width: 100vw;
+}
+
+.title {
+  color: #ffffff;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+.form-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Forzar estilos de Material a modo oscuro */
+::ng-deep {
+  .mat-mdc-form-field-label { color: rgba(255, 255, 255, 0.7) !important; }
+  .mat-mdc-text-field-wrapper { background-color: #1a1a1a !important; }
+  .mdc-text-field--outline:not(.mdc-text-field--disabled) .mdc-notched-outline__leading,
+  .mdc-text-field--outline:not(.mdc-text-field--disabled) .mdc-notched-outline__notch,
+  .mdc-text-field--outline:not(.mdc-text-field--disabled) .mdc-notched-outline__trailing {
+    border-color: rgba(255, 255, 255, 0.3) !important;
+  }
+  .mat-mdc-input-element { color: #ffffff !important; }
+}
+
+.toggle-group {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  color: #ffffff;
+}
+
+/* Lógica de colores para Slide Toggle */
+::ng-deep {
+  .toggle-red .mdc-switch__track { background-color: #ff5252 !important; }
+  .toggle-green .mdc-switch__track { background-color: #4caf50 !important; }
+  
+  /* Ajuste para el thumb (bolita) */
+  .toggle-red .mdc-switch__handle-track { background-color: #b71c1c !important; }
+  .toggle-green .mdc-switch__handle-track { background-color: #1b5e20 !important; }
+}
+
+.btn-cancel {
+  color: #ff5252 !important;
+}
+
+/* Media query para asegurar legibilidad en iPhone/S23 */
+@media (max-width: 600px) {
+  .dialog-container {
+    padding: 8px;
+  }
+  .mat-mdc-dialog-content {
+    max-height: 70vh;
+  }
+}

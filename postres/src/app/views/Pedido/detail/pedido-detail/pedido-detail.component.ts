@@ -23,6 +23,8 @@ import { provideNativeDateAdapter } from '@angular/material/core';
 import { trigger, transition, style, animate, query, stagger } from '@angular/animations';
 import { MatDialog } from '@angular/material/dialog';
 import { IosAlertDialogComponent, IosDialogData } from '../../../../share/ios-alert-dialog/ios-alert-dialog.component';
+import { OrderIssueDialogComponent } from '../../issue/order-issue-dialog.component';
+import { CalculoPerdidaErrorEnPedidoService } from '../../../../services/data/calculo_perdida_por_error_en_pedido.Service';
 
 @Component({
   selector: 'app-pedido-detail',
@@ -69,6 +71,7 @@ export class PedidoDetailComponent {
   private navService = inject(NavService);
   private router = inject(Router);
   private pedidoService = inject(PedidoService);
+
   public pedido: Pedido;
   private id: string = '';
 
@@ -99,6 +102,13 @@ export class PedidoDetailComponent {
     this.pedido = navigation?.extras.state?.['pedido'];
     if (this.pedido.id != undefined && this.pedido.id != null) {
       this.id = this.pedido.id;
+
+      // corrige el error que se envia a colocar el error pero no se salva el orderIssue
+      if(this.pedido.issue && this.pedido.orderIssue === undefined || this.pedido.orderIssue === null){
+        this.pedido.issue = false;
+         this.guardar();
+      }
+
     }
     if (!this.pedido) {
       this.router.navigate(['/app/pedido/list']);
@@ -110,6 +120,7 @@ export class PedidoDetailComponent {
 
 
   toggleEsCurso(): void {
+
     if (this.pedido.enCurso) {
       this.pedido.enCurso = false;
       this.toggleEsCursoResultado = false;
@@ -123,7 +134,7 @@ export class PedidoDetailComponent {
       if (this.resultado()!.todoAlcanza) {
         this.pedido.enCurso = true;
         if (this.pedido.enCurso) {
-           this.confirmarReservaInventario( this.pedido); 
+          this.confirmarReservaInventario(this.pedido);
         }
       } else {
         this.pedido.enCurso = false;
@@ -155,7 +166,7 @@ export class PedidoDetailComponent {
   }
 
 
-  confirmarReservaInventario( miPedido: Pedido) {
+  confirmarReservaInventario(miPedido: Pedido) {
     const dialogData: IosDialogData = {
       title: 'Alerta', // Título requerido con símbolo
       message: 'Los Ingredientes seran sacados de inventario y puesto en reserva hasta el Delivery.',
@@ -176,7 +187,7 @@ export class PedidoDetailComponent {
     });
 
     dialogRef.afterClosed().subscribe((respuesta: any) => {
-    this.confirmarPedido(miPedido);
+      this.confirmarPedido(miPedido);
     });
   }
 
@@ -232,32 +243,43 @@ export class PedidoDetailComponent {
 
     dialogRef.afterClosed().subscribe((respuesta: any) => {
       if (respuesta) {
-         this.pedido.itWasconsume = true;
-         this.inventoryService.procesarReducedStockReserved(this.pedido);
+        this.pedido.itWasconsume = true;
+        this.inventoryService.procesarReducedStockReserved(this.pedido);
       } else {
         this.pedido.itWasconsume = false;
       }
     });
   }
 
+  retornDelivery(pedido: Pedido): void {
+
+  }
 
   toggleDelivery(): void {
+
     this.pedido.delivery = !this.pedido.delivery;
+
     if (this.pedido.delivery) {
+
       this.pedido.pendy = false;
       this.pedido.enCurso = false;
       this.pedido.ispriority = false;
       this.pedido.onPausa = false;
       this.pedido.cancel = false;
       this.pedido.deliveryDay = new Date();
-      this. processOfEndPedido();
+
+      this.processOfEndPedido();
     } else {
+
       this.pedido.pendy = true;
       this.pedido.enCurso = true;
       this.pedido.deliveryDay = this.pedido.dayDue;
-      this.inventoryService.cancelReducetoStockReserved(this.pedido);
-      this.pedido.itWasconsume = false;
+
+      if (this.pedido.itWasconsume) {
+        this.revertProccessOfconsume();
+      }
     }
+
     this.guardar();
   }
 
@@ -267,7 +289,7 @@ export class PedidoDetailComponent {
   }
 
 
-revertCancelReducetoStockReserved() {
+  revertCancelReducetoStockReserved() {
     const dialogData: IosDialogData = {
       title: 'Alerta', // Título requerido con símbolo
       message: 'Se revertira el proceso de consumo a reserva.',
@@ -288,7 +310,7 @@ revertCancelReducetoStockReserved() {
     });
 
     dialogRef.afterClosed().subscribe((respuesta: any) => {
-       this.inventoryService.cancelReducetoStockReserved(this.pedido);
+      this.inventoryService.cancelReducetoStockReserved(this.pedido);
       this.pedido.itWasconsume = false;
     });
   }
@@ -305,9 +327,15 @@ revertCancelReducetoStockReserved() {
       this.pedido.delivery = false;
       this.processOfEndPedido();
     } else {
+
       this.pedido.pendy = true;
       this.pedido.enCurso = true;
-      this.revertCancelReducetoStockReserved();
+
+      if (this.pedido.itWasconsume) {
+        this.revertProccessOfconsume();
+      }
+
+
     }
     this.guardar();
   }
@@ -451,6 +479,25 @@ revertCancelReducetoStockReserved() {
   imprimir() {
     window.print();
   }
+
+  revertProccessOfconsume() {
+    this.revertCancelReducetoStockReserved();
+    this.confirmarPedido(this.pedido);
+    this.pedido.itWasconsume = false;
+  }
+
+
+  toggleError(): void {
+    this.pedido.issue = !this.pedido.issue;
+    if (this.pedido.issue) {
+      this.router.navigate(['/app/pedido/edit'], {
+        state: { pedido: this.pedido }
+      });
+    }
+  }
+
+
+
 
 
 

@@ -20,30 +20,30 @@
   </div>
 
 
-    <!-- Sección de chequeo de inventario -->
- @if ( this.toggleEsCursoResultado) {
+  <!-- Sección de chequeo de inventario -->
+  @if ( this.toggleEsCursoResultado) {
   <div class="ios-section">
-  <section class="section-group">
-    <ng-container>
-      <div class="vr-status" @fadeSlide [class.vr-status--ok]="resultado()!.todoAlcanza"
-        [class.vr-status--err]="!resultado()!.todoAlcanza">
-        <mat-icon>{{ resultado()!.todoAlcanza ? 'check_circle' : 'error' }}</mat-icon>
-        <span>
-          {{ resultado()!.todoAlcanza
-          ? '✅ Tienes todo en inventario para preparar lo solicitado'
-          : '⚠️ Faltan ingredientes — revisa la lista de compra abajo' }}
-        </span>
-      </div>
+    <section class="section-group">
+      <ng-container>
+        <div class="vr-status" @fadeSlide [class.vr-status--ok]="resultado()!.todoAlcanza"
+          [class.vr-status--err]="!resultado()!.todoAlcanza">
+          <mat-icon>{{ resultado()!.todoAlcanza ? 'check_circle' : 'error' }}</mat-icon>
+          <span>
+            {{ resultado()!.todoAlcanza
+            ? '✅ Tienes todo en inventario para preparar lo solicitado'
+            : '⚠️ Faltan ingredientes — revisa la lista de compra abajo' }}
+          </span>
+        </div>
 
-      @if(!resultado()!.todoAlcanza) {
-          <button type="button" class="vr-print-btn" (click)="imprimir()" matRipple>
-            <mat-icon>print</mat-icon>
-              Imprimir lista de compra
-          </button>
-    }
-    </ng-container>
+        @if(!resultado()!.todoAlcanza) {
+        <button type="button" class="vr-print-btn" (click)="imprimir()" matRipple>
+          <mat-icon>print</mat-icon>
+          Imprimir lista de compra
+        </button>
+        }
+      </ng-container>
 
-  </section>
+    </section>
   </div>
   }
 
@@ -102,6 +102,15 @@
         <div class="status-label">Cancelar</div>
         <button mat-mini-fab (click)="toggleCancel()" [class.btn-active]="pedido.cancel"
           [class.btn-inactive]="!pedido.cancel">
+          <mat-icon>{{ pedido.cancel ? 'check' : 'add' }}</mat-icon>
+        </button>
+      </div>
+
+      <!-- Error en Preparacion  -->
+      <div class="status-item">
+        <div class="status-label">Error en Pedido</div>
+        <button mat-mini-fab (click)="toggleError()" [class.btn-active]="pedido.issue"
+          [class.btn-inactive]="!pedido.issue">
           <mat-icon>{{ pedido.cancel ? 'check' : 'add' }}</mat-icon>
         </button>
       </div>
@@ -200,6 +209,46 @@
     </div>
   </div>
 
+  <!-- error en pedido -->
+  @if(this.pedido.issue){
+  @if( pedido.orderIssue != undefined && pedido.orderIssue != null){
+  <mat-accordion>
+    <mat-expansion-panel *ngFor="let receta of pedido.recetas; let i = index" class="receta-panel">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          Error en Pedido
+        </mat-panel-title>
+        <mat-panel-description>
+          {{ formatCurrency(pedido.orderIssue.costOfIssue) }}
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+
+      <div class="ios-section">
+        <!-- <div class="section-title lineBottom">Error en Pedido</div> -->
+        @if(pedido.orderIssue.porcentajeError){
+        <div class="info-row">
+          <span class="info-label">Porcentaje Error:</span>
+          <span class="info-value">{{pedido.orderIssue.porcentajeError| number:'1.1-1'}} %</span>
+        </div>
+        }
+
+        @if(pedido.orderIssue.costOfIssue){
+        <div class="info-row">
+          <span class="info-label">Costo del Error:</span>
+          <span class="info-value">{{pedido.orderIssue.costOfIssue| number:'1.2-2'}} % </span>
+        </div>
+        }
+        @if(pedido.orderIssue.issueNote){
+        <div class="info-row">
+          <span class="info-label">Nota:</span>
+          <span class="info-value">{{pedido.orderIssue.issueNote }}</span>
+        </div>
+        }
+      </div>
+    </mat-expansion-panel>
+  </mat-accordion>
+   }
+}
   <!-- Sección de recetas (expansión) -->
   <div class="ios-section">
     <div class="section-title lineBottom">Recetas</div>

@@ -314,7 +314,8 @@ private checkerService = inject(InventarioCheckerService);
     newPedido.deliveryDay = newPedido.dayDue;
     newPedido.confirInventory = this.resultado()!.todoAlcanza;
     newPedido.itWasconsume = false;
-
+    newPedido.issue = false;
+    // newPedido.orderNumber = 0;
     await this.pedidoService.guardar(newPedido);
     this.router.navigate(['/app/pedido/list']);
   }

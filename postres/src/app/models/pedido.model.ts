@@ -4,6 +4,7 @@ import { Receta } from "./receta.model";
 export interface Pedido{
     
     id?:string;
+    orderNumber:number;
     name:string;    
     dayDue:Date;
     createDay:Date;
@@ -35,6 +36,11 @@ export interface Pedido{
     delivery_cost:number;
     miscellaneous_cost:number;
     
+ 
+    issue: boolean;
+    orderIssue?: OrderIssue;
+  
+
     recetas: Receta[];
     
     address_Of_delivery:string;
@@ -45,6 +51,12 @@ export interface Pedido{
     pedido:string;
     notas:string;
     note_of_miscellaneous_Cost:string;
+}
 
-   
+export interface OrderIssue{
+    porcentajeError: number
+    costOfIssue: number;
+    issueAffectsCosts: boolean;
+    issueAffectThePrice: boolean;
+    issueNote: string;
 }

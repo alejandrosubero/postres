@@ -33,28 +33,28 @@
                 </mat-expansion-panel-header>
 
                 <section class="section-group">
-                    <mat-form-field appearance="fill">
-                        <mat-label>Nombre de Pedido</mat-label>
-                        <input matInput formControlName="name" placeholder="Ej: Ana Subero">
-                    </mat-form-field>
-                </section>
+                    <div class="ios-section">
 
-                <section class="section-group">
+                        <mat-form-field appearance="fill">
+                            <mat-label>Nombre de Pedido</mat-label>
+                            <input matInput formControlName="name" placeholder="Ej: Ana Subero">
+                        </mat-form-field>
+                        <!-- </section> -->
 
-                    <mat-form-field appearance="fill" class="example-full-width">
-                        <mat-label>Fecha de entrega (Due Date)</mat-label>
-                        <input matInput [matDatepicker]="picker" formControlName="dayDue">
-                        <mat-hint>MM/DD/YYYY</mat-hint>
-                        <mat-datepicker-toggle matIconSuffix [for]="picker" class="blanco"></mat-datepicker-toggle>
-                        <mat-datepicker #picker [touchUi]="isMobile"></mat-datepicker>
-                    </mat-form-field>
+                        <!-- <section class="section-group"> -->
+                        <mat-form-field appearance="fill" class="example-full-width">
+                            <mat-label>Fecha de entrega (Due Date)</mat-label>
+                            <input matInput [matDatepicker]="picker" formControlName="dayDue">
+                            <mat-hint>MM/DD/YYYY</mat-hint>
+                            <mat-datepicker-toggle matIconSuffix [for]="picker" class="blanco"></mat-datepicker-toggle>
+                            <mat-datepicker #picker [touchUi]="isMobile"></mat-datepicker>
+                        </mat-form-field>
 
-
-                    <mat-form-field appearance="fill" class="full-width">
-                        <mat-label>Pedido</mat-label>
-                        <textarea matInput formControlName="pedido" rows="4"></textarea>
-                    </mat-form-field>
-
+                        <mat-form-field appearance="fill" class="full-width">
+                            <mat-label>Pedido</mat-label>
+                            <textarea matInput formControlName="pedido" rows="4"></textarea>
+                        </mat-form-field>
+                    </div>
                 </section>
 
             </mat-expansion-panel>
@@ -73,61 +73,63 @@
                 </mat-expansion-panel-header>
 
                 <section class="section-group">
-
-                    <div class="header-container">
-                        <h3>CLiente:</h3>
-                        @if (this.customer.name === '' || this.customer.name === null || this.customer.name ===
-                        undefined) {
-                        <button type="button" class="btn-add-circle" (click)="addCustomer()">+</button>
-                        }
-                        @if (this.customer.name != '') {
-                        <button type="button" class="btn-add-circle" (click)="quitarCustomer()">-</button>
-                        }
-                    </div>
-
-                    @if(this.customerExist){
-                    @if (this.customer.name !='') {
-                    <div class="input-row">
-                        <span>Nombre: </span>
-                        <strong>{{ this.customer.name }}</strong>
-                    </div>
-                    }
-
-                    @if (this.customer.phoneNumber != 0) {
-                    <div class="input-row">
-                        <span>Telefono: </span>
-                        <strong>{{ this.customer.phoneNumber }}</strong>
-                    </div>
-                    }
-
-                    @if (this.customer.email !='') {
-                    <div class="input-row">
-                        <span>Email: </span>
-                        <strong>{{ this.customer.email }}</strong>
-                    </div>
-                    }
-
-                    @if (this.customer.address != '') {
-                    <div class="input-row clickable-address" [cdkCopyToClipboard]="this.customer.address" (click)="notificarCopiado()">
-                        <span>Direccion: </span>
-                        <strong>{{ this.customer.address }}</strong>
-                        <!-- Opcional: un icono pequeño de copiar -->
-                        <!-- <mat-icon style="font-size: 16px; margin-left: 8px;">content_copy</mat-icon> -->
-                    </div>
-                    }
-
-                    @if (this.customer.notas !='') {
-                    <div class="input-row">
-                        <span>Nota: </span>
-                        <!-- <strong>{{ this.customer.notas}}</strong> -->
-
-                        <div class="notes-section">
-                            <!-- <h3>Notas</h3> -->
-                            <p>{{this.customer.notas || 'Sin notas adicionales.' }}</p>
+                    <div class="ios-section">
+                        <div class="header-container">
+                            <h3 class="section-title">CLiente:</h3>
+                            @if (this.customer.name === '' || this.customer.name === null || this.customer.name ===
+                            undefined) {
+                            <button type="button" class="btn-add-circle" (click)="addCustomer()">+</button>
+                            }
+                            @if (this.customer.name != '') {
+                            <button type="button" class="btn-add-circle" (click)="quitarCustomer()">-</button>
+                            }
                         </div>
+
+                        @if(this.customerExist){
+                        @if (this.customer.name !='') {
+                        <div class="input-row">
+                            <span>Nombre: </span>
+                            <strong>{{ this.customer.name }}</strong>
+                        </div>
+                        }
+
+                        @if (this.customer.phoneNumber != 0) {
+                        <div class="input-row">
+                            <span>Telefono: </span>
+                            <strong>{{ this.customer.phoneNumber }}</strong>
+                        </div>
+                        }
+
+                        @if (this.customer.email !='') {
+                        <div class="input-row">
+                            <span>Email: </span>
+                            <strong>{{ this.customer.email }}</strong>
+                        </div>
+                        }
+
+                        @if (this.customer.address != '') {
+                        <div class="input-row clickable-address" [cdkCopyToClipboard]="this.customer.address"
+                            (click)="notificarCopiado()">
+                            <span>Direccion: </span>
+                            <strong>{{ this.customer.address }}</strong>
+                            <!-- Opcional: un icono pequeño de copiar -->
+                            <!-- <mat-icon style="font-size: 16px; margin-left: 8px;">content_copy</mat-icon> -->
+                        </div>
+                        }
+
+                        @if (this.customer.notas !='') {
+                        <div class="input-row">
+                            <span>Nota: </span>
+                            <!-- <strong>{{ this.customer.notas}}</strong> -->
+
+                            <div class="notes-section">
+                                <!-- <h3>Notas</h3> -->
+                                <p>{{this.customer.notas || 'Sin notas adicionales.' }}</p>
+                            </div>
+                        </div>
+                        }
+                        }
                     </div>
-                    }
-                    }
                 </section>
             </mat-expansion-panel>
         </mat-accordion>
@@ -145,32 +147,91 @@
                 </mat-expansion-panel-header>
 
                 <section class="section-group">
-
-                    <div class="header-container">
-                        <h3>Articulo:</h3>
-                        <button type="button" class="btn-add-circle" (click)="addReceta()">+</button>
-                    </div>
-
-                    <div class="ios-table">
-                        <div class="table-header">
-                            <div class="col-name">Articulo</div>
-                            <!-- <div class="col-cant">Cant.</div> -->
-                            <div class="col-cost">Costo</div>
+                    <div class="ios-section">
+                        <div class="header-container">
+                            <h3 class="section-title">Articulo:</h3>
+                            <button type="button" class="btn-add-circle" (click)="addReceta()">+</button>
                         </div>
 
-                        @for (receta of pedidoForm.value.recetas; track $index) {
-                        <div class="row" (click)="remuveReceta($index)">
-                            <div class="col-name">{{ receta.Name }}</div>
-                            <!-- <div class="col-cant">{{ receta.Cantidad }}</div> -->
-                            <div class="col-cost">${{ receta.CostoTotal | number:'1.2-2' }}</div>
+                        <div class="ios-table">
+                            <div class="table-header">
+                                <div class="col-name">Articulo</div>
+                                <!-- <div class="col-cant">Cant.</div> -->
+                                <div class="col-cost">Costo</div>
+                            </div>
+
+                            @for (receta of pedidoForm.value.recetas; track $index) {
+                            <div class="row" (click)="remuveReceta($index)">
+                                <div class="col-name">{{ receta.Name }}</div>
+                                <!-- <div class="col-cant">{{ receta.Cantidad }}</div> -->
+                                <div class="col-cost">${{ receta.CostoTotal | number:'1.2-2' }}</div>
+                            </div>
+                            } @empty {
+                            <p class="empty-msg">No hay articulos agregados.</p>
+                            }
                         </div>
-                        } @empty {
-                        <p class="empty-msg">No hay articulos agregados.</p>
-                        }
                     </div>
                 </section>
             </mat-expansion-panel>
         </mat-accordion>
+
+
+        <!-- error en pedido -->
+        @if(this.pedido.issue){
+        <mat-accordion>
+            <mat-expansion-panel hideToggle>
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        Error en pedido :
+                    </mat-panel-title>
+                    <mat-panel-description>
+                        {{ this.pedido.issue ? ' ' : 'Adicione el error en el pedido'}}
+                    </mat-panel-description>
+                </mat-expansion-panel-header>
+
+                <section class="section-group">
+                    <div class="header-container">
+                        <h3 class="section-title">Adiciona Error:</h3>
+                        <button type="button" class="btn-add-circle" (click)="reportarIssue()">+</button>
+                    </div>
+
+                    @if( pedido.orderIssue != undefined && pedido.orderIssue != null){
+                    <div class="ios-section">
+                        <!-- <div class="section-title lineBottom">Cliente</div> -->
+                        @if(pedido.orderIssue.porcentajeError){
+
+                        <!-- <div class="input-row">
+                            <span>Nombre: </span>
+                            <strong>{{ this.customer.name }}</strong>
+                        </div> -->
+
+                        <div class="input-row">
+                            <span class="info-label">Porcentaje Error:</span>
+                            <span class="info-value">{{pedido.orderIssue.porcentajeError| number:'1.1-1'}} %</span>
+                        </div>
+                        }
+
+                        @if(pedido.orderIssue.costOfIssue){
+                        <div class="input-row">
+                            <span class="info-label">Costo del Error:</span>
+                            <span class="info-value">${{pedido.orderIssue.costOfIssue| number:'1.2-2'}} </span>
+                        </div>
+                        }
+                        @if(pedido.orderIssue.issueNote){
+                        <div class="input-row">
+                            <span class="info-label">Nota:</span>
+                            <span class="info-value">{{pedido.orderIssue.issueNote }}</span>
+                        </div>
+                        }
+
+                    </div>
+                    }
+
+                </section>
+            </mat-expansion-panel>
+        </mat-accordion>
+        }
+
 
         <!-- Costos -->
         <mat-accordion>
@@ -184,61 +245,64 @@
                     </mat-panel-description> -->
                 </mat-expansion-panel-header>
                 <section class="section-group">
+                    <div class="ios-section">
+                        <div class="header-container">
+                            <h3 class="section-title">Costos:</h3>
+                        </div>
+                        <div class="total-row">
+                            <span>Costo Base</span>
+                            <strong>${{pedidoForm.get('cost_base')?.value | number:'1.2-2' }}</strong>
+                        </div>
 
-                    <div class="total-row">
-                        <span>Costo Base</span>
-                        <strong>${{pedidoForm.get('cost_base')?.value | number:'1.2-2' }}</strong>
-                    </div>
-
-                    @if(!this.esSinCargos){
-                    <mat-form-field appearance="fill">
-                        <mat-label>Ganancia Porcentaje:</mat-label>
-                        <input matInput type="number" formControlName="profit_Percentage" placeholder="">
-                    </mat-form-field>
-                    }
-
-                    <mat-form-field appearance="fill">
-                        <mat-label>Costos Varios:</mat-label>
-                        <input matInput type="number" formControlName="miscellaneous_cost" placeholder="">
-                    </mat-form-field>
-
-
-                    <mat-form-field appearance="fill">
-                        <mat-label>Costo de Delivery:</mat-label>
-                        <input matInput type="number" formControlName="delivery_cost" placeholder="">
-                    </mat-form-field>
-
-                    @if(!this.esSinCargos){
-                    <div class="total-row">
-                        <span>Ganancia: </span>
-                        <strong>${{ pedidoForm.get('profit')?.value | number:'1.2-2' }}</strong>
-                    </div>
-                    }
-
-                    <div class="total-row">
-                        <span>Total Costo: </span>
-                        <strong>${{ pedidoForm.get('cost_total')?.value | number:'1.2-2' }}</strong>
-                    </div>
-
-
-                    <div class="header-status-box">
-                        <span class="status-label">Costos Varios Detalles:</span>
-
-                        <button mat-mini-fab type="button" (click)="toggleOpen()" [class.btn-open]="isOpen"
-                            [class.btn-closed]="!isOpen">
-                            <mat-icon>{{ isOpen ? 'expand_less' : 'expand_more' }}</mat-icon>
-                        </button>
-                    </div>
-
-                    @if(isOpen){
-                    <div class="total-row">
-                        <mat-form-field appearance="fill" class="full-width">
-                            <mat-label> Description:</mat-label>
-                            <textarea matInput formControlName="note_of_miscellaneous_Cost" rows="4"></textarea>
+                        @if(!this.esSinCargos){
+                        <mat-form-field appearance="fill">
+                            <mat-label>Ganancia Porcentaje:</mat-label>
+                            <input matInput type="number" formControlName="profit_Percentage" placeholder="">
                         </mat-form-field>
-                    </div>
-                    }
+                        }
 
+                        <mat-form-field appearance="fill">
+                            <mat-label>Costos Varios:</mat-label>
+                            <input matInput type="number" formControlName="miscellaneous_cost" placeholder="">
+                        </mat-form-field>
+
+
+                        <mat-form-field appearance="fill">
+                            <mat-label>Costo de Delivery:</mat-label>
+                            <input matInput type="number" formControlName="delivery_cost" placeholder="">
+                        </mat-form-field>
+
+                        @if(!this.esSinCargos){
+                        <div class="total-row">
+                            <span>Ganancia: </span>
+                            <strong>${{ pedidoForm.get('profit')?.value | number:'1.2-2' }}</strong>
+                        </div>
+                        }
+
+                        <div class="total-row">
+                            <span>Total Costo: </span>
+                            <strong>${{ pedidoForm.get('cost_total')?.value | number:'1.2-2' }}</strong>
+                        </div>
+
+
+                        <div class="header-status-box">
+                            <span class="status-label">Costos Varios Detalles:</span>
+
+                            <button mat-mini-fab type="button" (click)="toggleOpen()" [class.btn-open]="isOpen"
+                                [class.btn-closed]="!isOpen">
+                                <mat-icon>{{ isOpen ? 'expand_less' : 'expand_more' }}</mat-icon>
+                            </button>
+                        </div>
+
+                        @if(isOpen){
+                        <div class="total-row">
+                            <mat-form-field appearance="fill" class="full-width">
+                                <mat-label> Description:</mat-label>
+                                <textarea matInput formControlName="note_of_miscellaneous_Cost" rows="4"></textarea>
+                            </mat-form-field>
+                        </div>
+                        }
+                    </div>
                 </section>
             </mat-expansion-panel>
         </mat-accordion>
@@ -256,15 +320,20 @@
                 </mat-expansion-panel-header>
 
                 <section class="section-group">
-                    <mat-form-field appearance="fill" class="full-width">
-                        <mat-label>Address Delivery</mat-label>
-                        <textarea matInput formControlName="address_Of_delivery" rows="4"></textarea>
-                    </mat-form-field>
+                    <div class="ios-section">
+                        <div class="header-container">
+                            <h3 class="section-title">Entrega:</h3>
+                        </div>
+                        <mat-form-field appearance="fill" class="full-width">
+                            <mat-label>Address Delivery</mat-label>
+                            <textarea matInput formControlName="address_Of_delivery" rows="4"></textarea>
+                        </mat-form-field>
 
-                    <mat-form-field appearance="fill" class="full-width">
-                        <mat-label>Instrucciones</mat-label>
-                        <textarea matInput formControlName="instrucciones" rows="4"></textarea>
-                    </mat-form-field>
+                        <mat-form-field appearance="fill" class="full-width">
+                            <mat-label>Instrucciones</mat-label>
+                            <textarea matInput formControlName="instrucciones" rows="4"></textarea>
+                        </mat-form-field>
+                    </div>
                 </section>
             </mat-expansion-panel>
         </mat-accordion>

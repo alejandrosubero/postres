@@ -93,7 +93,7 @@ export class InventoryService {
 
       if (ingredienteEnStock) {
         if (pedido.itWasconsume) {
-          newReserved = Math.max(0, ingredienteEnStock.reservedStock - cantidadA_Descontar);
+          newReserved = Math.max(0, ingredienteEnStock.reservedStock + cantidadA_Descontar);
         } else {
           newReserved = Math.max(0, ingredienteEnStock.reservedStock - cantidadA_Descontar);
           nuevaCantidad = Math.max(0, ingredienteEnStock.cantidad + cantidadA_Descontar);
@@ -116,6 +116,7 @@ export class InventoryService {
       throw error;
     }
   }
+
 
   /**
      * Recorre el pedido y suma todas las cantidades de ingredientes repetidos
