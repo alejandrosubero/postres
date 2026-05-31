@@ -1,0 +1,197 @@
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!--  pedidos-list.component.html                                    -->
+<!--  Angular 17 · @for control flow · Angular Material 17          -->
+<!--  UI: iOS Dark · Pure Black · Delivery feature                  -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+
+<div class="delivery-container">
+
+  <!-- ╔══════════════════════════════════╗ -->
+  <!-- ║  HEADER DE PANTALLA              ║ -->
+  <!-- ╚══════════════════════════════════╝ -->
+  <header class="screen-header">
+    <div class="header-left">
+      <mat-icon class="header-icon">local_shipping</mat-icon>
+      <div>
+        <h1 class="screen-title">Delivery</h1>
+        <span class="screen-subtitle">{{ pedidos().length }} pedidos activos</span>
+      </div>
+    </div>
+
+    @if (hasSelections()) {
+      <div class="selection-badge">
+        <mat-icon>route</mat-icon>
+        <span>{{ selectedCount() }}</span>
+      </div>
+    }
+  </header>
+
+  <!-- ╔══════════════════════════════════╗ -->
+  <!-- ║  LISTA DE PEDIDOS                ║ -->
+  <!-- ╚══════════════════════════════════╝ -->
+  <div class="pedidos-list">
+
+    @for (pedido of pedidos(); track pedido.id ?? pedido.orderNumber) {
+
+      <mat-card class="pedido-card"
+                [class.card-selected]="isAddressSelected(pedido.address_Of_delivery)"
+                [class.card-priority]="pedido.ispriority"
+                [class.card-issue]="pedido.issue"
+                matRipple
+                [matRippleColor]="'rgba(79,195,247,0.08)'">
+
+        <!-- ── TOP ROW: Checkbox + Número + Status chip ──────── -->
+        <div class="card-top">
+
+          <!-- Checkbox para agregar dirección a la ruta -->
+          <mat-checkbox
+            class="delivery-checkbox"
+            [checked]="isAddressSelected(pedido.address_Of_delivery)"
+            (change)="onCheckboxChange(pedido.address_Of_delivery, $event.checked)"
+            [aria-label]="'Seleccionar pedido ' + pedido.orderNumber">
+          </mat-checkbox>
+
+          <div class="order-meta">
+            <span class="order-number">#{{ pedido.orderNumber }}</span>
+            @if (pedido.ispriority) {
+              <mat-icon class="priority-icon" matTooltip="Pedido prioritario">star</mat-icon>
+            }
+          </div>
+
+          <!-- Chip de estado -->
+          @let status = getPedidoStatus(pedido);
+          <span class="status-chip {{ status.cssClass }}">
+            <mat-icon class="status-icon">{{ status.icon }}</mat-icon>
+            {{ status.label }}
+          </span>
+
+        </div>
+
+        <!-- ── NOMBRE DEL CLIENTE ───────────────────────────── -->
+        <div class="customer-row">
+          <mat-icon class="row-icon dim">person</mat-icon>
+          <span class="customer-name">{{ pedido.customer?.name ?? pedido.name }}</span>
+        </div>
+
+        <!-- ── DIRECCIÓN DE ENTREGA ─────────────────────────── -->
+        <div class="address-row">
+          <mat-icon class="row-icon accent-icon">place</mat-icon>
+          <div class="address-block">
+            <span class="address-text">{{ pedido.address_Of_delivery }}</span>
+            @if (pedido.address_Of_delivery_note) {
+              <span class="address-note">
+                <mat-icon class="note-icon">notes</mat-icon>
+                {{ pedido.address_Of_delivery_note }}
+              </span>
+            }
+          </div>
+        </div>
+
+        <mat-divider class="card-divider"></mat-divider>
+
+        <!-- ── MÉTRICAS DE DELIVERY ─────────────────────────── -->
+        <div class="metrics-row">
+
+          <div class="metric-chip miles">
+            <mat-icon>straighten</mat-icon>
+            <span class="metric-value">{{ pedido.milles_for_delivery }}</span>
+            <span class="metric-unit">mi</span>
+          </div>
+
+          <div class="metric-chip cost">
+            <mat-icon>payments</mat-icon>
+            <span class="metric-value">{{ formatCurrency(pedido.delivery_cost) }}</span>
+          </div>
+
+          <div class="metric-chip date">
+            <mat-icon>event</mat-icon>
+            <span class="metric-value">{{ formatDate(pedido.deliveryDay) }}</span>
+          </div>
+
+        </div>
+
+        <!-- ── NOTAS ─────────────────────────────────────────── -->
+        @if (pedido.notas) {
+          <div class="notes-row">
+            <mat-icon class="row-icon dim">sticky_note_2</mat-icon>
+            <span class="notes-text">{{ pedido.notas }}</span>
+          </div>
+        }
+
+        <!-- ── ALERTA DE ISSUE ───────────────────────────────── -->
+        @if (pedido.issue && pedido.orderIssue) {
+          <div class="issue-row">
+            <mat-icon class="issue-icon">warning_amber</mat-icon>
+            <span class="issue-text">{{ pedido.orderIssue.issueNote }}</span>
+          </div>
+        }
+
+        <mat-divider class="card-divider"></mat-divider>
+
+        <!-- ── ACCIONES: Botón Google Maps ───────────────────── -->
+        <div class="card-actions">
+
+          <button
+            mat-raised-button
+            class="btn-map"
+            [disabled]="!pedido.address_Of_delivery"
+            (click)="openSingleMap(pedido.address_Of_delivery, $event)"
+            matTooltip="Ver en Google Maps"
+            matTooltipPosition="above"
+            aria-label="Abrir en Google Maps">
+            <mat-icon>map</mat-icon>
+            Ir al mapa
+          </button>
+
+          <div class="card-actions-right">
+            @if (pedido.charges) {
+              <mat-icon class="flag-icon" matTooltip="Con cargos" style="color:#f59e0b">
+                attach_money
+              </mat-icon>
+            }
+            @if (pedido.confirInventory) {
+              <mat-icon class="flag-icon" matTooltip="Inventario confirmado" style="color:#22c55e">
+                inventory_2
+              </mat-icon>
+            }
+          </div>
+
+        </div>
+
+      </mat-card>
+
+    } @empty {
+      <!-- Estado vacío -->
+      <div class="empty-state">
+        <mat-icon class="empty-icon">inbox</mat-icon>
+        <p class="empty-title">Sin pedidos de delivery</p>
+        <p class="empty-sub">No hay pedidos activos para mostrar.</p>
+      </div>
+    }
+
+  </div><!-- /pedidos-list -->
+
+</div><!-- /delivery-container -->
+
+
+<!-- ╔══════════════════════════════════╗ -->
+<!-- ║  FAB — RUTA MULTI-PARADA         ║ -->
+<!-- ╚══════════════════════════════════╝ -->
+<button
+  mat-fab
+  class="fab-route"
+  [class.fab-active]="hasSelections()"
+  [disabled]="!hasSelections()"
+  (click)="openMultiStopRoute()"
+  matTooltip="Lanzar ruta con {{ selectedCount() }} paradas"
+  matTooltipPosition="left"
+  aria-label="Lanzar ruta multi-parada en Google Maps">
+
+  <!-- Badge con el conteo -->
+  @if (hasSelections()) {
+    <span class="fab-badge">{{ selectedCount() }}</span>
+  }
+
+  <mat-icon>alt_route</mat-icon>
+
+</button>

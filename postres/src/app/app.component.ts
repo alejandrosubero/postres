@@ -34,7 +34,15 @@ export class AppComponent implements OnInit {
 
   constructor() {
     effect(() => {
-      // console.log("Datos recibidos desde Firebase: ", this.ingredientes());
+      console.log("Datos recibidos desde Firebase: ", this.ingredientes());
+        this.ingredientes().forEach( ingrediente=>{
+          if(ingrediente.reservedStock != null && ingrediente.reservedStock != undefined && ingrediente.reservedStock > 0){
+            console.log(`${ingrediente.nombre}:`, ingrediente);
+          }
+        })
+
+
+
       // this.editIngredientes();
     });
     this.recetaService.obtenerTodas();

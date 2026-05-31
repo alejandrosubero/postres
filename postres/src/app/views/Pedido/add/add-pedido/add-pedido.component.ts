@@ -312,6 +312,7 @@ export class AddPedidoComponent implements OnInit {
     newPedido.wasPriority = newPedido.ispriority
     newPedido.editDay = new Date();
     newPedido.deliveryDay = newPedido.dayDue;
+    newPedido.milles_for_delivery = 0;
 
     if (this.resultado() != undefined && this.resultado() != null && this.resultado()!.todoAlcanza != null && this.resultado()!.todoAlcanza != undefined) {
       newPedido.confirInventory = this.resultado()!.todoAlcanza;

@@ -1,0 +1,83 @@
+
+<div class="dialog-wrapper">
+
+  <!-- ── HEADER ─────────────────────────────────────── -->
+  <div class="dialog-header">
+    <span class="dialog-title">
+      <mat-icon class="title-icon">local_shipping</mat-icon>
+      Distancia de entrega
+    </span>
+
+    <!-- Botón X de cierre (esquina superior derecha) -->
+    <button
+      class="btn-close"
+      mat-icon-button
+      (click)="onCancel()"
+      aria-label="Cancelar"
+    >
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <!-- ── BODY ───────────────────────────────────────── -->
+  <mat-dialog-content class="dialog-body">
+    <p class="dialog-subtitle">
+      Ingresa el número de millas para el <strong>delivery</strong> del pedido.
+    </p>
+
+    <mat-form-field appearance="outline" class="miles-field">
+      <mat-label>Millas</mat-label>
+
+      <input
+        matInput
+        type="number"
+        inputmode="decimal"
+        min="0"
+        step="0.1"
+        placeholder="Ej. 5.2"
+        [(ngModel)]="miles"
+        name="miles"
+        (keydown)="onKeyDown($event)"
+        (paste)="onPaste($event)"
+        autocomplete="off"
+      />
+
+      <mat-icon matSuffix class="suffix-icon">straighten</mat-icon>
+
+      <mat-hint>Solo valores numéricos positivos</mat-hint>
+
+      <mat-error *ngIf="miles !== null && !isValid">
+        Ingresa un número de millas válido (mayor a 0).
+      </mat-error>
+    </mat-form-field>
+  </mat-dialog-content>
+
+  <!-- ── FOOTER / ACCIONES ──────────────────────────── -->
+  <mat-dialog-actions class="dialog-actions">
+
+    <!-- Cancelar -->
+    <button
+      class="btn-action btn-cancel"
+      mat-raised-button
+      (click)="onCancel()"
+      aria-label="Cancelar"
+    >
+      <mat-icon>cancel</mat-icon>
+      Cancelar
+    </button>
+
+    <!-- Aceptar -->
+    <button
+      class="btn-action btn-accept"
+      mat-raised-button
+      [disabled]="!isValid"
+      (click)="onAccept()"
+      aria-label="Aceptar"
+    >
+      <mat-icon>check_circle</mat-icon>
+      Aceptar
+    </button>
+
+  </mat-dialog-actions>
+
+</div>

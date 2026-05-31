@@ -18,9 +18,12 @@ export interface Pedido{
     charges:boolean;
     onPausa:boolean;
     
+    milles_for_delivery: number;
     on_delivery:boolean;
     delivery:boolean;
+    delivery_cost:number;
     
+
     cancel:boolean;
     itWasconsume: boolean;
     
@@ -33,14 +36,12 @@ export interface Pedido{
     cost_base:number;
     profit:number;
     profit_Percentage:number;
-    delivery_cost:number;
     miscellaneous_cost:number;
     
- 
+
     issue: boolean;
     orderIssue?: OrderIssue;
   
-
     recetas: Receta[];
     
     address_Of_delivery:string;

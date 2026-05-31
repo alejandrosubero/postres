@@ -25,6 +25,12 @@ import { MatDialog } from '@angular/material/dialog';
 import { IosAlertDialogComponent, IosDialogData } from '../../../../share/ios-alert-dialog/ios-alert-dialog.component';
 import { OrderIssueDialogComponent } from '../../issue/order-issue-dialog.component';
 import { CalculoPerdidaErrorEnPedidoService } from '../../../../services/data/calculo_perdida_por_error_en_pedido.Service';
+import {
+  DeliveryMilesDialogComponent,
+  DeliveryMilesDialogData,
+  DeliveryMilesDialogResult,
+} from '../../../../share/milles_dialog/delivery-miles-dialog.component';
+
 
 @Component({
   selector: 'app-pedido-detail',
@@ -109,6 +115,10 @@ export class PedidoDetailComponent {
         this.guardar();
       }
 
+      if (this.pedido.milles_for_delivery == undefined || this.pedido.milles_for_delivery === null) {
+        this.pedido.milles_for_delivery = 0;
+        this.guardar();
+      }
     }
     if (!this.pedido) {
       this.router.navigate(['/app/pedido/list']);
@@ -124,6 +134,7 @@ export class PedidoDetailComponent {
     if (this.pedido.enCurso) {
       this.pedido.enCurso = false;
       this.toggleEsCursoResultado = false;
+      this.revertProccessOfconsume();
     } else {
       this.analizar();
 
@@ -167,6 +178,11 @@ export class PedidoDetailComponent {
 
 
   confirmarReservaInventario(miPedido: Pedido) {
+
+    if (document.activeElement instanceof HTMLElement) {
+      document.activeElement.blur();
+    }
+
     const dialogData: IosDialogData = {
       title: 'Alerta', // Título requerido con símbolo
       message: 'Los Ingredientes seran sacados de inventario y puesto en reserva hasta el Delivery.',
@@ -222,6 +238,10 @@ export class PedidoDetailComponent {
 
   processOfEndPedido() {
     // Definimos los datos con la interfaz estricta que creamos
+    if (document.activeElement instanceof HTMLElement) {
+      document.activeElement.blur();
+    }
+
     const dialogData: IosDialogData = {
       title: 'Alerta', // Título requerido con símbolo
       message: '¿Los Ingredientes fueron consumidos?',
@@ -257,38 +277,49 @@ export class PedidoDetailComponent {
 
   toggleDelivery(): void {
 
-    this.pedido.delivery = !this.pedido.delivery;
+    if (this.pedido.enCurso) {
 
-    if (this.pedido.delivery) {
+      this.pedido.delivery = !this.pedido.delivery;
 
-      this.pedido.pendy = false;
-      this.pedido.enCurso = false;
-      this.pedido.ispriority = false;
-      this.pedido.onPausa = false;
-      this.pedido.cancel = false;
-      this.pedido.deliveryDay = new Date();
+      if (this.pedido.delivery) {
 
-      this.processOfEndPedido();
+        this.pedido.pendy = false;
+        this.pedido.enCurso = false;
+        this.pedido.ispriority = false;
+        this.pedido.onPausa = false;
+        this.pedido.cancel = false;
+        this.pedido.deliveryDay = new Date();
 
-      if (this.pedido.issue && this.pedido.orderIssue != undefined && this.pedido.orderIssue != null) {
-        this.processErrorDescount();
+        this.processOfEndPedido();
+
+        if (this.pedido.issue && this.pedido.orderIssue != undefined && this.pedido.orderIssue != null) {
+          this.processErrorDescount();
+        }
+
+      } else {
+        this.pedido.pendy = true;
+        this.pedido.enCurso = true;
+        this.pedido.deliveryDay = this.pedido.dayDue;
+
+        if (this.pedido.itWasconsume) {
+          this.revertProccessOfconsume();
+        }
       }
-
+      this.guardar();
     } else {
-      this.pedido.pendy = true;
-      this.pedido.enCurso = true;
-      this.pedido.deliveryDay = this.pedido.dayDue;
-
-      if (this.pedido.itWasconsume) {
-        this.revertProccessOfconsume();
-      }
+      this.onDeliveryDialogAlertCurse();
     }
-    this.guardar();
+
+
   }
 
 
 
   processErrorDescount() {
+
+    if (document.activeElement instanceof HTMLElement) {
+      document.activeElement.blur();
+    }
     // Definimos los datos con la interfaz estricta que creamos
     const dialogData: IosDialogData = {
       title: 'Alerta', // Título requerido con símbolo
@@ -310,7 +341,7 @@ export class PedidoDetailComponent {
 
     dialogRef.afterClosed().subscribe((respuesta: any) => {
       if (respuesta) {
-        if (this.pedido.orderIssue != undefined && this.pedido.orderIssue != null && this.pedido.orderIssue.issueAffectsCosts){
+        if (this.pedido.orderIssue != undefined && this.pedido.orderIssue != null && this.pedido.orderIssue.issueAffectsCosts) {
           this.errorEnPedidoService.procesarErrorPedido(this.pedido, this.pedido.orderIssue.porcentajeError)
             .then(nuevoProfit => {
               this.pedido.profit = nuevoProfit;
@@ -320,18 +351,11 @@ export class PedidoDetailComponent {
     });
   }
 
-
-
-
-
-
-  toggleOnDelivery(): void {
-    this.pedido.on_delivery = !this.pedido.on_delivery;
-    this.guardar();
-  }
-
-
   revertCancelReducetoStockReserved() {
+    if (document.activeElement instanceof HTMLElement) {
+      document.activeElement.blur();
+    }
+
     const dialogData: IosDialogData = {
       title: 'Alerta', // Título requerido con símbolo
       message: 'Se revertira el proceso de consumo a reserva.',
@@ -463,17 +487,28 @@ export class PedidoDetailComponent {
   }
 
   analizar() {
-    const solicitudes: RecetaConCantidad[] = this.entradas()
-      .filter(e => e.receta !== null)
-      .map(e => ({ receta: e.receta!, cantidad: e.cantidad }));
+    // const solicitudes: RecetaConCantidad[] = this.entradas().filter(e => e.receta !== null)
+    //   .map(e => ({ receta: e.receta!, cantidad: e.cantidad }));
 
-    const res = this.checkerService.analizar(solicitudes);
-    this.resultado.set(res);
-    // console.log('this.resultado',this.resultado());
-    const conFaltantes = new Set(
-      res.resultados.filter(r => !r.puedeCompletarse).map(r => r.receta.id!)
-    );
-    this.detallesAbiertos.set(conFaltantes);
+    const res = this.checkerService.analizarPedido(this.pedido);
+    if (res != null && res != undefined) {
+      // const res = this.checkerService.analizar(solicitudes);
+      this.resultado.set(res);
+      console.log('this.resultado', this.resultado());
+  
+      const conFaltantes = new Set(
+        res.resultados.filter(r => !r.puedeCompletarse).map(r => r.receta.id!)
+      );
+      console.log('conFaltantes', conFaltantes);
+      this.detallesAbiertos.set(conFaltantes);
+      console.log(' this.detallesAbiertos', this.detallesAbiertos());
+
+   
+    }
+
+
+
+
   }
 
   // ── ────────────────────── EntradaReceta ───────────────────────────────────────
@@ -539,7 +574,81 @@ export class PedidoDetailComponent {
   }
 
 
+  toggleOnDelivery(): void {
+    if (this.pedido.enCurso) {
+      this.pedido.on_delivery = !this.pedido.on_delivery;
+      this.openDeliveryMilesDialog();
+    } else {
+      this.onDeliveryDialogAlertCurse();
+    }
+  }
 
+  onDeliveryDialogAlertCurse() {
+
+    if (document.activeElement instanceof HTMLElement) {
+      document.activeElement.blur();
+    }
+
+    const dialogData: IosDialogData = {
+      title: 'Alerta', // Título requerido con símbolo
+      message: 'El pedido debe de estar en curso Primero.',
+      btnLeft: {
+        label: 'none',
+        value: 'none'
+      },
+      btnRight: {
+        label: 'ok',
+        value: true
+      }
+    };
+    // Abrimos el MatDialog pasándole el componente y la configuración
+    const dialogRef = this.dialog.open(IosAlertDialogComponent, {
+      data: dialogData,
+      panelClass: 'ios-custom-panel',
+      disableClose: true,
+      autoFocus: 'first-tabbable',
+      restoreFocus: false
+    });
+
+    dialogRef.afterClosed().subscribe((respuesta: any) => { });
+  }
+
+
+
+
+
+  openDeliveryMilesDialog(): void {
+    let milles = 0;
+
+    if (this.pedido.milles_for_delivery != 0) {
+      milles = this.pedido.milles_for_delivery;
+    }
+
+    const dialogRef = this.dialog.open<DeliveryMilesDialogComponent, DeliveryMilesDialogData, DeliveryMilesDialogResult | null
+    >(DeliveryMilesDialogComponent, {
+      // ── Datos enviados al dialog ──────────────────────────
+      data: {
+        initialMiles: milles,
+      } satisfies DeliveryMilesDialogData,
+
+      // ── Configuración visual ──────────────────────────────
+      panelClass: 'dark-dialog-panel', // clase global para el backdrop/panel
+      backdropClass: 'dark-dialog-backdrop',
+      width: '420px',          // Ancho máximo (iPad y desktop)
+      maxWidth: '95vw',        // Responsivo en mobile
+      hasBackdrop: true,
+      disableClose: false,     // Permitir cerrar con Escape / click backdrop
+      autoFocus: 'dialog',     // Foco al dialog al abrir
+    });
+
+    // ── Suscripción al cierre ─────────────────────────────
+    dialogRef.afterClosed().subscribe((result: DeliveryMilesDialogResult | null | undefined) => {
+      if (result) {
+        this.pedido.milles_for_delivery = result.miles;
+        this.guardar();
+      }
+    });
+  }
 
 
 

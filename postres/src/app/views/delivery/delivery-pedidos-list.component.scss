@@ -1,0 +1,686 @@
+// ══════════════════════════════════════════════════════════════════
+//  pedidos-list.component.scss
+//  Tema: iOS Dark / Pure Black / Embossed Controls
+//  Targets: iPhone 12 Pro (390px) · Samsung Galaxy S23 (360px) · iPad (768px+)
+// ══════════════════════════════════════════════════════════════════
+
+// ── Design Tokens ────────────────────────────────────────────────
+$bg:              #000000;
+$surface-1:       #0d0d0d;
+$surface-2:       #141414;
+$surface-3:       #1c1c1c;
+$border:          rgba(255,255,255,0.09);
+$border-strong:   rgba(255,255,255,0.16);
+
+$white:           #ffffff;
+$white-dim:       rgba(255,255,255,0.65);
+$white-muted:     rgba(255,255,255,0.38);
+$white-faint:     rgba(255,255,255,0.18);
+
+// Accent palette
+$green:           #22c55e;
+$green-dim:       rgba(34,197,94,0.18);
+$green-glow:      0 0 12px rgba(34,197,94,0.35);
+
+$blue:            #38bdf8;
+$blue-dim:        rgba(56,189,248,0.15);
+$blue-glow:       0 0 12px rgba(56,189,248,0.35);
+
+$cyan:            #4fc3f7;    // direcciones
+$amber:           #fbbf24;    // fechas / costos
+$red:             #ef4444;    // cancelados / issues
+$orange:          #f97316;    // pausa
+
+// Sombras embossed
+$shadow-card:     0 4px 24px rgba(0,0,0,0.75),
+                  0 1px 6px rgba(0,0,0,0.6),
+                  inset 0 1px 0 rgba(255,255,255,0.06);
+
+$shadow-card-selected: 0 6px 28px rgba(56,189,248,0.25),
+                        0 2px 8px rgba(0,0,0,0.7),
+                        inset 0 1px 0 rgba(56,189,248,0.15);
+
+$shadow-card-priority: 0 6px 28px rgba(34,197,94,0.2),
+                        0 2px 8px rgba(0,0,0,0.7),
+                        inset 0 1px 0 rgba(34,197,94,0.12);
+
+$shadow-btn:      0 3px 10px rgba(0,0,0,0.7),
+                  0 1px 3px rgba(0,0,0,0.5),
+                  inset 0 1px 0 rgba(255,255,255,0.10);
+
+$shadow-btn-map:  0 4px 16px rgba(56,189,248,0.4),
+                  0 1px 4px rgba(0,0,0,0.6),
+                  inset 0 1px 0 rgba(255,255,255,0.12);
+
+$shadow-fab:      0 6px 24px rgba(56,189,248,0.45),
+                  0 2px 8px rgba(0,0,0,0.8),
+                  inset 0 1px 0 rgba(255,255,255,0.14);
+
+$radius-card:     18px;
+$radius-btn:      12px;
+$radius-chip:     8px;
+
+// ── Host ─────────────────────────────────────────────────────────
+:host {
+  display: block;
+  background: $bg;
+  min-height: 100dvh;
+  font-family: -apple-system, 'SF Pro Text', 'Helvetica Neue', sans-serif;
+}
+
+// ── Container ────────────────────────────────────────────────────
+.delivery-container {
+  background: $bg;
+  padding: 0 0 120px; // espacio para el FAB
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+// ══════════════════════════════════════════════════════════════════
+//  HEADER
+// ══════════════════════════════════════════════════════════════════
+.screen-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 54px 20px 16px; // 54px top = safe area iOS
+  background: $surface-1;
+  border-bottom: 1px solid $border;
+  box-shadow: inset 0 -1px 0 $border,
+              0 2px 12px rgba(0,0,0,0.5);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.header-icon {
+  font-size: 28px;
+  color: $blue;
+  filter: drop-shadow(0 0 8px rgba(56,189,248,0.5));
+}
+
+.screen-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: $white;
+  letter-spacing: -0.5px;
+  margin: 0;
+  line-height: 1.1;
+  font-family: -apple-system, 'SF Pro Display', 'Helvetica Neue', sans-serif;
+}
+
+.screen-subtitle {
+  font-size: 12px;
+  color: $white-muted;
+  display: block;
+  margin-top: 2px;
+}
+
+.selection-badge {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: $blue-dim;
+  border: 1px solid rgba(56,189,248,0.3);
+  border-radius: 20px;
+  padding: 5px 12px;
+  color: $blue;
+  font-size: 14px;
+  font-weight: 600;
+  box-shadow: $blue-glow;
+
+  mat-icon { font-size: 16px; }
+}
+
+// ══════════════════════════════════════════════════════════════════
+//  LISTA
+// ══════════════════════════════════════════════════════════════════
+.pedidos-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 16px 14px 0;
+}
+
+// ══════════════════════════════════════════════════════════════════
+//  TARJETA
+// ══════════════════════════════════════════════════════════════════
+.pedido-card {
+  background: $surface-2 !important;
+  border: 1px solid $border !important;
+  border-radius: $radius-card !important;
+  box-shadow: $shadow-card !important;
+  padding: 16px !important;
+  transition: box-shadow 0.25s ease, border-color 0.25s ease, transform 0.18s ease;
+  position: relative;
+  overflow: visible !important;
+
+  &:active {
+    transform: scale(0.985);
+  }
+
+  // ── Estados especiales ──────────────────────────────────────
+  &.card-selected {
+    border-color: rgba(56,189,248,0.35) !important;
+    box-shadow: $shadow-card-selected !important;
+    background: linear-gradient(180deg, #0d1a24 0%, $surface-2 100%) !important;
+  }
+
+  &.card-priority {
+    border-color: rgba(34,197,94,0.28) !important;
+    box-shadow: $shadow-card-priority !important;
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, $green, transparent);
+      border-radius: $radius-card $radius-card 0 0;
+    }
+  }
+
+  &.card-issue {
+    border-color: rgba(239,68,68,0.3) !important;
+  }
+}
+
+// ── TOP ROW ────────────────────────────────────────────────────
+.card-top {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+// Checkbox Material — sobreescritura para tema dark
+.delivery-checkbox {
+  ::ng-deep {
+    .mdc-checkbox__background {
+      background-color: $surface-3 !important;
+      border-color: $border-strong !important;
+      border-radius: 6px !important;
+      box-shadow: $shadow-btn;
+    }
+
+    .mdc-checkbox--selected .mdc-checkbox__background {
+      background-color: $blue !important;
+      border-color: $blue !important;
+      box-shadow: $blue-glow;
+    }
+
+    .mdc-checkbox__checkmark { color: #000 !important; }
+    .mdc-form-field { color: $white; }
+  }
+}
+
+.order-meta {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  flex: 1;
+}
+
+.order-number {
+  font-size: 18px;
+  font-weight: 700;
+  color: $white;
+  letter-spacing: -0.3px;
+  font-family: -apple-system, 'SF Pro Display', 'Helvetica Neue', sans-serif;
+}
+
+.priority-icon {
+  font-size: 18px;
+  color: $green;
+  filter: drop-shadow(0 0 4px rgba(34,197,94,0.6));
+}
+
+// ── STATUS CHIP ────────────────────────────────────────────────
+.status-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+  white-space: nowrap;
+  border: 1px solid transparent;
+
+  .status-icon {
+    font-size: 13px;
+    line-height: 13px;
+  }
+
+  &.status-delivery {
+    background: rgba(56,189,248,0.15);
+    color: $blue;
+    border-color: rgba(56,189,248,0.3);
+  }
+  &.status-done {
+    background: $green-dim;
+    color: $green;
+    border-color: rgba(34,197,94,0.3);
+  }
+  &.status-active {
+    background: rgba(99,102,241,0.15);
+    color: #818cf8;
+    border-color: rgba(99,102,241,0.3);
+  }
+  &.status-pending {
+    background: rgba(251,191,36,0.12);
+    color: $amber;
+    border-color: rgba(251,191,36,0.28);
+  }
+  &.status-paused {
+    background: rgba(249,115,22,0.12);
+    color: $orange;
+    border-color: rgba(249,115,22,0.28);
+  }
+  &.status-cancel {
+    background: rgba(239,68,68,0.12);
+    color: $red;
+    border-color: rgba(239,68,68,0.28);
+  }
+  &.status-default {
+    background: rgba(255,255,255,0.06);
+    color: $white-muted;
+    border-color: $border;
+  }
+}
+
+// ── FILA CLIENTE ───────────────────────────────────────────────
+.customer-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.customer-name {
+  font-size: 15px;
+  font-weight: 600;
+  color: $white;
+}
+
+// ── FILA DIRECCIÓN ─────────────────────────────────────────────
+.address-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.address-block {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+}
+
+.address-text {
+  font-size: 14px;
+  font-weight: 500;
+  color: $cyan;          // Dirección: cian llamativo
+  line-height: 1.4;
+  letter-spacing: -0.1px;
+  text-shadow: 0 0 8px rgba(79,195,247,0.3);
+}
+
+.address-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 4px;
+  font-size: 12px;
+  color: $white-muted;
+  line-height: 1.4;
+
+  .note-icon { font-size: 13px; margin-top: 1px; flex-shrink: 0; }
+}
+
+// ── ICONOS GENÉRICOS ───────────────────────────────────────────
+.row-icon {
+  font-size: 17px;
+  flex-shrink: 0;
+  margin-top: 1px;
+
+  &.dim       { color: $white-faint; }
+  &.accent-icon { color: $cyan; }
+}
+
+// ── DIVIDER ─────────────────────────────────────────────────────
+.card-divider {
+  border-color: $border !important;
+  margin: 10px 0 !important;
+}
+
+// ── MÉTRICAS ───────────────────────────────────────────────────
+.metrics-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 4px;
+}
+
+.metric-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  border: 1px solid transparent;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.06);
+
+  mat-icon { font-size: 14px; }
+
+  .metric-value { font-size: 13px; font-weight: 700; }
+  .metric-unit  { font-size: 11px; font-weight: 500; opacity: 0.8; }
+
+  &.miles {
+    background: $green-dim;
+    color: $green;
+    border-color: rgba(34,197,94,0.25);
+    box-shadow: $green-glow;
+  }
+
+  &.cost {
+    background: rgba(251,191,36,0.10);
+    color: $amber;
+    border-color: rgba(251,191,36,0.22);
+  }
+
+  &.date {
+    background: rgba(255,255,255,0.05);
+    color: $white-dim;
+    border-color: $border;
+  }
+}
+
+// ── NOTAS ──────────────────────────────────────────────────────
+.notes-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  margin-top: 4px;
+  margin-bottom: 2px;
+}
+
+.notes-text {
+  font-size: 12px;
+  color: $white-muted;
+  line-height: 1.5;
+}
+
+// ── ISSUE ──────────────────────────────────────────────────────
+.issue-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  background: rgba(239,68,68,0.08);
+  border: 1px solid rgba(239,68,68,0.2);
+  border-radius: 8px;
+  padding: 6px 10px;
+  margin-top: 8px;
+}
+
+.issue-icon {
+  font-size: 16px;
+  color: $red;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.issue-text {
+  font-size: 12px;
+  color: rgba(239,68,68,0.85);
+  line-height: 1.4;
+}
+
+// ── ACCIONES (pie de tarjeta) ──────────────────────────────────
+.card-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 2px;
+}
+
+.card-actions-right {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.flag-icon {
+  font-size: 20px;
+}
+
+// ── BOTÓN MAPA ─────────────────────────────────────────────────
+.btn-map {
+  background: $surface-3 !important;
+  color: $blue !important;
+  border: 1px solid rgba(56,189,248,0.3) !important;
+  border-radius: $radius-btn !important;
+  box-shadow: $shadow-btn-map !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  height: 40px !important;
+  padding: 0 16px !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  transition: transform 0.12s ease, filter 0.12s ease !important;
+  font-family: inherit !important;
+
+  mat-icon { font-size: 18px !important; }
+
+  &:active {
+    transform: scale(0.95) !important;
+    filter: brightness(0.85) !important;
+  }
+
+  &:disabled {
+    opacity: 0.3 !important;
+    cursor: not-allowed !important;
+  }
+}
+
+// ══════════════════════════════════════════════════════════════════
+//  FAB — RUTA MULTI-PARADA
+// ══════════════════════════════════════════════════════════════════
+.fab-route {
+  position: fixed !important;
+  bottom: 28px !important;
+  right: 20px !important;
+  z-index: 100 !important;
+  background: $surface-3 !important;
+  color: $white-muted !important;
+  border: 1px solid $border !important;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.7) !important;
+  width: 60px !important;
+  height: 60px !important;
+  border-radius: 18px !important;
+  transition: background 0.2s, box-shadow 0.2s, transform 0.15s, color 0.2s !important;
+  position: relative;
+
+  mat-icon {
+    font-size: 26px !important;
+  }
+
+  &.fab-active {
+    background: $blue !important;
+    color: #000 !important;
+    border-color: transparent !important;
+    box-shadow: $shadow-fab !important;
+  }
+
+  &:active {
+    transform: scale(0.92) !important;
+  }
+
+  &:disabled {
+    opacity: 0.35 !important;
+  }
+}
+
+// Badge numérico del FAB
+.fab-badge {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  background: $green;
+  color: #000;
+  font-size: 11px;
+  font-weight: 800;
+  min-width: 20px;
+  height: 20px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 5px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.5);
+  border: 1.5px solid $bg;
+  z-index: 1;
+}
+
+// ══════════════════════════════════════════════════════════════════
+//  ESTADO VACÍO
+// ══════════════════════════════════════════════════════════════════
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  text-align: center;
+}
+
+.empty-icon {
+  font-size: 56px !important;
+  width: 56px !important;
+  height: 56px !important;
+  color: $white-faint;
+  margin-bottom: 16px;
+}
+
+.empty-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: $white-dim;
+  margin: 0 0 6px;
+}
+
+.empty-sub {
+  font-size: 14px;
+  color: $white-muted;
+  margin: 0;
+}
+
+// ══════════════════════════════════════════════════════════════════
+//  RESPONSIVE
+// ══════════════════════════════════════════════════════════════════
+
+// iPhone 12 Pro (390px) y Samsung Galaxy S23 (360px)
+@media (max-width: 430px) {
+  .screen-header {
+    padding: 48px 16px 14px;
+  }
+
+  .pedidos-list {
+    padding: 12px 12px 0;
+    gap: 12px;
+  }
+
+  .pedido-card {
+    padding: 14px !important;
+    border-radius: 16px !important;
+  }
+
+  .order-number   { font-size: 16px; }
+  .customer-name  { font-size: 14px; }
+  .address-text   { font-size: 13px; }
+
+  .metrics-row {
+    gap: 6px;
+  }
+
+  .metric-chip {
+    font-size: 12px;
+    padding: 3px 8px;
+  }
+
+  .btn-map {
+    font-size: 12px !important;
+    height: 38px !important;
+    padding: 0 12px !important;
+  }
+
+  .fab-route {
+    bottom: 22px !important;
+    right: 16px !important;
+    width: 56px !important;
+    height: 56px !important;
+    border-radius: 16px !important;
+  }
+}
+
+// Pantallas muy pequeñas (Galaxy S23 360px)
+@media (max-width: 375px) {
+  .screen-title   { font-size: 19px; }
+  .order-number   { font-size: 15px; }
+  .metrics-row    { gap: 5px; }
+
+  .metric-chip {
+    font-size: 11px;
+    padding: 3px 7px;
+  }
+}
+
+// iPad (768px+)
+@media (min-width: 768px) {
+  .delivery-container {
+    padding: 0 0 100px;
+  }
+
+  .screen-header {
+    padding: 28px 28px 18px;
+  }
+
+  .pedidos-list {
+    padding: 20px 20px 0;
+    gap: 16px;
+  }
+
+  .pedido-card {
+    padding: 20px !important;
+  }
+
+  .order-number  { font-size: 20px; }
+  .address-text  { font-size: 15px; }
+  .customer-name { font-size: 16px; }
+
+  .btn-map {
+    height: 44px !important;
+    font-size: 14px !important;
+  }
+
+  .fab-route {
+    bottom: 36px !important;
+    right: 32px !important;
+    width: 64px !important;
+    height: 64px !important;
+  }
+}

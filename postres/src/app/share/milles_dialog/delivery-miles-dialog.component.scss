@@ -1,0 +1,315 @@
+// ═══════════════════════════════════════════════════════
+//  DeliveryMilesDialog — SCSS
+//  Tema: iOS Dark / Pure Black / Embossed Controls
+//  Targets: iPhone 12 Pro · Samsung Galaxy S23 · iPad
+// ═══════════════════════════════════════════════════════
+
+// ── Tokens de diseño ─────────────────────────────────
+$color-bg:          #000000;
+$color-surface:     #0d0d0d;
+$color-surface-2:   #1a1a1a;
+$color-border:      #2a2a2a;
+$color-white:       #ffffff;
+$color-white-dim:   rgba(255, 255, 255, 0.65);
+$color-white-muted: rgba(255, 255, 255, 0.35);
+$color-accept:      #1a8c4e;   // Verde iOS-style
+$color-accept-h:    #21a85e;
+$color-cancel:      #c0392b;   // Rojo iOS-style
+$color-cancel-h:    #e04433;
+$color-hint:        rgba(255,255,255,0.38);
+
+// Sombra embossed (relieve oscuro)
+$shadow-inset: inset 0 1px 0 rgba(255,255,255,0.08),
+               inset 0 -1px 0 rgba(0,0,0,0.6);
+
+$shadow-emboss: 0 2px 6px rgba(0,0,0,0.8),
+                0 1px 2px rgba(0,0,0,0.6),
+                inset 0 1px 0 rgba(255,255,255,0.07);
+
+$shadow-btn-accept: 0 4px 14px rgba(26,140,78,0.45),
+                    0 1px 4px rgba(0,0,0,0.5),
+                    inset 0 1px 0 rgba(255,255,255,0.15);
+
+$shadow-btn-cancel: 0 4px 14px rgba(192,57,43,0.45),
+                    0 1px 4px rgba(0,0,0,0.5),
+                    inset 0 1px 0 rgba(255,255,255,0.10);
+
+$radius-dialog:  20px;
+$radius-btn:     12px;
+$radius-field:   12px;
+
+// ── Wrapper del dialog ────────────────────────────────
+.dialog-wrapper {
+  background: $color-bg;
+  border: 1px solid $color-border;
+  border-radius: $radius-dialog;
+  overflow: hidden;
+  min-width: 300px;
+  max-width: 420px;
+  width: 100%;
+  box-shadow: 0 24px 60px rgba(0,0,0,0.95),
+              0 8px 20px rgba(0,0,0,0.8),
+              inset 0 1px 0 rgba(255,255,255,0.06);
+}
+
+// ── Header ────────────────────────────────────────────
+.dialog-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 20px 14px;
+  border-bottom: 1px solid $color-border;
+  background: $color-surface;
+  box-shadow: $shadow-inset;
+}
+
+.dialog-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: $color-white;
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: -0.3px;
+  font-family: -apple-system, 'SF Pro Display', 'Helvetica Neue', sans-serif;
+
+  .title-icon {
+    font-size: 20px;
+    color: #4fc3f7;
+    opacity: 0.9;
+  }
+}
+
+// Botón X (esquina superior derecha)
+.btn-close {
+  color: $color-white-dim !important;
+  background: $color-surface-2 !important;
+  border: 1px solid $color-border !important;
+  border-radius: 50% !important;
+  width: 32px !important;
+  height: 32px !important;
+  min-width: unset !important;
+  box-shadow: $shadow-emboss;
+  transition: background 0.2s, transform 0.1s;
+
+  mat-icon {
+    font-size: 18px;
+    line-height: 18px;
+  }
+
+  &:active {
+    transform: scale(0.93);
+    background: #2a2a2a !important;
+  }
+}
+
+// ── Body ──────────────────────────────────────────────
+.dialog-body {
+  padding: 24px 20px 8px !important;
+  background: $color-bg;
+}
+
+.dialog-subtitle {
+  color: $color-white-dim;
+  font-size: 14px;
+  line-height: 1.5;
+  margin: 0 0 20px;
+  font-family: -apple-system, 'SF Pro Text', 'Helvetica Neue', sans-serif;
+
+  strong {
+    color: $color-white;
+  }
+}
+
+// ── Campo de millas ───────────────────────────────────
+.miles-field {
+  width: 100%;
+
+  // Contenedor outline
+  ::ng-deep .mat-mdc-form-field-outline-start,
+  ::ng-deep .mat-mdc-form-field-outline-notch,
+  ::ng-deep .mat-mdc-form-field-outline-end {
+    border-color: $color-border !important;
+    background: $color-surface-2;
+  }
+
+  ::ng-deep .mdc-notched-outline {
+    border-radius: $radius-field !important;
+  }
+
+  ::ng-deep .mdc-notched-outline__leading,
+  ::ng-deep .mdc-notched-outline__notch,
+  ::ng-deep .mdc-notched-outline__trailing {
+    border-color: $color-border !important;
+  }
+
+  // Relieve embossed en el input
+  ::ng-deep .mat-mdc-text-field-wrapper {
+    background: $color-surface-2 !important;
+    border-radius: $radius-field !important;
+    box-shadow: $shadow-emboss;
+  }
+
+  // Texto del input
+  ::ng-deep input.mat-mdc-input-element {
+    color: $color-white !important;
+    font-size: 20px !important;
+    font-weight: 500 !important;
+    caret-color: #4fc3f7;
+    font-family: -apple-system, 'SF Pro Text', 'Helvetica Neue', sans-serif;
+
+    // Quitar flechas del input number
+    &::-webkit-inner-spin-button,
+    &::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+    -moz-appearance: textfield;
+  }
+
+  // Label
+  ::ng-deep .mat-mdc-floating-label {
+    color: $color-white-muted !important;
+  }
+
+  ::ng-deep .mdc-floating-label--float-above {
+    color: #4fc3f7 !important;
+  }
+
+  // Hint
+  ::ng-deep .mat-mdc-form-field-hint {
+    color: $color-hint !important;
+    font-size: 12px;
+  }
+
+  // Error
+  ::ng-deep .mat-mdc-form-field-error {
+    color: $color-cancel !important;
+    font-size: 12px;
+  }
+
+  // Sufijo icon
+  .suffix-icon {
+    color: $color-white-muted;
+    font-size: 20px;
+  }
+
+  // Focus ring
+  &.mat-focused ::ng-deep .mdc-notched-outline__leading,
+  &.mat-focused ::ng-deep .mdc-notched-outline__notch,
+  &.mat-focused ::ng-deep .mdc-notched-outline__trailing {
+    border-color: #4fc3f7 !important;
+    border-width: 1.5px !important;
+  }
+}
+
+// ── Acciones / Footer ─────────────────────────────────
+.dialog-actions {
+  display: flex !important;
+  justify-content: space-between !important;
+  gap: 12px;
+  padding: 16px 20px 22px !important;
+  background: $color-bg;
+  border-top: 1px solid $color-border;
+}
+
+// Base botón de acción
+.btn-action {
+  flex: 1;
+  height: 50px;
+  border-radius: $radius-btn !important;
+  font-size: 15px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: transform 0.12s ease, box-shadow 0.12s ease, filter 0.12s ease;
+  font-family: -apple-system, 'SF Pro Text', 'Helvetica Neue', sans-serif !important;
+
+  mat-icon {
+    font-size: 20px;
+  }
+
+  &:active {
+    transform: scale(0.96);
+    filter: brightness(0.88);
+  }
+}
+
+// Botón Cancelar (rojo)
+.btn-cancel {
+  color: $color-white !important;
+  background-color: $color-cancel !important;
+  box-shadow: $shadow-btn-cancel;
+
+  &:hover:not(:disabled) {
+    background-color: $color-cancel-h !important;
+    box-shadow: 0 6px 18px rgba(192,57,43,0.55), inset 0 1px 0 rgba(255,255,255,0.12);
+  }
+}
+
+// Botón Aceptar (verde)
+.btn-accept {
+  color: $color-white !important;
+  background-color: $color-accept !important;
+  box-shadow: $shadow-btn-accept;
+
+  &:hover:not(:disabled) {
+    background-color: $color-accept-h !important;
+    box-shadow: 0 6px 18px rgba(26,140,78,0.55), inset 0 1px 0 rgba(255,255,255,0.15);
+  }
+
+  &:disabled {
+    background-color: #1a3d2a !important;
+    color: rgba(255,255,255,0.3) !important;
+    box-shadow: none;
+    cursor: not-allowed;
+  }
+}
+
+// ── Responsive ───────────────────────────────────────
+// iPhone 12 Pro (390px) y Galaxy S23 (360px)
+@media (max-width: 430px) {
+  .dialog-wrapper {
+    min-width: unset;
+    max-width: 100%;
+    border-radius: 16px;
+    margin: 0 8px;
+  }
+
+  .dialog-header {
+    padding: 16px 16px 12px;
+  }
+
+  .dialog-body {
+    padding: 20px 16px 6px !important;
+  }
+
+  .dialog-actions {
+    padding: 14px 16px 20px !important;
+    gap: 10px;
+  }
+
+  .btn-action {
+    height: 46px;
+    font-size: 14px !important;
+  }
+
+  .dialog-title {
+    font-size: 16px;
+  }
+}
+
+// iPad (768px+)
+@media (min-width: 768px) {
+  .dialog-wrapper {
+    min-width: 380px;
+  }
+
+  .btn-action {
+    height: 52px;
+    font-size: 16px !important;
+  }
+}

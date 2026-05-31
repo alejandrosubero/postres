@@ -8,6 +8,7 @@ import { FirebaseService } from '../data/firebase.service';
 import { Ingrediente } from '../../models/ingrediente.model';
 import { Receta, RecetaIngredientes } from '../../models/receta.model';
 import { UnitsService } from '../convert/units.service';
+import { Pedido } from '../../models/pedido.model';
 
 // ── TIPOS PÚBLICOS ────────────────────────────────────────────────────────────
 
@@ -102,6 +103,29 @@ export class InventarioCheckerService {
 
         return { resultados, listaCompra, costoTotalCompra, todoAlcanza };
     }
+
+
+/**
+   * Toma un Pedido, extrae sus recetas y ejecuta el análisis de inventario de forma directa.
+   */
+  analizarPedido(pedido: Pedido): ResultadoAnalisis | null {
+    if (!pedido || !pedido.recetas || pedido.recetas.length === 0) {
+      console.warn('El pedido no contiene recetas para analizar.');
+      return null;
+    }
+
+    // 1. Convertimos las recetas del pedido al formato que espera tu método analizar()
+    // Nota: Como el modelo Receta no tiene un campo 'cantidad' explícito en tu interfaz, 
+    // asumimos que cada objeto en el array representa 1 unidad, o puedes mapearlo según tu lógica.
+    const solicitudes: RecetaConCantidad[] = pedido.recetas.map(receta => ({
+      receta: receta,
+      cantidad: 1 // Si tu modelo maneja cantidades de otra forma, ajústalo aquí
+    }));
+
+    // 2. Ejecutamos y retornamos el análisis usando la lógica existente
+    return this.analizar(solicitudes);
+  }
+
 
     /**
      * Versión simplificada: una sola receta.
