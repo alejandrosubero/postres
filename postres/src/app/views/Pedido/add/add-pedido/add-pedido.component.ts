@@ -85,6 +85,7 @@ export class AddPedidoComponent implements OnInit {
   isOpen: boolean = false;
   newDate: Date = new Date();
   checkInventory = false;
+  colorCheckInventory = false;
 
   customer: Customer = {
     id: "",
@@ -330,7 +331,7 @@ export class AddPedidoComponent implements OnInit {
 
     await this.pedidoService.guardar(newPedido);
 
-    console.log('pedido nuevo ', newPedido);
+    // console.log('pedido nuevo ', newPedido);
 
     this.router.navigate(['/app/pedido/list']);
   }
@@ -377,6 +378,9 @@ export class AddPedidoComponent implements OnInit {
       res.resultados.filter(r => !r.puedeCompletarse).map(r => r.receta.id!)
     );
     this.detallesAbiertos.set(conFaltantes);
+    this.colorCheckInventory = this.resultado()!.todoAlcanza;
+
+
   }
 
   // ── DETALLE TOGGLE ────────────────────────────────────────────────────────

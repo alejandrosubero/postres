@@ -10,7 +10,7 @@ export class UnitsService {
 
   convertUnits(cantidad: number, unidadOrigen: string, unidadDestino: string, presentacion: string): number {
 
-      console.log('convertUnits recibe: ',`cantidad: ${cantidad}, unidadOrigen:  ${unidadOrigen}, unidadDestino:  ${unidadDestino}, presentacion: ${presentacion};` )
+      // console.log('convertUnits recibe: ',`cantidad: ${cantidad}, unidadOrigen:  ${unidadOrigen}, unidadDestino:  ${unidadDestino}, presentacion: ${presentacion};` )
     
 
     let factorH: number = 1;

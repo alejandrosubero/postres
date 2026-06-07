@@ -1,0 +1,5 @@
+
+La solución: Abre cualquier archivo .ts, presiona F1 o Ctrl + Shift + P
+ para abrir la paleta de comandos, escribe y selecciona:
+
+TypeScript: Restart TS Server (Reiniciar el servidor TS)

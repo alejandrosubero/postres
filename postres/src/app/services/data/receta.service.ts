@@ -40,7 +40,6 @@ export class RecetaService {
       const receta = this.converter.jsonToReceta(decryptedJson);
       return { ...receta, id: key } as Receta;
     }).filter((r): r is Receta => r !== null);
-
     this._recetas.set(listaRecetas);
     return listaRecetas;
   }

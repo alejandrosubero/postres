@@ -17,7 +17,7 @@ import { MatButtonModule } from '@angular/material/button';
   styleUrl: './lista-receta.component.scss'
 })
 export class ListaRecetaComponent {
-  
+
   private recetaService = inject(RecetaService);
   private router = inject(Router);
   private navService = inject(NavService);
@@ -26,15 +26,22 @@ export class ListaRecetaComponent {
   // Accedemos a la señal directamente del servicio
   recetas = this.recetaService.recetas();
   searchTerm = signal('');
+  activeFavoriteView = 0;
+
 
   constructor() {
     this.setNav();
+    const navigation = this.router.getCurrentNavigation();
+    this.activeFavoriteView = navigation?.extras.state?.['receta'];
+    if (this.activeFavoriteView === 1) {
+      this.recetas = this.recetaService.recetas().filter(item => item.isfavorite === true);
+    }
   }
 
   // Señal calculada: se actualiza sola cada vez que 'searchTerm' o 'ingredientesSignal' cambian
   filteredRecetas = computed(() => {
     const term = this.searchTerm().toLowerCase();
-    const lista = this.recetaService.recetas();
+    const lista = this.recetas;
     if (term.length < 2) return lista;
     return lista.filter(item =>
       item.Name.toLowerCase().includes(term)
@@ -43,8 +50,13 @@ export class ListaRecetaComponent {
 
 
   seleccionarIngrediente(receta: Receta) {
-    // Para pasar el objeto, podemos usar State en el Router
-    this.router.navigate(['/app/receta/detail'], { state: { receta } });
+    if (this.activeFavoriteView === 1) {
+      let viewFavorite = true;
+      this.router.navigate(['/app/receta/detail'], { state: { receta, viewFavorite } });
+    } else {
+      // Para pasar el objeto, podemos usar State en el Router
+      this.router.navigate(['/app/receta/detail'], { state: { receta } });
+    }
   }
 
 
@@ -55,7 +67,6 @@ export class ListaRecetaComponent {
 
 
   setNav() {
-    // this.checkFavorites();
     let navConfig: NavConfig = new NavConfig();
     navConfig.title = 'Recetas';
     navConfig.ico.menu = true;
@@ -63,12 +74,10 @@ export class ListaRecetaComponent {
     navConfig.ico.logut = false;
     navConfig.ico.home = true;
     navConfig.ico.cart = false;
-    // navConfig.goto = "/app/dashboard";
-      navConfig.goto2 = '/app/dashboard?tab=1'
+    navConfig.goto2 = '/app/dashboard?tab=1'
     if (this.isFavoriteView) {
       navConfig.favorite.active = this.isFavoriteView;
     }
-    // navConfig.favorite.url = 'favorites';
     this.navService.setNavConfig(navConfig);
   }
 

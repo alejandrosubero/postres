@@ -36,6 +36,7 @@
       <div class="ios-card" (click)="seleccionarPedido(item)">
         <div class="card-info">
           <h3>{{ item.name }}</h3>
+          <p style="color: darkorange;"> | Orden #{{item.orderNumber}} |</p> 
           <p class="date">{{ item.dayDue | date: 'MM/dd/yyyy' }}</p>
         </div>
 

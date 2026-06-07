@@ -93,6 +93,7 @@ export class AddRecetaComponent {
       ...this.recetaForm.value,
     };
     nuevaReceta.Date = new Date();
+    nuevaReceta.isfavorite = false;
     await this.recetaService.guardar(nuevaReceta);
     this.router.navigate(['/app/receta/list']);
   }
@@ -129,6 +130,8 @@ export class AddRecetaComponent {
     navConfig.ico.back = true;
     navConfig.ico.cart = false;
     navConfig.goto = '/app/receta/list';
+    navConfig.favorite.viewDetail = false;
+    
     if (this.isFavoriteView) {
       navConfig.favorite.active = this.isFavoriteView;
     }

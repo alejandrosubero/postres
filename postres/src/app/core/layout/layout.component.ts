@@ -14,10 +14,11 @@ import { AuthService } from '../../services/Auth/auth.Service';
 import { NavService } from '../../services/navegate/nav.service';
 import { FirebaseService } from '../../services/data/firebase.service';
 import { MatBadgeModule } from '@angular/material/badge';
-import { DomSanitizer } from '@angular/platform-browser';
-import { NavegateService } from '../../services/navegate/navegateService';
-import { NavConfig } from '../../models/navegation/navElemet.model';
-import { Ingrediente } from '../../models/ingrediente.model';
+
+// import { DomSanitizer } from '@angular/platform-browser';
+// import { NavegateService } from '../../services/navegate/navegateService';
+// import { NavConfig } from '../../models/navegation/navElemet.model';
+// import { Ingrediente } from '../../models/ingrediente.model';
 
 @Component({
   selector: 'app-layout',
@@ -48,12 +49,7 @@ export class LayoutComponent implements OnInit {
   public car = false;
   lowStockCount = 0;
 
-  constructor(
-    private router: Router,
-    // private navegateService: NavegateService,    
-    // private matIconRegistry: MatIconRegistry,
-    // private domSanitizer: DomSanitizer
-  ) {
+  constructor(private router: Router ) {
     this.isAdmin = this.authService.getRolValue() === 'admin' ? true : false;
     effect(() => {
       this.navConfig = this.navService.config;
@@ -92,14 +88,7 @@ export class LayoutComponent implements OnInit {
   }
 
 
-
-
-
-
   //  ============ logout and back================
-
-
-
   logout(): void {
     this.authService.logout();
     this.router.navigate(['/login']);
@@ -122,12 +111,31 @@ export class LayoutComponent implements OnInit {
     }
   }
 
+
+  goFavorites(): void {
+    if (this.navConfig().favorite.viewDetail) {
+      let value = this.navConfig().favorite.toggleFavorite ? false : true;
+      this.navService.updateToggleFavorite(value);
+    } else {
+      // this.navegateService.goFavorites('favorites', 1);
+      let receta = 1;
+      this.router.navigate(['/app/receta/list'], { state: { receta } });
+    }
+  }
+
+
   back() {
     const goto: string = this.navConfig().goto;
     if (!goto) return;
-    // Creamos un UrlTree para separar limpiamente la ruta base de los queryParams
-    const urlTree = this.router.parseUrl(goto);
-    this.router.navigateByUrl(urlTree);
+   
+    if (goto === '/app/receta/list' && this.navConfig().goto2 === 'none') {
+      this.navConfig().favorite.viewDetail = false;
+      this.goFavorites();
+    } else {
+      // Creamos un UrlTree para separar limpiamente la ruta base de los queryParams
+      const urlTree = this.router.parseUrl(goto);
+      this.router.navigateByUrl(urlTree);
+    }
   }
 
   back1() {
@@ -250,11 +258,6 @@ export class LayoutComponent implements OnInit {
     // this.navigate(routeBase);
   }
 
-
-  // ======= ********** =============== //
-
-
-
   downloadPdf(): void {
     // const pdfUrl = this.navConfig().label;
     // const pdfName = `${new Date()}.pdf`;
@@ -265,37 +268,6 @@ export class LayoutComponent implements OnInit {
     // link.click();
     // link.remove();
   }
-
-  // ======= ********** =============== //
-
-  goFavorites(): void {
-    // if (this.navConfig().favorite.viewDetail) {
-    //   let value = this.navConfig().favorite.toggleFavorite ? false : true;
-    //   this.navService.updateToggleFavorite(value);
-    // } else {
-    //   this.navegateService.goFavorites('favorites', 1);
-    // }
-  }
-
-  // backs(): void {
-  // if(this.navConfig().goto === 'app/favorites'){
-  //    this.navegateService.goFavorites('favorites', 1);
-  // }else{
-  //   this.navigate(this.navConfig().goto);
-  // }
-  // if(this.navConfig().goto === 'formulations' &&  this.navConfig().favorite.url === 'formulations'){
-  //   this.navegateService.goFavorites('formulations', this.navConfig().favorite.id);
-  //  let title = 'Formulations';
-  // //  this.navService.updateTitle(title);
-
-  // }
-  // if(this.navConfig().goto === 'storage' &&  this.navConfig().favorite.url === 'storage'){
-  //   this.navegateService.goFavorites('storage', 1);
-  //   let title = 'Storage';
-  //   // this.navService.updateTitle(title);
-  // }
-  // }
-
 
 }
 

@@ -10,11 +10,11 @@
         <h3>Ingredientes</h3>
         <div class="ios-table">
 
-             <div class="table-header">
-                    <div class="col-name">Nombre</div>
-                    <div class="col-cant">Cant.</div>
-                    <div class="col-cant">unidad</div>
-                    <div class="col-cost">Costo</div>
+            <div class="table-header">
+                <div class="col-name">Nombre</div>
+                <div class="col-cant">Cant.</div>
+                <div class="col-cant">unidad</div>
+                <div class="col-cost">Costo</div>
             </div>
 
             @for (ing of receta.Lista_ingredientes; track $index) {
@@ -33,25 +33,21 @@
     </mat-card>
 
 
-
-
-
-
     <mat-card class="ios-card">
         <h3>Instrucciones</h3>
         <p class="content-text">{{ receta.instrucciones }}</p>
     </mat-card>
 
-@if (receta.Notes && receta.Notes.length > 0) {
+    @if (receta.Notes && receta.Notes.length > 0) {
     <mat-card class="ios-card">
         <h3>Notas</h3>
         <ul class="notes-list">
             @for (note of receta.Notes; track $index) {
-                <li class="note-item">{{ note }}</li>
+            <li class="note-item">{{ note }}</li>
             }
         </ul>
     </mat-card>
-}
+    }
 
 </div>
 

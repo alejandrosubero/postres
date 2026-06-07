@@ -1,5 +1,4 @@
-import { Component, inject, signal, OnInit} from '@angular/core';
-// import { Router } from '@angular/router';
+import { Component, inject, signal, OnInit } from '@angular/core';
 import { NavConfig } from '../../models/navegation/navElemet.model';
 import { NavService } from '../../services/navegate/nav.service';
 import { MatIconModule } from '@angular/material/icon';
@@ -8,6 +7,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { CalendarShellComponent } from '../../views/calendario/components/calendar-shell/calendar-shell.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { Router, ActivatedRoute } from '@angular/router';
+import { RecetaService } from '../../services/data/receta.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -29,6 +29,10 @@ export class DashboardComponent implements OnInit {
   private route = inject(ActivatedRoute);
   isMenuOpen = signal(false);
 
+  private recetaService = inject(RecetaService);
+  private recetas = this.recetaService.recetas();
+
+
   // Señal para controlar la pestaña activa (por defecto 0 = Calendario)
   activeTab = signal<number>(0);
 
@@ -43,6 +47,7 @@ export class DashboardComponent implements OnInit {
 
   isFavoriteView: boolean = false;
 
+
   constructor() {
     this.setNav();
   }
@@ -54,11 +59,11 @@ export class DashboardComponent implements OnInit {
         const tabIndex = parseInt(params['tab'], 10);
         this.activeTab.set(tabIndex);
       } else {
-        this.activeTab.set(0); // Si no viene el parámetro, por defecto va a la primera tab
+        this.activeTab.set(0);
       }
     });
   }
-  
+
   toggleMenu() {
     this.isMenuOpen.set(!this.isMenuOpen());
   }
@@ -75,7 +80,6 @@ export class DashboardComponent implements OnInit {
   }
 
   setNav() {
-    // this.checkFavorites();
     let navConfig: NavConfig = new NavConfig();
     navConfig.title = 'Dashboard  ';
     navConfig.ico.menu = true;
@@ -83,11 +87,12 @@ export class DashboardComponent implements OnInit {
     navConfig.ico.logut = false;
     navConfig.ico.cart = true;
 
-    if (this.isFavoriteView) {
-      navConfig.favorite.active = this.isFavoriteView;
+    const listRecetas = this.recetas.filter(item => item.isfavorite === true);
+    if (listRecetas != undefined && listRecetas != null && listRecetas.length > 0) {
+      navConfig.favorite.active = true;
+    } else {
+      navConfig.favorite.active = false;
     }
-    // navConfig.favorite.url = 'favorites';
     this.navService.setNavConfig(navConfig);
   }
-
 }

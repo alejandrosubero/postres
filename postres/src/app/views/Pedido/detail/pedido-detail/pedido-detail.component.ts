@@ -494,16 +494,14 @@ export class PedidoDetailComponent {
     if (res != null && res != undefined) {
       // const res = this.checkerService.analizar(solicitudes);
       this.resultado.set(res);
-      console.log('this.resultado', this.resultado());
+      // console.log('this.resultado', this.resultado());
   
       const conFaltantes = new Set(
         res.resultados.filter(r => !r.puedeCompletarse).map(r => r.receta.id!)
       );
-      console.log('conFaltantes', conFaltantes);
+      // console.log('conFaltantes', conFaltantes);
       this.detallesAbiertos.set(conFaltantes);
-      console.log(' this.detallesAbiertos', this.detallesAbiertos());
-
-   
+      // console.log(' this.detallesAbiertos', this.detallesAbiertos());
     }
 
 

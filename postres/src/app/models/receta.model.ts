@@ -6,6 +6,7 @@ export interface Receta {
   CostoTotal: number
   instrucciones: string;
   Notes: string[];
+  isfavorite:boolean;
   // cantidad?:number;
 }
 

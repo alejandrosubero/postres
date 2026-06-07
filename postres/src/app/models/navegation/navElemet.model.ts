@@ -5,7 +5,7 @@ export class NavConfig {
     public sds: string;
     public favorite: Favorite;
     public goto: string;
-     public goto2: string;
+    public goto2: string;
     public noteSource: string;
     public hideNemu: boolean;
     public ico: IcoConfig;
