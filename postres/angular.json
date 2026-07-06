@@ -44,7 +44,7 @@
             "scripts": [
               "node_modules/apexcharts/dist/apexcharts.min.js"
             ],
-            "baseHref": "/postres/"
+            "baseHref": "/luzpostres/"
           },
           "configurations": {
             "production": {
