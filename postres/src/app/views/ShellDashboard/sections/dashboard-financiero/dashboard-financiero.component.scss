@@ -105,3 +105,43 @@
 .red {
   color: #ff3b30;
 }
+
+// sections/dashboard-financiero/dashboard-financiero.component.scss
+
+.fin-tabs {
+  display: flex;
+  gap: 6px;
+  padding: 4px;
+  background: #2c2c2e;
+  border-radius: 12px;
+  margin: 0 16px;
+  overflow-x: auto; /* Permitir deslizamiento si el espacio es muy corto */
+  scrollbar-width: none;
+  &::-webkit-scrollbar { display: none; }
+}
+
+.fin-tab {
+  flex: 1;
+  flex-shrink: 0; /* Evita que colapsen las pestañas */
+  font-size: 11px; /* Ligeramente más compacto para acomodar 4 tabs */
+  font-weight: 600;
+  color: #8e8e93;
+  background: transparent;
+  border: none;
+  padding: 8px 12px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 160ms;
+  -webkit-tap-highlight-color: transparent;
+
+  &.active {
+    color: #fff;
+    background: #1c1c1e; /* Estilo Segmented Control nativo de Apple */
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.4);
+  }
+}
+
+/* Colores de fuentes personalizadas del resumen */
+.purple { color: #bf5af2; }
+.yellow { color: #ffd60a; }

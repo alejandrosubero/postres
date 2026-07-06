@@ -10,6 +10,7 @@ import { Router } from '@angular/router';
 import { NavConfig } from '../../../models/navegation/navElemet.model';
 import { NavService } from '../../../services/navegate/nav.service';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
+import { UnitService } from '../../../services/convert/unit.service';
 
 @Component({
   selector: 'app-edit-ingrediente',
@@ -24,11 +25,13 @@ export class EditIngredienteComponent {
   private fb = inject(FormBuilder);
   private fbService = inject(FirebaseService);
   private router = inject(Router);
-  ingrediente: Ingrediente;
   private navService = inject(NavService);
+  private unitService = inject(UnitService);
+  ingrediente: Ingrediente;
   isMenuOpen = signal(false);
   isFavoriteView: boolean = false;
-  unidades = ['g', 'kg', 'oz', 'lb', 'ml', 'l', 'unit', 'cup', 'tablespoon', 'teaspoon'];
+  unidades = this.unitService.units();
+  // unidades = ['g', 'kg', 'oz', 'lb', 'ml', 'l', 'unit', 'cup', 'tablespoon', 'teaspoon'];
   ingredienteId: string = "";
   form: FormGroup;
 

@@ -93,6 +93,7 @@ export class UnitsService {
         case "ml": return cantidad / 1000;
         case "l": return cantidad;
         case "fl oz": return (cantidad * 29.5735) / 1000;
+        case "fl_oz": return (cantidad * 29.5735) / 1000;
         default: return 0;
       }
     }
@@ -106,14 +107,30 @@ export class UnitsService {
         case "tablespoon": return cantidad * 0.5;
         case "teaspoon": return cantidad * 0.166;
         case "fl oz": return cantidad;
+        case "fl_oz": return cantidad;
         default: return 0;
       }
     }
+
+      if (unidadDestino === " fl_oz") {
+      switch (unidadOrigen) {
+        case "ml": return cantidad / 29.5735;
+        case "l": return (cantidad * 1000) / 29.5735;
+        case "cup": return cantidad * 8;
+        case "tablespoon": return cantidad * 0.5;
+        case "teaspoon": return cantidad * 0.166;
+        case "fl oz": return cantidad;
+        case "fl_oz": return cantidad;
+        default: return 0;
+      }
+    }
+   
 
     // Convertir a TAZAS (cup)
     if (unidadDestino === "cup") {
       switch (unidadOrigen) {
         case "fl oz": return cantidad / 8;
+        case "fl_oz": return cantidad / 8;
         case "ml": return cantidad / 236.588;
         case "tablespoon": return cantidad / 16;
         case "cup": return cantidad;
@@ -136,9 +153,6 @@ export class UnitsService {
 
     return isNaN(numero) ? null : numero;
   }
-
-
-
 
 
 }

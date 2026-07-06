@@ -9,6 +9,7 @@ import { DashboardFinancieroComponent } from '../sections/dashboard-financiero/d
 import { DashboardRecetasComponent }  from '../sections/dashboard-recetas/dashboard-recetas.component';
 import { DashboardClientesComponent } from '../sections/dashboard-clientes/dashboard-clientes.component';
 import { DashboardAlertasComponent }  from '../sections/dashboard-alertas/dashboard-alertas.component';
+import { GastoOperativoService } from '../../../services/data/gasto-operativo.service';
  
 export type DashPeriod = '7d' | '30d' | '90d' | 'all';
 
@@ -45,31 +46,58 @@ export type DashPeriod = '7d' | '30d' | '90d' | 'all';
 })
 export class DashboardShellComponent {
 
-   private pedidoService = inject(PedidoService);
  
-  // ── ÚNICA CONEXIÓN CON TU SIGNAL ─────────────────────────────────
-  readonly allPedidos = computed(() => this.pedidoService.pedidos());
-  // ─────────────────────────────────────────────────────────────────
- 
-  period = signal<DashPeriod>('30d');
- 
-  periods: { id: DashPeriod; label: string }[] = [
-    { id: '7d',  label: '7 días'  },
+private pedidoService = inject(PedidoService);
+  private gastoOperativoService = inject(GastoOperativoService);
+
+  // Estados base de tus servicios
+  public allPedidos = this.pedidoService.pedidos;
+  public allGastosOperativos = this.gastoOperativoService.gastosOperativos;
+
+  public period = signal<DashPeriod>('30d');
+  public periods: { id: DashPeriod; label: string }[] = [
+    { id: '7d', label: '7 días' },
     { id: '30d', label: '30 días' },
     { id: '90d', label: '90 días' },
-    { id: 'all', label: 'Todo'    },
+    { id: 'all', label: 'Todo' },
   ];
  
-  pedidosFiltrados = computed<Pedido[]>(() => {
-    const all = this.allPedidos();
-    const p   = this.period();
-    if (p === 'all') return all;
-    const cutoff = new Date();
-    const days = p === '7d' ? 7 : p === '30d' ? 30 : 90;
-    cutoff.setDate(cutoff.getDate() - days);
-    return all.filter(x => new Date(x.createDay) >= cutoff);
+
+// 1. FILTRO REACTIVO DE PEDIDOS (Mantiene tu lógica exacta)
+  public pedidosFiltrados = computed(() => {
+    const pedidos = this.allPedidos();
+    const p = this.period();
+    if (p === 'all') return pedidos;
+
+    const ahora = new Date();
+    const dias = p === '7d' ? 7 : p === '30d' ? 30 : 90;
+    const limite = new Date(ahora.setDate(ahora.getDate() - dias));
+
+    return pedidos.filter(ped => new Date(ped.createDay) >= limite);
   });
- 
+
+  // 2. NUEVO: FILTRO REACTIVO DE GASTOS OPERATIVOS POR PERÍODO
+  public gastosOperativosFiltrados = computed(() => {
+    const gastos = this.allGastosOperativos();
+    const p = this.period();
+    if (p === 'all') return gastos;
+
+    const ahora = new Date();
+    const dias = p === '7d' ? 7 : p === '30d' ? 30 : 90;
+    const limite = new Date(ahora.setDate(ahora.getDate() - dias));
+
+    return gastos.filter(g => new Date(g.fecha) >= limite);
+  });
+
+  // 3. NUEVO: METRICA EXTRA DE MILLAS TOTALES PARA PASAR AL KPI (Opcional si quieres encapsularlo)
+  public totalMillasPeriodo = computed(() => {
+    return this.pedidosFiltrados()
+      .filter(p => !p.cancel)
+      .reduce((acc, p) => acc + (p.milles_for_delivery || 0), 0);
+  });
+
+
+
   // Alertas inteligentes derivadas del signal
   alertas = computed(() => {
     const pedidos = this.allPedidos();

@@ -9,6 +9,7 @@ import { Router } from '@angular/router';
 import { NavConfig } from '../../../models/navegation/navElemet.model';
 import { NavService } from '../../../services/navegate/nav.service';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { UnitService } from '../../../services/convert/unit.service';
 
 
 @Component({
@@ -26,6 +27,7 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 })
 export class AddIngredienteComponent implements OnInit {
   private fb = inject(FormBuilder);
+  private unitService = inject(UnitService);
   private fbService = inject(FirebaseService);
   private router = inject(Router);
   private navService = inject(NavService);
@@ -33,8 +35,8 @@ export class AddIngredienteComponent implements OnInit {
   isFavoriteView: boolean = false;
 
   form: FormGroup;
-  unidades = ['g', 'kg', 'oz', 'lb', 'ml', 'l', 'unit', 'cup', 'tablespoon', 'teaspoon'];
-
+  // unidades = ['g', 'kg', 'oz','fl_oz' ,'lb', 'ml', 'l', 'unit', 'cup', 'tablespoon', 'teaspoon'];
+  unidades = this.unitService.units();
 
   constructor() {
     this.setNav();

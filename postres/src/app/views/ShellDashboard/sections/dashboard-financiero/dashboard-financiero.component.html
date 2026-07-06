@@ -1,51 +1,57 @@
-<div class="fin-root">
+
+
+    <div class="fin-root">
  
-      <!-- TAB SELECTOR -->
-      <div class="fin-tabs">
-        <button class="fin-tab" [class.active]="activeChart() === 'barras'" (click)="activeChart.set('barras')">
-          Ingresos vs Costos
-        </button>
-        <button class="fin-tab" [class.active]="activeChart() === 'pastel'" (click)="activeChart.set('pastel')">
-          Distribución gastos
-        </button>
+  <div class="fin-tabs">
+    <button class="fin-tab" [class.active]="activeChart() === 'barras'" (click)="activeChart.set('barras')">
+      Ingresos vs Costos
+    </button>
+    <button class="fin-tab" [class.active]="activeChart() === 'pastel'" (click)="activeChart.set('pastel')">
+      Distribución
+    </button>
+    <button class="fin-tab" [class.active]="activeChart() === 'logistica'" (click)="activeChart.set('logistica')">
+      Logística (Millas)
+    </button>
+    <button class="fin-tab" [class.active]="activeChart() === 'balance'" (click)="activeChart.set('balance')">
+      Balance Global
+    </button>
+  </div>
+ 
+  <div class="fin-chart-wrap">
+    <div #barChart class="fin-chart" [style.display]="activeChart() === 'barras' ? 'block' : 'none'"></div>
+    <div #pieChart class="fin-chart" [style.display]="activeChart() === 'pastel' ? 'block' : 'none'"></div>
+    <div #logisticsChart class="fin-chart" [style.display]="activeChart() === 'logistica' ? 'block' : 'none'"></div>
+    <div #globalBalanceChart class="fin-chart" [style.display]="activeChart() === 'balance' ? 'block' : 'none'"></div>
+  </div>
+ 
+  <div class="fin-summary">
+    <div class="fin-sum-item">
+      <span class="fin-sum-dot" style="background:#30d158"></span>
+      <div class="fin-sum-body">
+        <span class="fin-sum-label">Ingresos</span>
+        <span class="fin-sum-val green">{{ fmt(totales().ingresos) }}</span>
       </div>
- 
-      <!-- CHART CONTAINER -->
-      <div class="fin-chart-wrap">
-        <div #barChart class="fin-chart" [style.display]="activeChart() === 'barras' ? 'block' : 'none'"></div>
-        <div #pieChart class="fin-chart" [style.display]="activeChart() === 'pastel' ? 'block' : 'none'"></div>
-      </div>
- 
-      <!-- RESUMEN NUMÉRICO -->
-      <div class="fin-summary">
-        <div class="fin-sum-item">
-          <span class="fin-sum-dot" style="background:#30d158"></span>
-          <div class="fin-sum-body">
-            <span class="fin-sum-label">Ingresos</span>
-            <span class="fin-sum-val green">{{ fmt(totales().ingresos) }}</span>
-          </div>
-        </div>
-        <div class="fin-sum-item">
-          <span class="fin-sum-dot" style="background:#0a84ff"></span>
-          <div class="fin-sum-body">
-            <span class="fin-sum-label">Costo base</span>
-            <span class="fin-sum-val blue">{{ fmt(totales().costoBase) }}</span>
-          </div>
-        </div>
-        <div class="fin-sum-item">
-          <span class="fin-sum-dot" style="background:#ffd60a"></span>
-          <div class="fin-sum-body">
-            <span class="fin-sum-label">Misceláneos</span>
-            <span class="fin-sum-val yellow">{{ fmt(totales().misc) }}</span>
-          </div>
-        </div>
-        <div class="fin-sum-item">
-          <span class="fin-sum-dot" style="background:#ff3b30"></span>
-          <div class="fin-sum-body">
-            <span class="fin-sum-label">Envíos</span>
-            <span class="fin-sum-val red">{{ fmt(totales().delivery) }}</span>
-          </div>
-        </div>
-      </div>
- 
     </div>
+    <div class="fin-sum-item">
+      <span class="fin-sum-dot" style="background:#0a84ff"></span>
+      <div class="fin-sum-body">
+        <span class="fin-sum-label">Costos Pedidos</span>
+        <span class="fin-sum-val blue">{{ fmt(totales().costoTotalPedidos) }}</span>
+      </div>
+    </div>
+    <div class="fin-sum-item">
+      <span class="fin-sum-dot" style="background:#bf5af2"></span>
+      <div class="fin-sum-body">
+        <span class="fin-sum-label">Gastos Operat.</span>
+        <span class="fin-sum-val purple">{{ fmt(totales().gastosOperativos) }}</span>
+      </div>
+    </div>
+    <div class="fin-sum-item">
+      <span class="fin-sum-dot" style="background:#ffd60a"></span>
+      <div class="fin-sum-body">
+        <span class="fin-sum-label">Millas Totales</span>
+        <span class="fin-sum-val yellow">{{ totales().millas.toLocaleString('es-ES') }} mi</span>
+      </div>
+    </div>
+  </div>
+</div>

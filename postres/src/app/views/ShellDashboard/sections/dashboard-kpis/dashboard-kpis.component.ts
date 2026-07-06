@@ -76,6 +76,13 @@ pedidos = input.required<Pedido[]>();
  
     // ── Ingresos totales ──
     const ingresos = activos.reduce((s, p) => s + (p.cost_total ?? 0), 0);
+
+
+    // NUEVO CALCULO: Millas recorridas en pedidos válidos
+  const totalMillas = activos.reduce((acc, p) => acc + (p.milles_for_delivery || 0), 0);
+  const totalDeliveryCost = activos.reduce((acc, p) => acc + (p.delivery_cost || 0), 0);
+  const ratioMilla = totalMillas > 0 ? (totalDeliveryCost / totalMillas) : 0;
+
  
     return [
       {
@@ -128,6 +135,16 @@ pedidos = input.required<Pedido[]>();
         icon: '⚙️',
         accent: 'blue',
       },
+
+      {
+      id: 'millas-recorridas',
+      label: 'Millas recorridas',
+      value: `${totalMillas.toLocaleString('es-ES')} mi`,
+      sub: `Eficiencia: $${ratioMilla.toFixed(2)} / mi`,
+      icon: '📍',
+      accent: 'purple',
+    },
+
     ];
   });
  

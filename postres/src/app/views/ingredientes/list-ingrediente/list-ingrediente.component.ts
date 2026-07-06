@@ -54,8 +54,9 @@ export class ListIngredienteComponent {
     this.router.navigate(['/app/ingredient/detail'], { state: { ingrediente } });
   }
 
+
     add() {
-    const routeBase = "/app/ingredient/list";
+    const routeBase = "/app/ingredient/add";
     this.router.navigate([routeBase]);
   }
 
